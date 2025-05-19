@@ -1,0 +1,35 @@
+
+
+
+.accountPageMainFirstP {
+    width: 284px;
+    height: 52px;
+    font-family: Orbitron;
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 52px;
+    letter-spacing: 0%;
+    background: linear-gradient(91.46deg, #FF005D 48.64%, #00D1FF 88.63%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+}
+
+.accountPageMain input {
+    border: 2px solid transparent; 
+    padding: 10px;
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    border-image-source: linear-gradient(90deg, #FF005D 0%, #00D1FF 100%);
+    border-image-slice: 1;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+  }
+
+.accountPageButton {
+    width: 350px;
+    height: 54px;
+    border: 1px solid #FFFFFF
+}

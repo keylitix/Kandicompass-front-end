@@ -1,0 +1,64 @@
+.main {
+    background-image: url("../../../public/Home1.png");
+    height: calc(100vh - 74px);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.homeSection {
+    width: 480px;
+    padding-left: 90px;
+    padding-top: 128px;
+}
+
+.homeSection .homeSectionFirstP {
+    font-family: Orbitron;
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 52px;
+    letter-spacing: 0%;
+    background: linear-gradient(95.82deg, #FF005D 45.34%, #00D1FF 80.04%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: color 0.3s ease;
+}
+
+.homeSection .homeSectionSecondP {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0%;
+}
+
+.homeSection .homeSectionThird .buttonFirst {
+    width: 181px;
+    height: 51px;
+    background: linear-gradient(95.11deg, #FF005D 26.34%, #00D1FF 101.31%);
+    font-family: Orbitron;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 52px;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+}
+
+.homeSection .homeSectionThird .buttonSecond {
+    width: 181px;
+    height: 51px;
+    top: 276px;
+    left: 210px;
+    border-width: 2px;
+    border: 2px solid transparent;
+    border-image-source: linear-gradient(90deg, #FF005D 0%, #00D1FF 100%);
+    border-image-slice: 1;
+    font-family: Orbitron;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 52px;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+
+}
