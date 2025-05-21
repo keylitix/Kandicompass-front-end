@@ -1,9 +1,11 @@
-"use client";
-import React, { useState, useCallback, ChangeEvent, DragEvent } from "react";
-import downloadImge from "@/public/download.svg";
-import Image from "next/image";
-import { useAddThreadMutation, useUploadThreadImageMutation } from "@/redux/api/thredApi";
-
+'use client';
+import React, { useState, useCallback, ChangeEvent, DragEvent } from 'react';
+import downloadImge from '@/public/download.svg';
+import Image from 'next/image';
+import {
+  useAddThreadMutation,
+  useUploadThreadImageMutation,
+} from '@/redux/api/thredApi';
 
 interface UploadedFile {
   file: File;
@@ -12,9 +14,9 @@ interface UploadedFile {
 
 const DCharmUpload = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [threadName, setThreadName] = useState<string>("NZ");
-  const [threadId, setThreadId] = useState<string>("R4025");
-  const [location, setLocation] = useState<string>("R4025");
+  const [threadName, setThreadName] = useState<string>('NZ');
+  const [threadId, setThreadId] = useState<string>('R4025');
+  const [location, setLocation] = useState<string>('R4025');
   const [isPrivate, setIsPrivate] = useState<boolean>(true);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -67,24 +69,24 @@ const DCharmUpload = () => {
       };
 
       const threadRes = await addThread(threadPayload).unwrap();
-      console.log("Thread created:", threadRes);
+      console.log('Thread created:', threadRes);
 
       for (const uploaded of uploadedFiles) {
         const formData = new FormData();
-        formData.append("image", uploaded.file);
+        formData.append('image', uploaded.file);
 
         const uploadRes = await uploadImage({
           threadId: threadId,
           formData: formData,
         }).unwrap();
 
-        console.log("Image uploaded:", uploadRes);
+        console.log('Image uploaded:', uploadRes);
       }
 
-      alert("Thread created and images uploaded successfully!");
+      alert('Thread created and images uploaded successfully!');
     } catch (error) {
-      console.error("Error saving thread:", error);
-      alert("Something went wrong while saving the thread.");
+      console.error('Error saving thread:', error);
+      alert('Something went wrong while saving the thread.');
     } finally {
       setIsUploading(false);
     }
@@ -101,17 +103,18 @@ const DCharmUpload = () => {
         <h1
           className="text-center mb-8"
           style={{
-            fontFamily: "Orbitron",
+            fontFamily: 'Orbitron',
             fontWeight: 700,
-            fontSize: "46px",
-            lineHeight: "52px",
-            background: "linear-gradient(90.24deg, #FF005D 50.79%, #00D1FF 81.07%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
+            fontSize: '46px',
+            lineHeight: '52px',
+            background:
+              'linear-gradient(90.24deg, #FF005D 50.79%, #00D1FF 81.07%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
           }}
         >
-        Upload
+          Upload
         </h1>
 
         <div className="mb-6">
@@ -122,8 +125,8 @@ const DCharmUpload = () => {
             onChange={(e) => setThreadName(e.target.value)}
             className="w-full p-3 text-white bg-transparent border-2 border-transparent"
             style={{
-              borderImage: "linear-gradient(to right, #FF005D, #00D1FF) 1",
-              outline: "none",
+              borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+              outline: 'none',
             }}
           />
         </div>
@@ -136,8 +139,8 @@ const DCharmUpload = () => {
             readOnly
             className="w-full p-3 text-white border-2 border-transparent bg-[#170F24]"
             style={{
-              borderImage: "linear-gradient(to right, #FF005D, #00D1FF) 1",
-              outline: "none",
+              borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+              outline: 'none',
             }}
           />
         </div>
@@ -147,8 +150,8 @@ const DCharmUpload = () => {
           <div
             className="border-2 border-transparent bg-[#170F24] text-white text-center min-h-[325px] w-full flex flex-col justify-center items-center gap-4 p-4"
             style={{
-              borderImage: "linear-gradient(to right, #FF005D, #00D1FF) 1",
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.3)",
+              borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+              boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)',
             }}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -156,11 +159,17 @@ const DCharmUpload = () => {
             {uploadedFiles.length > 0 ? (
               <div className="w-full">
                 {chunkedFiles.map((row, rowIndex) => (
-                  <div key={rowIndex} className="flex justify-center gap-4 mb-4">
+                  <div
+                    key={rowIndex}
+                    className="flex justify-center gap-4 mb-4"
+                  >
                     {row.map((file, fileIndex) => {
                       const index = rowIndex * 4 + fileIndex;
                       return (
-                        <div key={index} className="relative w-1/4 aspect-square">
+                        <div
+                          key={index}
+                          className="relative w-1/4 aspect-square"
+                        >
                           <Image
                             src={file.previewUrl}
                             alt={`Uploaded preview ${index + 1}`}
@@ -183,9 +192,15 @@ const DCharmUpload = () => {
             ) : (
               <div className="flex flex-col items-center">
                 <label htmlFor="file-upload" className="cursor-pointer">
-                  <Image src={downloadImge} alt="Upload Icon" className="w-[60px] mb-2 ml-[150px]" />
+                  <Image
+                    src={downloadImge}
+                    alt="Upload Icon"
+                    className="w-[60px] mb-2 ml-[150px]"
+                  />
                   <p className="text-sm text-white">
-                    <span className="text-[#FF005D]">CLICK TO DISC/HIS_OR.DRAW.IF HERE</span>
+                    <span className="text-[#FF005D]">
+                      CLICK TO DISC/HIS_OR.DRAW.IF HERE
+                    </span>
                     <br />
                     <span className="text-gray-400">FOR THIS PINK</span>
                     <br />
@@ -206,15 +221,17 @@ const DCharmUpload = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-white mb-2">Set Your Charm’s Location</label>
+          <label className="block text-white mb-2">
+            Set Your Charm’s Location
+          </label>
           <input
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             className="w-full p-3 text-white bg-transparent border-2 border-transparent"
             style={{
-              borderImage: "linear-gradient(to right, #FF005D, #00D1FF) 1",
-              outline: "none",
+              borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+              outline: 'none',
             }}
           />
         </div>

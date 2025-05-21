@@ -1,181 +1,213 @@
-"use client";
+'use client';
 
-import { useGetAllThreadsQuery } from "@/redux/api/thredApi";
-import Image from "next/image";
+import { useGetAllThreadsQuery } from '@/redux/api/thredApi';
+import Image from 'next/image';
 import { MessageSquareText } from 'lucide-react';
-import threadURL from "@/public/thred.svg";
-import { useState, useEffect, useCallback } from "react";
-import { useInView } from "react-intersection-observer";
-import Skeleton from "react-loading-skeleton";
-import ViewQrCodeModal from "../modal/view-qr-code";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useRouter } from "next/navigation";
-import { debounce } from "lodash";
+import threadURL from '@/public/thred.svg';
+import { useState, useEffect, useCallback } from 'react';
+import { useInView } from 'react-intersection-observer';
+import Skeleton from 'react-loading-skeleton';
+import ViewQrCodeModal from '../modal/view-qr-code';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { useRouter } from 'next/navigation';
+import { debounce } from 'lodash';
 
 export default function ThreadsList() {
-    const router = useRouter();
-    const [threads, setThreads] = useState<any[]>([]);
-    const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedThread, setSelectedThread] = useState<any>(null);
+  const router = useRouter();
+  const [threads, setThreads] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedThread, setSelectedThread] = useState<any>(null);
 
-    const { ref, inView } = useInView();
+  const { ref, inView } = useInView();
 
-    const [shouldSkip, setShouldSkip] = useState(false);
+  const [shouldSkip, setShouldSkip] = useState(false);
 
-    const { data: tData, isLoading, isError, isFetching } = useGetAllThreadsQuery(
-        { page_number: page, page_size: 10 },
-        { skip: !hasMore }
-        
-    );
+  const {
+    data: tData,
+    isLoading,
+    isError,
+    isFetching,
+  } = useGetAllThreadsQuery(
+    { page_number: page, page_size: 10 },
+    { skip: !hasMore },
+  );
 
-    useEffect(() => {
-        setShouldSkip(isLoading);
-    }, [isLoading]);
+  useEffect(() => {
+    setShouldSkip(isLoading);
+  }, [isLoading]);
 
-    const threadsResponse = tData?.data ?? [];
+  const threadsResponse = tData?.data ?? [];
 
-    useEffect(() => {
-        if (tData?.data?.length) {
-          setThreads(prev => {
-            const seen = new Set(prev.map(t => t._id));
-            const newThreads = tData.data.filter((t: { _id: any; }) => !seen.has(t._id));
-            return [...prev, ...newThreads];
-          });
-          setLoading(false);
-        } else if (!isFetching) {
-          setHasMore(false);
-        }
-      }, [tData, isFetching]);
+  useEffect(() => {
+    if (tData?.data?.length) {
+      setThreads((prev) => {
+        const seen = new Set(prev.map((t) => t._id));
+        const newThreads = tData.data.filter(
+          (t: { _id: any }) => !seen.has(t._id),
+        );
+        return [...prev, ...newThreads];
+      });
+      setLoading(false);
+    } else if (!isFetching) {
+      setHasMore(false);
+    }
+  }, [tData, isFetching]);
 
-    useEffect(() => {
-        if (inView && !loading && !isLoading && !shouldSkip) {
-            loadMore();
-        }
-    }, [inView, loading, isLoading, shouldSkip]);
+  useEffect(() => {
+    if (inView && !loading && !isLoading && !shouldSkip) {
+      loadMore();
+    }
+  }, [inView, loading, isLoading, shouldSkip]);
 
-    const loadMore = useCallback(
-        debounce(() => {
-          if (!isFetching && hasMore ) {
-            setPage((prev) => prev + 1);
-          }
-        }, 300),
-        [isFetching, hasMore]
-      );
+  const loadMore = useCallback(
+    debounce(() => {
+      if (!isFetching && hasMore) {
+        setPage((prev) => prev + 1);
+      }
+    }, 300),
+    [isFetching, hasMore],
+  );
 
-    const handleQrCodeClick = (thread: string) => {
-        setSelectedThread(thread);
-        setIsModalOpen(true);
-    };
+  const handleQrCodeClick = (thread: string) => {
+    setSelectedThread(thread);
+    setIsModalOpen(true);
+  };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedThread(null);
-    };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedThread(null);
+  };
 
-    return (
-        <>
-            <div className="w-full h-full">
-                <div className="bg-white/7 h-[calc(100vh-80px)] md:h-[calc(100vh-100px)] rounded-md overflow-hidden flex flex-col">
-                    <div className="p-4 border-b border-white/10">
-                        <h2 className="text-white text-lg font-medium">Logged Threads</h2>
+  return (
+    <>
+      <div className="w-full h-full">
+        <div className="bg-white/7 h-[calc(100vh-80px)] md:h-[calc(100vh-100px)] rounded-md overflow-hidden flex flex-col">
+          <div className="p-4 border-b border-white/10">
+            <h2 className="text-white text-lg font-medium">Logged Threads</h2>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            {isLoading &&
+              Array(5)
+                .fill(0)
+                .map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    enableAnimation
+                    baseColor="#ffffff20"
+                    highlightColor="#ffffff30"
+                    className="bg-white/10 animate-pulse h-14 rounded-md mb-4"
+                  />
+                ))}
+
+            {isError && (
+              <div className="flex flex-col items-center justify-center h-full text-white/70 p-4 text-center">
+                <p>Failed to load threads</p>
+                <button className="mt-2 px-4 py-2 bg-white/10 rounded-md hover:bg-white/20 transition-colors">
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {!isLoading && !isError && threads.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full text-white/70 p-4 text-center">
+                <MessageSquareText className="w-12 h-12 mb-2 opacity-50" />
+                <p className="text-lg font-medium">No threads yet</p>
+                <p className="text-sm">Start a conversation or join a thread</p>
+              </div>
+            )}
+
+            {!isLoading &&
+              !isError &&
+              threads.length > 0 &&
+              threads.map((thread: any) => (
+                <div
+                  key={thread._id}
+                  className="bg-white/10 rounded-md p-3 flex justify-between hover:bg-white/15 transition-colors cursor-pointer"
+                  onClick={() =>
+                    !isModalOpen && router.push(`/dashboard/charms/thred-charm`)
+                  }
+                >
+                  <div className="flex gap-3 items-center">
+                    <div className="w-10 h-10 relative bg-white/12 rounded-md flex-shrink-0 overflow-hidden">
+                      <Image
+                        src={
+                          thread.avatar
+                            ? `https://kandi-backend.cradle.services/${thread.avatar}`
+                            : threadURL.src
+                        }
+                        fill
+                        alt={`${thread.threadName} image`}
+                        className="object-cover rounded-md"
+                      />
                     </div>
-
-                    <div className="flex-1 overflow-y-auto p-3 space-y-3">
-                        {isLoading && (
-                            Array(5).fill(0).map((_, i) => (
-                                <Skeleton key={i} enableAnimation baseColor="#ffffff20" highlightColor="#ffffff30" className="bg-white/10 animate-pulse h-14 rounded-md mb-4" />
-                            ))
-                        )}
-
-                        {isError && (
-                            <div className="flex flex-col items-center justify-center h-full text-white/70 p-4 text-center">
-                                <p>Failed to load threads</p>
-                                <button className="mt-2 px-4 py-2 bg-white/10 rounded-md hover:bg-white/20 transition-colors">
-                                    Retry
-                                </button>
-                            </div>
-                        )}
-
-                        {!isLoading && !isError && threads.length === 0 && (
-                            <div className="flex flex-col items-center justify-center h-full text-white/70 p-4 text-center">
-                                <MessageSquareText className="w-12 h-12 mb-2 opacity-50" />
-                                <p className="text-lg font-medium">No threads yet</p>
-                                <p className="text-sm">Start a conversation or join a thread</p>
-                            </div>
-                        )}
-
-                        {!isLoading && !isError && threads.length > 0 && threads.map((thread: any) => (
-                            <div
-                                key={thread._id}
-                                className="bg-white/10 rounded-md p-3 flex justify-between hover:bg-white/15 transition-colors cursor-pointer"
-                                onClick={() => !isModalOpen && router.push(`/dashboard/charms/thred-charm`)}
-                            >
-                                <div className="flex gap-3 items-center">
-                                    <div className="w-10 h-10 relative bg-white/12 rounded-md flex-shrink-0 overflow-hidden">
-                                        <Image
-                                            src={thread.avatar ? `https://kandi-backend.cradle.services/${thread.avatar}` : threadURL.src}
-                                            fill
-                                            alt={`${thread.threadName} image`}
-                                            className="object-cover rounded-md"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col overflow-hidden">
-                                        <span className="text-md text-white font-medium truncate">
-                                            {thread.threadName || "Unnamed Thread"}
-                                        </span>
-                                        <span className="text-xs text-white/60 truncate">
-                                            {thread.totalMember || "No member yet"}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {thread.qrCode && (
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <div className="w-10 h-10 relative bg-white rounded-md flex-shrink-0 overflow-hidden">
-                                                    <Image
-                                                        src={`https://kandi-backend.cradle.services/${thread.qrCode}`}
-                                                        fill
-                                                        alt={`${thread.threadName} image`}
-                                                        className="object-cover rounded-md"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleQrCodeClick(thread);
-                                                        }}
-                                                    />
-                                                </div>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Click to see QR Code</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                )}
-
-                                <ViewQrCodeModal
-                                    isOpen={isModalOpen}
-                                    onClose={handleCloseModal}
-                                    title={selectedThread?.threadName}
-                                    qrURL={selectedThread?.qrCode}
-                                    status={selectedThread?.status || ''}
-                                />
-                            </div>
-                        ))}
-
-                        {loading && !isLoading && !isError && (
-                            <div className="flex justify-center items-center py-4">
-                                <Skeleton count={1} enableAnimation baseColor="#ffffff20" highlightColor="#ffffff30" className="bg-white/10 animate-pulse h-14 rounded-md" />
-                            </div>
-                        )}
-
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-md text-white font-medium truncate">
+                        {thread.threadName || 'Unnamed Thread'}
+                      </span>
+                      <span className="text-xs text-white/60 truncate">
+                        {thread.totalMember || 'No member yet'}
+                      </span>
                     </div>
-                    <div ref={ref} className="h-10" />
+                  </div>
+
+                  {thread.qrCode && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <div className="w-10 h-10 relative bg-white rounded-md flex-shrink-0 overflow-hidden">
+                            <Image
+                              src={`https://kandi-backend.cradle.services/${thread.qrCode}`}
+                              fill
+                              alt={`${thread.threadName} image`}
+                              className="object-cover rounded-md"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleQrCodeClick(thread);
+                              }}
+                            />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Click to see QR Code</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+
+                  <ViewQrCodeModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    title={selectedThread?.threadName}
+                    qrURL={selectedThread?.qrCode}
+                    status={selectedThread?.status || ''}
+                  />
                 </div>
-            </div>
-        </>
-    );
+              ))}
+
+            {loading && !isLoading && !isError && (
+              <div className="flex justify-center items-center py-4">
+                <Skeleton
+                  count={1}
+                  enableAnimation
+                  baseColor="#ffffff20"
+                  highlightColor="#ffffff30"
+                  className="bg-white/10 animate-pulse h-14 rounded-md"
+                />
+              </div>
+            )}
+          </div>
+          <div ref={ref} className="h-10" />
+        </div>
+      </div>
+    </>
+  );
 }

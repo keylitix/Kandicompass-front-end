@@ -1,10 +1,13 @@
-import React from "react";
+import React from 'react';
 
 interface InputProps {
   label: string;
   type: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  name?: string;
+  value?: string | number;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
   readOnly?: boolean;
   placeholder?: string;
   additionalStyles?: string;
@@ -15,19 +18,23 @@ interface InputProps {
 const Input: React.FC<InputProps> = ({
   label,
   type,
+  name,
   value,
   onChange,
   readOnly = false,
-  placeholder = "",
-  additionalStyles = "",
+  placeholder = '',
+  additionalStyles = '',
   rows = 4,
   cols = 50,
 }) => {
   return (
     <div className="mb-6">
-      <label className="block text-white mb-2">{label}</label>
-      {type === "textarea" ? (
+      <label className="block text-white mb-2" htmlFor={name}>
+        {label}
+      </label>
+      {type === 'textarea' ? (
         <textarea
+          id={name}
           value={value}
           onChange={onChange}
           readOnly={readOnly}
@@ -36,21 +43,23 @@ const Input: React.FC<InputProps> = ({
           cols={cols}
           className={`w-full p-3 text-white bg-transparent border-2 border-transparent ${additionalStyles}`}
           style={{
-            borderImage: "linear-gradient(to right, #FF005D, #00D1FF) 1",
-            outline: "none",
+            borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+            outline: 'none',
           }}
         />
       ) : (
         <input
+          id={name}
           type={type}
+          name={name}
           value={value}
           onChange={onChange}
           readOnly={readOnly}
           placeholder={placeholder}
           className={`w-full p-3 text-white bg-transparent border-2 border-transparent ${additionalStyles}`}
           style={{
-            borderImage: "linear-gradient(to right, #FF005D, #00D1FF) 1",
-            outline: "none",
+            borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+            outline: 'none',
           }}
         />
       )}

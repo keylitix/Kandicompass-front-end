@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserType } from "@/app/types/UserType";
-import { AppDispatch } from "../store/store";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { UserType } from '@/app/types/UserType';
+import { AppDispatch } from '../store/store';
 
 interface InitialStateType {
   token: any;
@@ -26,22 +26,25 @@ export const enableLocation = () => async (dispatch: AppDispatch) => {
 
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      dispatch(setCoordinates({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      }));
+      dispatch(
+        setCoordinates({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }),
+      );
     },
     (error) => {
-      console.error("Geolocation error:", error.message);
-      alert('Location access denied.\n\nClick the lock ⓘ icon near the address bar.\nFind "Location" and allow access.\nThen reload the page.'
+      console.error('Geolocation error:', error.message);
+      alert(
+        'Location access denied.\n\nClick the lock ⓘ icon near the address bar.\nFind "Location" and allow access.\nThen reload the page.',
       );
       dispatch(setLocationDenied());
-    }
+    },
   );
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserType>) => {
@@ -53,7 +56,10 @@ const authSlice = createSlice({
       });
       state.user = null;
     },
-    setCoordinates: (state, action: PayloadAction<{ latitude: number; longitude: number }>) => {
+    setCoordinates: (
+      state,
+      action: PayloadAction<{ latitude: number; longitude: number }>,
+    ) => {
       state.coordinates = action.payload;
       state.isLocationEnabled = true;
       state.locationDenied = false;
@@ -71,5 +77,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, logout, setCoordinates, setLocationDenied, disableLocation } = authSlice.actions;
+export const {
+  setUser,
+  logout,
+  setCoordinates,
+  setLocationDenied,
+  disableLocation,
+} = authSlice.actions;
 export default authSlice.reducer;

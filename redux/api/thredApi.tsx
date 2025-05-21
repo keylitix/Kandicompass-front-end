@@ -1,11 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
+import { CORE_BACKEND_URL } from '@/helper/path';
 
 interface IThread {
   data: any;
   threadName: string;
   threadId: string;
   charmLocation: string;
+}
+
+interface ThreadResponse {
+  data: any;
+  isSuccess: boolean;
+  message: string;
+  statusCode: number;
 }
 
 interface IUploadImageResponse {
@@ -17,7 +25,7 @@ interface IUploadImageResponse {
 export const threadApi = createApi({
   reducerPath: 'threadApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://kandi-backend.cradle.services/threads',
+    baseUrl: CORE_BACKEND_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
@@ -28,65 +36,75 @@ export const threadApi = createApi({
   }),
   tagTypes: ['Thread'],
   endpoints: (builder) => ({
-    // 🔹 Get all threads
+    // Get all threads
     getThreads: builder.query<{ data: IThread[] }, void>({
       query: () => '',
       providesTags: ['Thread'],
     }),
 
-    // 🔹 Get a thread by ID
+    // Get a thread by ID
     getThreadById: builder.query<IThread, string>({
-      query: (id) => `${id}`,
-      providesTags: (result, error, id) => [{ type: 'Thread', id }],
+      query: (id) => `threads/getById/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'Thread', id }],
     }),
 
-    // 🔹 Create a new thread
-    addThread: builder.mutation<IThread, Partial<IThread>>({
+    // Create a new thread
+    addThread: builder.mutation<ThreadResponse, Partial<IThread>>({
       query: (body) => ({
-        url: 'create',
+        url: 'threads/create',
         method: 'POST',
         body,
       }),
       invalidatesTags: ['Thread'],
     }),
 
-    // 🔹 Update thread
-    updateThread: builder.mutation<IThread, { id: string; body: Partial<IThread> }>({
+    // Update thread
+    updateThread: builder.mutation<
+      IThread,
+      { id: string; body: Partial<IThread> }
+    >({
       query: ({ id, body }) => ({
-        url: `update/${id}`,
+        url: `threads/update/${id}`,
         method: 'PUT',
         body,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Thread', id }],
     }),
 
-    // 🔹 Delete thread
+    // Delete thread
     deleteThread: builder.mutation<void, string>({
       query: (id) => ({
-        url: `delete/${id}`,
+        url: `threads/delete/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Thread'],
     }),
 
-    // 🔹 Upload image to thread
-    uploadThreadImage: builder.mutation<IUploadImageResponse, { threadId: string; formData: FormData }>({
+    // Upload image to thread
+    uploadThreadImage: builder.mutation<
+      IUploadImageResponse,
+      { threadId: string; formData: FormData }
+    >({
       query: ({ threadId, formData }) => ({
-        url: `uploadImage/${threadId}`,
+        url: `threads/uploadImage/${threadId}`,
         method: 'POST',
         body: formData,
       }),
-      invalidatesTags: (result, error, { threadId }) => [{ type: 'Thread', id: threadId }],
+      invalidatesTags: (result, error, { threadId }) => [
+        { type: 'Thread', id: threadId },
+      ],
     }),
 
-    getAllThreads: builder.query<any, { page_number: number; page_size: number }>({
+    getAllThreads: builder.query<
+      any,
+      { page_number: number; page_size: number }
+    >({
       query: ({ page_number, page_size }) => ({
-        url: `/getall`,
+        url: `/threads/getall`,
         method: 'GET',
         params: { page_number, page_size },
       }),
     }),
-
   }),
 });
 

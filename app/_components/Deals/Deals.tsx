@@ -45,31 +45,28 @@
 
 // export default Deals
 
-
-
-
-import "./Deals.css";
-import Cart from "../../../public/cart.svg";
-import Gift from "../../../public/gift.svg";
-import Percantage from "../../../public/percentage.svg";
-import Image from "next/image";
+import './Deals.css';
+import Cart from '../../../public/cart.svg';
+import Gift from '../../../public/gift.svg';
+import Percantage from '../../../public/percentage.svg';
+import Image from 'next/image';
 
 const dealsData = [
   {
     image: Gift,
-    text: "Buy 2 Get 1 Free on Charms!",
-    button: "claim now"
+    text: 'Buy 2 Get 1 Free on Charms!',
+    button: 'claim now',
   },
   {
     image: Percantage,
-    text: "20% Off All Charms This Week!",
-    button: "claim now"
+    text: '20% Off All Charms This Week!',
+    button: 'claim now',
   },
   {
     image: Cart,
-    text: "Free Shipping on Orders Over $30!",
-    button: "claim now"
-  }
+    text: 'Free Shipping on Orders Over $30!',
+    button: 'claim now',
+  },
 ];
 
 const Deals = () => {
@@ -78,19 +75,19 @@ const Deals = () => {
       <p className="dealsMainP text-center pt-12 pb-8 text-3xl sm:text-4xl md:text-5xl lg:text-[46px]">
         Current Deals
       </p>
-      
+
       <div className="flex flex-col md:flex-row items-center justify-center w-full gap-8 lg:gap-14 xl:gap-56 pt-8">
         {dealsData.map((item, index) => (
-          <div 
+          <div
             key={index}
             className="dealsMainItem w-full max-w-[260px] h-[329px] bg-[#170F24] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
           >
             <div className="flex justify-center pt-6">
-              <Image 
-                src={item.image} 
-                alt="logo" 
-                width={180} 
-                height={126} 
+              <Image
+                src={item.image}
+                alt="logo"
+                width={180}
+                height={126}
                 className="w-[180px] h-auto"
               />
             </div>

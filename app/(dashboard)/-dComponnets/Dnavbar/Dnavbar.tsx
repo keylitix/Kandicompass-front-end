@@ -1,28 +1,40 @@
-"use client";
+'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Bell, LogOut, HelpCircle, User, ReceiptText, MapPin } from 'lucide-react';
+import {
+  Menu,
+  X,
+  Bell,
+  LogOut,
+  HelpCircle,
+  User,
+  ReceiptText,
+  MapPin,
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store/store';
-import { disableLocation, enableLocation, logout } from '@/redux/slice/UserSlice';
+import {
+  disableLocation,
+  enableLocation,
+  logout,
+} from '@/redux/slice/UserSlice';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
-
 
 const DashboardRoutes = [
   {
     id: 1,
-    label: "HOME",
-    link: "/dashboard"
+    label: 'HOME',
+    link: '/dashboard',
   },
   // {
   //   id: 2,
@@ -46,8 +58,8 @@ const DashboardRoutes = [
   // },
   {
     id: 6,
-    label: "ABOUT US",
-    link: "/dashboard/about"
+    label: 'ABOUT US',
+    link: '/dashboard/about',
   },
   // {
   //   id: 7,
@@ -56,42 +68,45 @@ const DashboardRoutes = [
   // },
   {
     id: 8,
-    label: "Contact Us",
-    link: "/dashboard/contact-us"
-  }
+    label: 'Contact Us',
+    link: '/dashboard/contact-us',
+  },
 ];
 
 const notifications = [
   {
     id: 1,
-    title: "Tracking Update",
-    time: "10 PM",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lectus elit.",
-    action: null
+    title: 'Tracking Update',
+    time: '10 PM',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lectus elit.',
+    action: null,
   },
   {
     id: 2,
-    title: "New Charm Rivaltakia!",
-    time: "10 PM",
-    content: "Check out our newest charm collection.",
-    action: "VIEW NOW"
+    title: 'New Charm Rivaltakia!',
+    time: '10 PM',
+    content: 'Check out our newest charm collection.',
+    action: 'VIEW NOW',
   },
   {
     id: 3,
-    title: "Exclusive Offer",
-    time: "10 PM",
-    content: "Special discounts for our premium members.",
-    action: "SHOP NOW"
-  }
+    title: 'Exclusive Offer',
+    time: '10 PM',
+    content: 'Special discounts for our premium members.',
+    action: 'SHOP NOW',
+  },
 ];
 
 const Dnavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(3);
-  const dispatch = useDispatch<AppDispatch>()
-  const route = useRouter()
+  const dispatch = useDispatch<AppDispatch>();
+  const route = useRouter();
 
-  const { isLocationEnabled, locationDenied } = useSelector((state: RootState) => state.auth)
+  const { isLocationEnabled, locationDenied } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const toggleLocation = () => {
     if (isLocationEnabled) {
@@ -105,7 +120,11 @@ const Dnavbar = () => {
     <nav className="w-full relative">
       {/* Desktop Navbar */}
       <div className="flex px-4 sm:px-10 lg:px-20 py-4 justify-between items-center">
-        <Link href='/dashboard'><h1 className="font-[700] text-[30px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">Kandi</h1></Link>
+        <Link href="/dashboard">
+          <h1 className="font-[700] text-[30px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">
+            Kandi
+          </h1>
+        </Link>
 
         {/* Desktop Navigation Links - Hidden on mobile */}
         <div className="hidden md:flex gap-x-10 lg:gap-x-10 items-center">
@@ -139,8 +158,12 @@ const Dnavbar = () => {
                 <div className="flex justify-between items-center px-2">
                   <h3 className="font-bold">NOTIFICATIONS</h3>
                   <div className="flex gap-2">
-                    <button className="text-xs text-blue-400 hover:text-blue-300">VIEW ALL</button>
-                    <button className="text-xs text-blue-400 hover:text-blue-300">MARK AS READ</button>
+                    <button className="text-xs text-blue-400 hover:text-blue-300">
+                      VIEW ALL
+                    </button>
+                    <button className="text-xs text-blue-400 hover:text-blue-300">
+                      MARK AS READ
+                    </button>
                   </div>
                 </div>
               </div>
@@ -152,9 +175,13 @@ const Dnavbar = () => {
                 >
                   <div className="flex justify-between w-full">
                     <span className="font-semibold">{notification.title}</span>
-                    <span className="text-xs text-gray-400">{notification.time}</span>
+                    <span className="text-xs text-gray-400">
+                      {notification.time}
+                    </span>
                   </div>
-                  <p className="text-sm text-gray-300">{notification.content}</p>
+                  <p className="text-sm text-gray-300">
+                    {notification.content}
+                  </p>
                   {notification.action && (
                     <button className="text-xs text-blue-400 hover:text-blue-300 mt-1">
                       {notification.action}
@@ -167,9 +194,7 @@ const Dnavbar = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">
-              <div
-                className="w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] cursor-pointer"
-              >
+              <div className="w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] cursor-pointer">
                 <Image
                   src="/avatar.jfif"
                   alt="Profile"
@@ -178,7 +203,6 @@ const Dnavbar = () => {
                   className="rounded-full object-cover w-full h-full"
                 />
               </div>
-
             </DropdownMenuTrigger>
 
             <DropdownMenuContent className="w-auto bg-gray-900 text-white border border-gray-700 mt-2">
@@ -192,7 +216,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 <HelpCircle className="h-4 w-4" />
                 <span>FAQ</span>
@@ -200,35 +224,33 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 <ReceiptText className="h-4 w-4" />
                 <span>Terms & Conditions</span>
               </DropdownMenuItem>
 
-              <div
-                className="w-full px-3 py-2"
-              >
+              <div className="w-full px-3 py-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="h-4 w-4 " />
-                    <span className='text-gray-300'>Location</span>
+                    <span className="text-gray-300">Location</span>
                   </div>
                   <Switch
                     checked={isLocationEnabled}
                     onCheckedChange={toggleLocation}
                     className="self-end data-[state=unchecked]:bg-gray-700 data-[state=checked]:bg-green-700"
                   />
-
                 </div>
               </div>
-
 
               <DropdownMenuSeparator className="my-2 border-gray-700" />
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => { dispatch(logout()) }}
+                onClick={() => {
+                  dispatch(logout());
+                }}
               >
                 <LogOut className="h-4 w-4" />
                 <span>Logout</span>

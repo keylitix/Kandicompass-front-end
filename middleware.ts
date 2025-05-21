@@ -1,25 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('_client_kandy_jwt')?.value
+  const token = request.cookies.get('_client_kandy_jwt')?.value;
   const path = request.nextUrl.pathname;
-  console.log('redirected path ==>>>>>>', path)
+  console.log('redirected path ==>>>>>>', path);
 
   const isProtected = path.startsWith('/dashboard');
   const isAuthPage = ['/sign-in', '/', '/sign-up'].includes(path);
   const isOpenPage = ['/terms-and-conditions'].includes(path);
 
-  // if (isProtected && !token) {
-  //   return NextResponse.redirect(new URL('/sign-in', request.url));
-  // }
+  if (isProtected && !token) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
+  }
 
-  // if (isAuthPage && token) {
-  //   return NextResponse.redirect(new URL('/dashboard', request.url));
-  // }
+  if (isAuthPage && token) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
 
-  // if (isOpenPage) {
-  //   return NextResponse.next();
-  // }
+  if (isOpenPage) {
+    return NextResponse.next();
+  }
 
   return NextResponse.next();
 }

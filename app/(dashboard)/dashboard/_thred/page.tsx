@@ -5,11 +5,16 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useGetAllThreadsQuery } from '@/redux/api/thredApi';
-import thred from "@/public/thred.svg";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import thred from '@/public/thred.svg';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 import { useRouter } from 'next/navigation';
-
 
 // 👇 Dynamically import GlobeDisplay and disable SSR
 const GlobeDisplay = dynamic(() => import('@/components/GlobeDisplay'), {
@@ -21,10 +26,8 @@ export default function LoggedThread() {
   const [visibleThread, setVisibleThread] = useState(3);
   const router = useRouter();
 
-  const {
-    data: getAllThreaddata,
-    isLoading: getAllThreadloading,
-  } = useGetAllThreadsQuery({ page_number: 1, page_size: 10 });
+  const { data: getAllThreaddata, isLoading: getAllThreadloading } =
+    useGetAllThreadsQuery({ page_number: 1, page_size: 10 });
 
   // Function to handle scanning and notifying admin
   const handleScan = async (threadId: string) => {
@@ -45,7 +48,7 @@ export default function LoggedThread() {
   };
 
   return (
-    <div id='thred-screen' className="min-h-screen  text-white pb-6">
+    <div id="thred-screen" className="min-h-screen  text-white pb-6">
       {/* <div className="flex flex-col items-center justify-center text-center space-y-4">
         <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] relative">
           <GlobeDisplay />
@@ -70,12 +73,17 @@ export default function LoggedThread() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 max-w-6xl mx-auto">
         {getAllThreaddata?.data.slice(0, visibleThread).map((thread: any) => (
-          <Card key={thread._id} className="bg-[#1c0a38] border border-[#2d1d52] text-center">
+          <Card
+            key={thread._id}
+            className="bg-[#1c0a38] border border-[#2d1d52] text-center"
+          >
             <CardContent className="flex flex-col items-center p-6 space-y-4">
               <Image src={thred} alt="Thread Icon" className="w-50" />
-              <h3 className="text-xl font-semibold text-white">{thread.threadName}</h3>
+              <h3 className="text-xl font-semibold text-white">
+                {thread.threadName}
+              </h3>
 
-              <div className='flex gap-4'>
+              <div className="flex gap-4">
                 <Button
                   onClick={() => router.push('/dashboard/thread')}
                   className="bg-gradient-to-r from-pink-500 to-cyan-400 text-white px-4 py-2 rounded-full shadow-md hover:opacity-90"
@@ -103,10 +111,7 @@ export default function LoggedThread() {
       </div>
 
       {/* Modal */}
-      <Dialog
-        open={!!openThread}
-        onOpenChange={() => setOpenThread(null)}
-      >
+      <Dialog open={!!openThread} onOpenChange={() => setOpenThread(null)}>
         <DialogContent className="rounded-3xl text-white">
           {openThread && (
             <>
@@ -143,11 +148,17 @@ export default function LoggedThread() {
       <div className="text-center mt-10">
         <Button
           onClick={() => {
-            setVisibleThread(visibleThread >= getAllThreaddata.data.length ? 3 : getAllThreaddata.data.length);
+            setVisibleThread(
+              visibleThread >= getAllThreaddata.data.length
+                ? 3
+                : getAllThreaddata.data.length,
+            );
           }}
           className="border border-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 hover:text-white"
         >
-          {visibleThread >= getAllThreaddata?.data?.length ? "VIEW LESS" : "VIEW ALL"}
+          {visibleThread >= getAllThreaddata?.data?.length
+            ? 'VIEW LESS'
+            : 'VIEW ALL'}
         </Button>
       </div>
     </div>

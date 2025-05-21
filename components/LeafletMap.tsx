@@ -1,8 +1,8 @@
-"use client";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import customMarkerIcon from "@/public/global.png";
+'use client';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import customMarkerIcon from '@/public/global.png';
 
 // Create custom icon using your imported image
 const CustomIcon = L.icon({
@@ -26,8 +26,8 @@ interface LeafletMapProps {
 const LeafletMap = ({
   center,
   zoom = 13,
-  markerText = "Location",
-  className = "h-[400px] w-full",
+  markerText = 'Location',
+  className = 'h-[400px] w-full',
 }: LeafletMapProps) => {
   return (
     <MapContainer

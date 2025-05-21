@@ -1,11 +1,11 @@
-import Forgot from "@/app/_components/Auth/Forgot"
+import Forgot from '@/app/_components/Auth/Forgot';
 
 const Authpage = () => {
   return (
     <div>
-        <Forgot/>
+      <Forgot />
     </div>
-  )
-}
+  );
+};
 
-export default Authpage
+export default Authpage;

@@ -1,116 +1,109 @@
 .Processmain {
-    background: #170F24;
+  background: #170f24;
 }
 
 .ProcessmainFirstSec {
-    width: 544px;
+  width: 544px;
 }
 
 .ProcessmainFirstSec :nth-child(1)p {
-    width: 163px;
-    height: 14px;
-    font-family: Orbitron;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 0px;
-    letter-spacing: 0%;
-}
- 
-.ProcessmainFirstSec :nth-child(2) {
-    font-family: Orbitron;
-    font-weight: 700;
-    font-size: 46px;
-    line-height: 52px;
-    letter-spacing: 0%;
-    color: #FF005D;
+  width: 163px;
+  height: 14px;
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 0px;
+  letter-spacing: 0%;
 }
 
-.ProcessmainSecondSec{
-    width: 1000px;
+.ProcessmainFirstSec :nth-child(2) {
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 52px;
+  letter-spacing: 0%;
+  color: #ff005d;
+}
+
+.ProcessmainSecondSec {
+  width: 1000px;
 }
 .ProcessmainSecondSec > div:nth-child(1) {
-    width: 160;
-    height: 160;
+  width: 160;
+  height: 160;
 }
 
 .ProcessmainSecondSec > div:nth-child(1) p:first-of-type {
-    width: 181px;
-    height: 60px;
-    font-family: Orbitron;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: 0%;
-    text-align: center;
-    
-    background: linear-gradient(114.74deg, #00D1FF 32.8%, #FF005D 60.56%);
+  width: 181px;
+  height: 60px;
+  font-family: Orbitron;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: 0%;
+  text-align: center;
 
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  background: linear-gradient(114.74deg, #00d1ff 32.8%, #ff005d 60.56%);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .ProcessmainSecondSec > div:nth-child(2) p:first-of-type {
-    width: 182px;
-    height: 60px;
-    
-    
-    font-family: Orbitron;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: 0%;
-    text-align: center;
-    
-    
-    background: linear-gradient(114.74deg, #00D1FF 32.8%, #FF005D 60.56%);
+  width: 182px;
+  height: 60px;
 
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  font-family: Orbitron;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: 0%;
+  text-align: center;
+
+  background: linear-gradient(114.74deg, #00d1ff 32.8%, #ff005d 60.56%);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .ProcessmainSecondSec > div:nth-child(3) p:first-of-type {
-    width: 181px;
-    height: 60px;
-    font-family: Orbitron;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 30px;
-    letter-spacing: 0%;
-    text-align: center;
-    
-    background: linear-gradient(114.74deg, #00D1FF 32.8%, #FF005D 60.56%);
+  width: 181px;
+  height: 60px;
+  font-family: Orbitron;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: 0%;
+  text-align: center;
 
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  background: linear-gradient(114.74deg, #00d1ff 32.8%, #ff005d 60.56%);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-.processbuttton{
-width: 1100px;
-height: 70px;
-border: none;
-background: linear-gradient(90.23deg, #FF005D 28%, #00D1FF 100%);
-box-shadow: 0px 0px 20px 0px #FF005D;
+.processbuttton {
+  width: 1100px;
+  height: 70px;
+  border: none;
+  background: linear-gradient(90.23deg, #ff005d 28%, #00d1ff 100%);
+  box-shadow: 0px 0px 20px 0px #ff005d;
 }
 
-.processbuttton p{
-width: 341px;
-height: 54px;
-font-family: Orbitron;
-font-weight: 700;
-font-size: 30px;
-line-height: 54px;
-letter-spacing: 0%;
-text-align: center;
-
+.processbuttton p {
+  width: 341px;
+  height: 54px;
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 54px;
+  letter-spacing: 0%;
+  text-align: center;
 }
 
-.CardContentItem{
- 
-border-width: 1px soild red;
-
+.CardContentItem {
+  border-width: 1px soild red;
 }
-
-

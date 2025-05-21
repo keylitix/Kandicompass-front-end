@@ -1,118 +1,109 @@
 .charmsMain {
-    width: 100%;
-   
-    background: #170F24;
+  width: 100%;
+
+  background: #170f24;
 }
 
 .charmsMainH3 {
-    font-family: Orbitron;
-    font-weight: 700;
-    font-size: 46px;
-    line-height: 52px;
-    letter-spacing: 0%;
-    text-align: center;
-    color: #FF005D;
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 52px;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #ff005d;
 }
 
 .charmsMainP {
-    font-family: Orbitron;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 20px;
-    letter-spacing: 0%;
-    color: #FFFFFF;
-    text-align: center;
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: #ffffff;
+  text-align: center;
 }
 
 .charmsMainCard {
-    text-align: center;
+  text-align: center;
 }
 
 .firstChild1 {
-    width: 320px;
-    height: 248px;
-    border: 1px solid #FF005D;
-    background: #000000CC;
-    
-   
+  width: 320px;
+  height: 248px;
+  border: 1px solid #ff005d;
+  background: #000000cc;
 }
 
-.firstChild1Button{
-    width: 153px;
-height: 42px;
-border: none;
-background: linear-gradient(95.11deg, #FF005D 26.34%, #00D1FF 101.31%);
-box-shadow: 0px 0px 20px 0px #F906D6B2;
-
+.firstChild1Button {
+  width: 153px;
+  height: 42px;
+  border: none;
+  background: linear-gradient(95.11deg, #ff005d 26.34%, #00d1ff 101.31%);
+  box-shadow: 0px 0px 20px 0px #f906d6b2;
 }
 
 .secondChild2 {
-    width: 320px;
-    height: 248px;
-    background: #FFFFFF1A;
-
+  width: 320px;
+  height: 248px;
+  background: #ffffff1a;
 }
 
 .secondChild {
-    width: 320px;
-    height: 516px;
-    background: #FFFFFF1A;
-
+  width: 320px;
+  height: 516px;
+  background: #ffffff1a;
 }
 
-.thiirdChild1{
-    width: 320px;
-    height: 248px;
-    background: #FFFFFF1A;
-   
+.thiirdChild1 {
+  width: 320px;
+  height: 248px;
+  background: #ffffff1a;
 }
 
-.thiirdChild2{
-    width: 320px;
-    height: 248px;
-    background: #FFFFFF1A;
+.thiirdChild2 {
+  width: 320px;
+  height: 248px;
+  background: #ffffff1a;
 }
 
-.charmsBottom h3{
-    font-family: Orbitron;
-font-weight: 700;
-font-size: 46px;
-line-height: 52px;
-letter-spacing: 0%;
-text-align: center;
-color: #FF005D;
-
+.charmsBottom h3 {
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 52px;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #ff005d;
 }
 
-.charmsBottom p{
-    font-family: Orbitron;
-font-weight: 700;
-font-size: 20px;
-line-height: 20px;
-letter-spacing: 0%;
-text-align: center;
-color: #FFFFFF;
-
+.charmsBottom p {
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #ffffff;
 }
 
-.charmsBottomInput input{
-    width: 610px;
-    height: 54px;
-    background: #D9D9D91A;
-    border: none;
-    box-shadow: none;
+.charmsBottomInput input {
+  width: 610px;
+  height: 54px;
+  background: #d9d9d91a;
+  border: none;
+  box-shadow: none;
 }
 
-.charmsBottom button{
-    width: 212px;
-    height: 54px;
-    padding: 1px 49px;
-    color: #FFFFFF;
-    transition-duration: 200ms;
+.charmsBottom button {
+  width: 212px;
+  height: 54px;
+  padding: 1px 49px;
+  color: #ffffff;
+  transition-duration: 200ms;
 }
 
-.charmsBottom button:hover{
-    background: linear-gradient(95.82deg, #FF005D 45.34%, #00D1FF 80.04%);
-    box-shadow: 0px 0px 20px 0px #F906D6B2;
-
+.charmsBottom button:hover {
+  background: linear-gradient(95.82deg, #ff005d 45.34%, #00d1ff 80.04%);
+  box-shadow: 0px 0px 20px 0px #f906d6b2;
 }

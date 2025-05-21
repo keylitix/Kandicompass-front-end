@@ -14,7 +14,7 @@ const ThreadPage = () => {
     if (threadId) {
       fetch(`/api/threads/${threadId}`)
         .then((response) => response.json())
-        .then((data ) => {
+        .then((data) => {
           if (data.status === 'approved') {
             setThreadStatus('approved');
             setMessage('Thread is approved and you are now part of it!');
@@ -50,9 +50,7 @@ const ThreadPage = () => {
     <div>
       <h1>Thread {threadId}</h1>
       <p>{message}</p>
-      {!isPartOfThread && (
-        <button onClick={handleScan}>Scan QR Code</button>
-      )}
+      {!isPartOfThread && <button onClick={handleScan}>Scan QR Code</button>}
       {isPartOfThread && (
         <div>
           <h2>Welcome to the Thread!</h2>

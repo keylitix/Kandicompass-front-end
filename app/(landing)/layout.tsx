@@ -1,9 +1,5 @@
-const LayoutLandingPage = ({children}:{children:React.ReactNode}) =>{
-    return(
-        <div>
-            {children}
-        </div>
-    )
-}
+const LayoutLandingPage = ({ children }: { children: React.ReactNode }) => {
+  return <div>{children}</div>;
+};
 
-export default LayoutLandingPage
+export default LayoutLandingPage;

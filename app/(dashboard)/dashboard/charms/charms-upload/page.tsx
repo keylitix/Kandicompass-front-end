@@ -1,14 +1,13 @@
-import DCharmUpload from '@/app/(dashboard)/-dComponnets/DCharmUpload/DCharmUpload'
-import React from 'react'
+import DCharmUpload from '@/app/(dashboard)/-dComponnets/DCharmUpload/DCharmUpload';
+import React from 'react';
 
 const CharmUpload = () => {
   return (
     <div>
-        <DCharmUpload/>
+      <DCharmUpload />
     </div>
-  )
-}
+  );
+};
 
-
-<div className=""></div>
-export default CharmUpload
+<div className=""></div>;
+export default CharmUpload;

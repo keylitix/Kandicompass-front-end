@@ -9,6 +9,7 @@ type GradientButtonProps = {
   icon?: LucideIcon;
   href?: string;
   children: React.ReactNode;
+  type?: 'button' | 'submit' | 'reset';
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const GradientButton: React.FC<GradientButtonProps> = ({
@@ -17,15 +18,20 @@ export const GradientButton: React.FC<GradientButtonProps> = ({
   href,
   children,
   className = '',
+  type = 'button',
   ...props
 }) => {
   const content = (
     <button
+      type={type}
+      {...(href ? {} : { role: 'button' })}
       {...props}
       className={`flex items-center font-semibold transition-all cursor-pointer
-        ${variant === 'fill'
-          ? 'border border-transparent bg-gradient-to-r from-[#FF005D] to-[#00D1FF] text-white px-4 py-2 rounded-lg hover:opacity-90'
-          : 'p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] rounded-lg'}
+        ${
+          variant === 'fill'
+            ? 'border border-transparent bg-gradient-to-r from-[#FF005D] to-[#00D1FF] text-white px-4 py-2 rounded-lg hover:opacity-90'
+            : 'p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] rounded-lg'
+        }
         ${className}`}
     >
       {variant === 'outline' ? (

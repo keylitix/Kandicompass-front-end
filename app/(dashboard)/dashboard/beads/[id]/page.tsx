@@ -1,11 +1,11 @@
 'use client';
 import { BeadDetail } from '@/app/_components/beads/BeadDetail';
-import { mockBeads } from '@/app/_components/dashboard/YourThreads';
+// import { mockBeads } from '@/app/_components/dashboard/YourThreads';
 import { Bead } from '@/app/types/common';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
- const BeadDetailPage: React.FC = () => {
+const BeadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [bead, setBead] = useState<Bead | null>(null);
   const [loading, setLoading] = useState(true);
@@ -16,11 +16,11 @@ import React, { useEffect, useState } from 'react';
       setLoading(true);
       try {
         // In a real app, this would be an API call
-        const foundBead = mockBeads.find(b => b.id === id);
-        
+        const foundBead = null;
+
         // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         if (foundBead) {
           setBead(foundBead);
         }
@@ -47,9 +47,14 @@ import React, { useEffect, useState } from 'react';
   if (!bead) {
     return (
       <div className="bg-cosmic-card backdrop-blur-md rounded-xl overflow-hidden border border-cosmic-glow border-opacity-20 p-8 text-center">
-        <h2 className="text-xl font-semibold text-cosmic-accent mb-2">Bead Not Found</h2>
-        <p className="text-cosmic-text-secondary mb-4">The bead you're looking for does not exist or has been transferred to another dimension.</p>
-        <button 
+        <h2 className="text-xl font-semibold text-cosmic-accent mb-2">
+          Bead Not Found
+        </h2>
+        <p className="text-cosmic-text-secondary mb-4">
+          The bead you're looking for does not exist or has been transferred to
+          another dimension.
+        </p>
+        <button
           onClick={() => window.history.back()}
           className="bg-cosmic-accent text-white px-4 py-2 rounded-lg hover:bg-cosmic-glow transition-colors"
         >

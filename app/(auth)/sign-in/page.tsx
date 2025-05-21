@@ -1,13 +1,12 @@
-
-import SIgnIn from '@/app/_components/Auth/SignIn'
-import React from 'react'
+import SIgnIn from '@/app/_components/Auth/SignIn';
+import React from 'react';
 
 const Authpage = () => {
   return (
     <div>
-        <SIgnIn/>
+      <SIgnIn />
     </div>
-  )
-}
+  );
+};
 
-export default Authpage
+export default Authpage;

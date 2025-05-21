@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import avatar from "@/public/User.svg";
+import Image from 'next/image';
+import avatar from '@/public/User.svg';
 
 const users = [
-  "John Wick",
-  "Vickie",
-  "John Wick",
-  "John Wick",
-  "Vickie",
-  "John Wick",
-  "Vickie",
-  "Alice",
-  "Bob",
-  "Charlie",
-  "Diana",
-  "Eve"
+  'John Wick',
+  'Vickie',
+  'John Wick',
+  'John Wick',
+  'Vickie',
+  'John Wick',
+  'Vickie',
+  'Alice',
+  'Bob',
+  'Charlie',
+  'Diana',
+  'Eve',
 ];
 
 const RightSection = () => {

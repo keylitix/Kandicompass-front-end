@@ -1,9 +1,8 @@
 // app/threadcharm/page.tsx
-import { Metadata } from "next";
-import { META } from "@/lib/meta";
-import LeftSection from "@/app/_components/dashboard/LeftSection";
-import RightSection from "@/app/_components/dashboard/RightSection";
-
+import { Metadata } from 'next';
+import { META } from '@/lib/meta';
+import LeftSection from '@/app/_components/dashboard/LeftSection';
+import RightSection from '@/app/_components/dashboard/RightSection';
 
 export const metadata: Metadata = META.HOME;
 

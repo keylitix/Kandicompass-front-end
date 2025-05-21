@@ -1,18 +1,20 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState, useRef } from "react";
-import { Globe, Heart, MessageSquareText, Send } from "lucide-react";
+import Image from 'next/image';
+import { useState, useRef } from 'react';
+import { Globe, Heart, MessageSquareText, Send } from 'lucide-react';
 
-import avatar from "@/public/User.svg";
-import threadURL from "@/public/thred.svg";
-import Link from "next/link";
+import avatar from '@/public/User.svg';
+import threadURL from '@/public/thred.svg';
+import Link from 'next/link';
 
 const LeftSection = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState<{ id: number; text: string; liked: boolean }[]>([]);
-  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState<
+    { id: number; text: string; liked: boolean }[]
+  >([]);
+  const [newComment, setNewComment] = useState('');
   const commentBoxRef = useRef<HTMLDivElement>(null);
 
   const toggleLike = () => setIsLiked((prev) => !prev);
@@ -20,7 +22,10 @@ const LeftSection = () => {
   const toggleComments = () => {
     setShowComments((prev) => !prev);
     setTimeout(() => {
-      commentBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      commentBoxRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }, 100);
   };
 
@@ -30,7 +35,7 @@ const LeftSection = () => {
       ...prev,
       { id: Date.now(), text: newComment.trim(), liked: false },
     ]);
-    setNewComment("");
+    setNewComment('');
   };
 
   const toggleCommentLike = (commentId: number) => {
@@ -38,8 +43,8 @@ const LeftSection = () => {
       prev.map((comment) =>
         comment.id === commentId
           ? { ...comment, liked: !comment.liked }
-          : comment
-      )
+          : comment,
+      ),
     );
   };
 
@@ -70,14 +75,14 @@ const LeftSection = () => {
         </p>
 
         <div className="w-full h-80 relative mb-4   rounded-md">
-         <Link href={`/dashboard/charms`}>
-          <Image
-            src={threadURL}
-            alt="Thread Charm"
-            fill
-            className="object-contain p-4"
-          />
-         </Link>
+          <Link href={`/dashboard/charms`}>
+            <Image
+              src={threadURL}
+              alt="Thread Charm"
+              fill
+              className="object-contain p-4"
+            />
+          </Link>
         </div>
 
         <div className="flex justify-around text-center border-t border-[#2c1a45] pt-4 text-sm">
@@ -106,18 +111,26 @@ const LeftSection = () => {
         </div>
 
         {showComments && (
-          <div ref={commentBoxRef} className="mt-4 bg-white/10 p-4 rounded-md space-y-4">
+          <div
+            ref={commentBoxRef}
+            className="mt-4 bg-white/10 p-4 rounded-md space-y-4"
+          >
             <div className="space-y-2 max-h-60 overflow-y-auto pr-2 custom-scroll">
               {comments.length === 0 ? (
-                <p className="text-sm italic text-white/70 text-center py-4">No comments yet. Be the first to comment!</p>
+                <p className="text-sm italic text-white/70 text-center py-4">
+                  No comments yet. Be the first to comment!
+                </p>
               ) : (
                 comments.map((comment) => (
-                  <div key={comment.id} className="flex justify-between items-start text-sm bg-white/5 p-3 rounded-md">
+                  <div
+                    key={comment.id}
+                    className="flex justify-between items-start text-sm bg-white/5 p-3 rounded-md"
+                  >
                     <p>{comment.text}</p>
                     <Heart
                       size={16}
-                      color={comment.liked ? "red" : "white"}
-                      fill={comment.liked ? "red" : "none"}
+                      color={comment.liked ? 'red' : 'white'}
+                      fill={comment.liked ? 'red' : 'none'}
                       onClick={() => toggleCommentLike(comment.id)}
                       className="cursor-pointer mt-1 transition-transform hover:scale-125"
                     />

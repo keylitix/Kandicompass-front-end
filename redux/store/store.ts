@@ -26,12 +26,8 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, 
-    }).concat(
-      beadApi.middleware,
-      userApi.middleware,
-      threadApi.middleware
-    ),
+      serializableCheck: false,
+    }).concat(beadApi.middleware, userApi.middleware, threadApi.middleware),
 });
 
 export const persistor = persistStore(store);

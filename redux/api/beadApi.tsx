@@ -1,9 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
+import { CORE_BACKEND_URL } from '@/helper/path';
+import { CreateBeadRequest } from '@/app/types/bead';
 
 interface IBead {
   avatar: any;
-  data: any;
+  data: {
+    data: any
+  };
   _id?: string;
   beadName: string;
   beadType: string;
@@ -40,21 +44,25 @@ interface IUploadImageResponse {
 
 export const beadApi = createApi({
   reducerPath: 'beadApi',
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: 'https://kandi-backend.cradle.services/',
+  baseQuery: fetchBaseQuery({
+    baseUrl: CORE_BACKEND_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
       return headers;
-    }
+    },
   }),
   tagTypes: ['Bead'],
   endpoints: (builder) => ({
     // Get all beads with pagination
-    getBeads: builder.query<{ data: IBead[] }, { page_number: number; page_size: number }>({
-      query: ({ page_number, page_size }) => `beads/getall?page_number=${page_number}&page_size=${page_size}`,
+    getBeads: builder.query<
+      { data: IBead[] },
+      { page_number: number; page_size: number }
+    >({
+      query: ({ page_number, page_size }) =>
+        `beads/getall?page_number=${page_number}&page_size=${page_size}`,
       providesTags: ['Bead'],
     }),
 
@@ -64,8 +72,16 @@ export const beadApi = createApi({
       providesTags: (result, error, id) => [{ type: 'Bead', id }],
     }),
 
+    //Get bead by threadId  beads/by-thread
+getBeadByThreadId: builder.query<any, { threadId: string; page_number: number; page_size: number }>({
+      query: ({ threadId, page_number, page_size }) =>
+        `beads/by-thread/${threadId}?page_no=${page_number}&page_size=${page_size}`,
+
+      providesTags: ['Bead'],
+    }),
+
     // Create new bead
-    addBead: builder.mutation<IBead, Partial<IBead>>({
+    addBead: builder.mutation<any, Partial<CreateBeadRequest>>({
       query: (body) => ({
         url: 'beads/create',
         method: 'POST',
@@ -94,17 +110,23 @@ export const beadApi = createApi({
     }),
 
     // Upload image for specific bead
-    uploadBeadImage: builder.mutation<IUploadImageResponse, { beadId: string; formData: FormData }>({
+uploadBeadImage: builder.mutation<any, { beadId: string; formData: FormData }>({
+
       query: ({ beadId, formData }) => ({
         url: `beads/uploadImage/${beadId}`,
         method: 'POST',
         body: formData,
       }),
-      invalidatesTags: (result, error, { beadId }) => [{ type: 'Bead', id: beadId }],
+      invalidatesTags: (result, error, { beadId }) => [
+        { type: 'Bead', id: beadId },
+      ],
     }),
 
     // Combined create bead with image upload
-    createBeadWithImage: builder.mutation<IBead, { beadData: Partial<IBead>; imageFile: File | null }>({
+    createBeadWithImage: builder.mutation<
+      IBead,
+      { beadData: Partial<IBead>; imageFile: File | null }
+    >({
       async queryFn({ beadData, imageFile }, api, extraOptions, baseQuery) {
         // Step 1: Create the bead
         const beadResult = await baseQuery({
@@ -123,7 +145,7 @@ export const beadApi = createApi({
         if (imageFile && newBead._id) {
           const formData = new FormData();
           formData.append('image', imageFile);
-          
+
           const imageResult = await baseQuery({
             url: `beads/uploadImage/${newBead._id}`,
             method: 'POST',
@@ -155,9 +177,10 @@ export const beadApi = createApi({
 export const {
   useGetBeadsQuery,
   useGetBeadByIdQuery,
+  useGetBeadByThreadIdQuery,
   useAddBeadMutation,
   useUpdateBeadMutation,
-  useDeleteBeadMutation,                                          
+  useDeleteBeadMutation,
   useUploadBeadImageMutation,
   useCreateBeadWithImageMutation,
 } = beadApi;

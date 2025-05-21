@@ -1,13 +1,12 @@
-
-import SIgnUp from '@/app/_components/Auth/SignUp'
-import React from 'react'
+import SIgnUp from '@/app/_components/Auth/SignUp';
+import React from 'react';
 
 const Authpage = () => {
   return (
     <div>
-        <SIgnUp/>
+      <SIgnUp />
     </div>
-  )
-}
+  );
+};
 
-export default Authpage
+export default Authpage;

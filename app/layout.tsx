@@ -1,12 +1,11 @@
-
-import type { Metadata } from "next";
-import { Orbitron, Montserrat } from "next/font/google";
-import "./globals.css";
-import { Providers } from "./providers";
+import type { Metadata } from 'next';
+import { Orbitron, Montserrat } from 'next/font/google';
+import './globals.css';
+import { Providers } from './providers';
 
 const orbitron = Orbitron({
-  subsets: ["latin"],
-  weight: ["400", "900"],
+  subsets: ['latin'],
+  weight: ['400', '900'],
 });
 
 const montserrat = Montserrat({
@@ -16,8 +15,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Kandi Compass",
-  description: "",
+  title: 'Kandi Compass',
+  description: '',
 };
 
 export default function RootLayout({
@@ -27,10 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${orbitron.className} ${montserrat.variable}  antialiased`}>
-        <Providers>
-          {children}
-        </Providers>
+      <body
+        className={`${orbitron.className} ${montserrat.variable}  antialiased`}
+      >
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

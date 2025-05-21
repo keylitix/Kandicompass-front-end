@@ -1,12 +1,12 @@
-"use client";
-import { Lock, User, Facebook, Globe, Mail } from "lucide-react";
-import "./SignUp.css";
-import Link from "next/link";
-import { useCreateUserMutation } from "@/redux/api/userApi";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+'use client';
+import { Lock, User, Facebook, Globe, Mail } from 'lucide-react';
+import './SignUp.css';
+import Link from 'next/link';
+import { useCreateUserMutation } from '@/redux/api/userApi';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast and ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
 
 export default function SignUp() {
   const [createUser, { isLoading, error }] = useCreateUserMutation();
@@ -20,9 +20,9 @@ export default function SignUp() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -33,7 +33,7 @@ export default function SignUp() {
       console.log('User created:', response.user);
 
       // Show success toast
-      toast.success("Account created successfully! Redirecting to login...");
+      toast.success('Account created successfully! Redirecting to login...');
 
       // Navigate to sign-in page after 2 seconds to display the toast
       setTimeout(() => {
@@ -41,15 +41,17 @@ export default function SignUp() {
       }, 2000);
     } catch (err) {
       console.error('Signup failed:', err);
-      toast.error("Signup failed. Please try again.");
+      toast.error('Signup failed. Please try again.');
     }
   };
 
   return (
     <div className="authMain flex items-center justify-center h-screen">
       <div className="authMainFirstSec bg-transparent border border-white/30 rounded-lg p-8 w-[400px] backdrop-blur-md">
-        <p className="text-center font-semibold text-white text-[32px]">Sign Up</p>
-        
+        <p className="text-center font-semibold text-white text-[32px]">
+          Sign Up
+        </p>
+
         <form onSubmit={handleSubmit}>
           {/* Full Name */}
           <div className="relative w-[350px] h-[54px] mt-6">
@@ -117,16 +119,15 @@ export default function SignUp() {
 
           {/* Terms Checkbox */}
           <label className="text-white flex items-center space-x-2 mt-4">
-            <input 
-              type="checkbox" 
-              className="accent-white" 
-              required 
-            />
-            <span>I agree with your <Link href='/terms-and-conditions'>Terms and Conditions</Link>.</span>
+            <input type="checkbox" className="accent-white" required />
+            <span>
+              I agree with your{' '}
+              <Link href="/terms-and-conditions">Terms and Conditions</Link>.
+            </span>
           </label>
 
           {/* Submit Button */}
-          <button 
+          <button
             type="submit"
             disabled={isLoading}
             className={`authLogiButton p-4 w-[350px] h-[54px] mt-6 text-white cursor-pointer font-semibold border border-white/60 rounded-sm flex items-center justify-center transition-colors ${
@@ -139,9 +140,9 @@ export default function SignUp() {
           {/* Error Message */}
           {error && (
             <p className="text-red-500 mt-2 text-center">
-              {('data' in error) ? 
-                (error.data as { message: string }).message : 
-                'Signup failed. Please try again.'}
+              {'data' in error
+                ? (error.data as { message: string }).message
+                : 'Signup failed. Please try again.'}
             </p>
           )}
         </form>
@@ -163,13 +164,13 @@ export default function SignUp() {
 
         {/* Social Login */}
         <div className="flex justify-center space-x-6">
-          <button 
+          <button
             type="button"
             className="w-10 h-10 flex items-center justify-center border border-white/60 rounded-full hover:bg-white/10 transition-colors"
           >
             <Facebook className="w-6 h-6 text-white" />
           </button>
-          <button 
+          <button
             type="button"
             className="w-10 h-10 flex items-center justify-center border border-white/60 rounded-full hover:bg-white/10 transition-colors"
           >

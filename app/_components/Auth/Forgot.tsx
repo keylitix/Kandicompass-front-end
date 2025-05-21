@@ -1,13 +1,11 @@
-import { Facebook, Globe, Mail } from "lucide-react";
-import Link from "next/link";
+import { Facebook, Globe, Mail } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Forgot() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden">
       {/* Background image with overlay */}
-      <div 
-        className="absolute inset-0 bg-[url('/AuthBackground.svg')] bg-cover bg-center"
-      ></div>
+      <div className="absolute inset-0 bg-[url('/AuthBackground.svg')] bg-cover bg-center"></div>
       <div className="absolute inset-0 bg-black/60 z-10"></div>
 
       {/* Main content container */}
@@ -16,7 +14,8 @@ export default function Forgot() {
           Forgot Password
         </h1>
         <p className="text-center text-white mt-2 text-sm sm:text-base">
-          Enter the email address associated with your account, and we'll send you a link to reset your password.
+          Enter the email address associated with your account, and we'll send
+          you a link to reset your password.
         </p>
 
         <div className="relative w-full h-[54px] mt-4">

@@ -1,12 +1,12 @@
-import React from 'react'
-import AccountPage from '../../../(auth)/DAccount/Account'
+import React from 'react';
+import AccountPage from '../../../(auth)/DAccount/Account';
 
 const page = () => {
   return (
     <div>
-        <AccountPage/>
+      <AccountPage />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

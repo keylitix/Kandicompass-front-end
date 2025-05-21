@@ -1,0 +1,2 @@
+const CORE_BACKEND_URL = process.env.NEXT_PUBLIC_CORE_BACKEND_URL;
+export { CORE_BACKEND_URL };

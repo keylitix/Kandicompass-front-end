@@ -1,56 +1,52 @@
 .dashboardHomeFirstP {
-    font-family: Orbitron;
-    font-weight: 700;
-    font-size: 46px;
-    line-height: 52px;
-    letter-spacing: 0%;
-    background: linear-gradient(90.49deg, #FF005D 43.89%, #00D1FF 84.81%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    transition: color 0.3s ease;
+  font-family: Orbitron;
+  font-weight: 700;
+  font-size: 46px;
+  line-height: 52px;
+  letter-spacing: 0%;
+  background: linear-gradient(90.49deg, #ff005d 43.89%, #00d1ff 84.81%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: color 0.3s ease;
 }
 
 .dashboardHomeSecondP {
-    width: 806px;
-    height: 80px;
-
-
+  width: 806px;
+  height: 80px;
 }
 
 .dashboardHome {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .Dcard {
-    width: 260px;
-    height: 329px;
-    background: #2b164f;
-
+  width: 260px;
+  height: 329px;
+  background: #2b164f;
 }
-.Dcard button{
-    width: 153px;
-height: 42px;
-border: 1px solid #FFFFFF
+.Dcard button {
+  width: 153px;
+  height: 42px;
+  border: 1px solid #ffffff;
 }
 
-.Dcard button p{
-    font-family: Orbitron;
-font-weight: 600;
-font-size: 12px;
-line-height: 52px;
-letter-spacing: 0%;
-text-align: center;
-text-transform: uppercase;
-
+.Dcard button p {
+  font-family: Orbitron;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 52px;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: uppercase;
 }
-.dashboardButton{
-    width: 153px;
-height: 42px;
-border: 1px solid #FFFFFF;
-color: white;
-padding: 16px 17px;
-margin-top: 100px;
+.dashboardButton {
+  width: 153px;
+  height: 42px;
+  border: 1px solid #ffffff;
+  color: white;
+  padding: 16px 17px;
+  margin-top: 100px;
 }

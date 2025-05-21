@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
-
-const API_URL = "https://kandi-backend.cradle.services/User";
+import { CORE_BACKEND_URL } from '@/helper/path';
 
 export interface User {
   fullName: string;
@@ -25,24 +24,27 @@ export interface LoginRequest {
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: API_URL,
-     prepareHeaders: (headers, { getState }) => {
-       const token = (getState() as RootState).auth.token;
+  baseQuery: fetchBaseQuery({
+    baseUrl: CORE_BACKEND_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
       return headers;
-    }
+    },
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
-    createUser: builder.mutation<{ 
-      user: User & { id: string };
-      message: string;
-    }, User>({
+    createUser: builder.mutation<
+      {
+        user: User & { id: string };
+        message: string;
+      },
+      User
+    >({
       query: (user) => ({
-        url: '/create',
+        url: 'User/create',
         method: 'POST',
         body: user,
       }),
@@ -50,7 +52,7 @@ export const userApi = createApi({
     }),
     loginUser: builder.mutation<any, any>({
       query: (credentials) => ({
-        url: '/login', 
+        url: 'User/login',
         method: 'POST',
         body: credentials,
       }),
@@ -58,7 +60,4 @@ export const userApi = createApi({
   }),
 });
 
-export const { 
-  useCreateUserMutation,
-  useLoginUserMutation 
-} = userApi;
+export const { useCreateUserMutation, useLoginUserMutation } = userApi;

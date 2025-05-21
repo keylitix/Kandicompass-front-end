@@ -1,12 +1,12 @@
-import React from 'react'
-import Home from '../../-dComponnets/DHome/Home'
+import React from 'react';
+import Home from '../../-dComponnets/DHome/Home';
 
 const Charmspage = () => {
   return (
     <div>
-      <Home/>
+      <Home />
     </div>
-  )
-}
+  );
+};
 
-export default Charmspage
+export default Charmspage;

@@ -2,10 +2,10 @@
 
 Welcome to **Kandi Compass**, a platform designed to explore, collect, and share unique beads with a vibrant community. This app is built with **Next.js** and provides an immersive user experience for bead enthusiasts, collectors, and storytellers.
 
-
 ## About
 
 Kandi Compass is a bead collection and storytelling platform where users can:
+
 - View detailed bead profiles with origin stories and ownership history.
 - Interact with the community through stories and reviews.
 - Explore 3D visualizations of beads and their ownership timeline.
@@ -33,7 +33,9 @@ Kandi Compass is a bead collection and storytelling platform where users can:
 ## Installation
 
 ### Prerequisites
+
 Make sure you have the following installed on your system:
+
 - [Node.js](https://nodejs.org/) (version 18.0 or later)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) package manager
 
@@ -42,3 +44,4 @@ Make sure you have the following installed on your system:
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/kandi-compass.git
+   ```

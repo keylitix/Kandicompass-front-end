@@ -1,33 +1,33 @@
-"use client";
-import { Lock, User, Facebook, Globe } from "lucide-react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useLoginUserMutation } from "@/redux/api/userApi";
-import { toast, ToastContainer } from "react-toastify";
-import Link from "next/link";
-import "react-toastify/dist/ReactToastify.css";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store/store";
-import { setUser } from "@/redux/slice/UserSlice";
+'use client';
+import { Lock, User, Facebook, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLoginUserMutation } from '@/redux/api/userApi';
+import { toast, ToastContainer } from 'react-toastify';
+import Link from 'next/link';
+import 'react-toastify/dist/ReactToastify.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store/store';
+import { setUser } from '@/redux/slice/UserSlice';
 
 export default function SignIn() {
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: 'User@gmail.com',
-    password: 'User@123'
+    email: 'sahil@gmail.com',
+    password: '@Charri184',
   });
   const dispatch = useDispatch<AppDispatch>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -42,12 +42,12 @@ export default function SignIn() {
           body: JSON.stringify({ token: response.data.token }),
         });
         dispatch(setUser(response.data));
-        toast.success("Login successful! Redirecting...");
+        toast.success('Login successful! Redirecting...');
         router.push('/dashboard');
       }
     } catch (err) {
       console.error('Login failed:', err);
-      toast.error("Login failed. Please check your credentials.");
+      toast.error('Login failed. Please check your credentials.');
     } finally {
       router.push('/dashboard');
     }
@@ -69,7 +69,11 @@ export default function SignIn() {
             Log In
           </h1>
 
-          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+            autoComplete="off"
+          >
             <div className="space-y-4">
               <div className="relative">
                 <Input
@@ -104,7 +108,10 @@ export default function SignIn() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
               <div className="flex items-center space-x-2">
                 <Checkbox id="remember-me" className="border-white/60" />
-                <Label htmlFor="remember-me" className="text-white cursor-pointer text-sm sm:text-base">
+                <Label
+                  htmlFor="remember-me"
+                  className="text-white cursor-pointer text-sm sm:text-base"
+                >
                   Remember me
                 </Label>
               </div>
@@ -119,10 +126,11 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isLoading}
-              className={`w-full h-12 mt-2 text-white font-semibold border border-white/60 rounded-sm ${isLoading
-                ? 'opacity-70'
-                : 'hover:bg-gradient-to-r from-[#FF005D] to-[#00D1FF] hover:shadow-[0_0_20px_0_rgba(249,6,214,0.7)]'
-                }`}
+              className={`w-full h-12 mt-2 text-white font-semibold border border-white/60 rounded-sm ${
+                isLoading
+                  ? 'opacity-70'
+                  : 'hover:bg-gradient-to-r from-[#FF005D] to-[#00D1FF] hover:shadow-[0_0_20px_0_rgba(249,6,214,0.7)]'
+              }`}
             >
               {isLoading ? 'LOGGING IN...' : 'LOG IN'}
             </Button>

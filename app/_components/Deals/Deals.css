@@ -43,23 +43,26 @@
     color: white;
 } */
 
-
 .dealsMain {
-    background-image: url(../../../public/innerImage.svgg.svg), url(../../../public/outsideImage.svg);
-    background-size: cover;
-    background-position: left top, left top;
-    background-repeat: no-repeat, repeat;
+  background-image:
+    url(../../../public/innerImage.svgg.svg),
+    url(../../../public/outsideImage.svg);
+  background-size: cover;
+  background-position:
+    left top,
+    left top;
+  background-repeat: no-repeat, repeat;
 }
 
 .dealsMainP {
-    font-family: Orbitron;
-    font-weight: 700;
-    line-height: 1.1;
-    color: #FF005D;
+  font-family: Orbitron;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ff005d;
 }
 
 .dealsMainItemP {
-    font-family: Orbitron;
-    color: #FFFFFF;
-    text-transform: capitalize;
+  font-family: Orbitron;
+  color: #ffffff;
+  text-transform: capitalize;
 }
