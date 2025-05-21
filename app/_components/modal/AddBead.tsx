@@ -330,8 +330,6 @@
 
 // export default AddBead;
 
-
-
 import { useFormik } from 'formik';
 import {
   Dialog,
@@ -346,7 +344,11 @@ import { useAppSelector } from '@/app/hook/useReduxApp';
 import ImageUpload from '../custom-ui/ImageUpload';
 import CustomSelect from '../custom-ui/Select';
 import { CreateBeadRequest } from '@/app/types/bead';
-import { useAddBeadMutation, useDeleteBeadMutation, useUploadBeadImageMutation } from '@/redux/api/beadApi';
+import {
+  useAddBeadMutation,
+  useDeleteBeadMutation,
+  useUploadBeadImageMutation,
+} from '@/redux/api/beadApi';
 import Input from '../custom-ui/Input';
 
 interface UploadedFile {
@@ -436,8 +438,8 @@ const AddBead: React.FC<AddThreadProps> = ({
         // First create the bead
         const beadResponse = await addBead(values).unwrap();
 
-        console.log('beadResponse========', beadResponse)
-        debugger
+        console.log('beadResponse========', beadResponse);
+        debugger;
         if (!beadResponse?.isSuccess || !beadResponse.data?._id) {
           throw new Error('Failed to create bead');
         }
@@ -447,17 +449,16 @@ const AddBead: React.FC<AddThreadProps> = ({
         // If there are images to upload
         if (uploadedFiles.length > 0) {
           setIsUploadingImages(true);
-          
+
           const formData = new FormData();
           uploadedFiles.forEach((fileObj) => {
             formData.append('files', fileObj.file);
           });
-          
-          
+
           // Upload images
           const uploadResponse = await uploadBeadImage({
             beadId,
-            formData
+            formData,
           }).unwrap();
 
           if (!uploadResponse?.isSuccess) {
@@ -481,7 +482,7 @@ const AddBead: React.FC<AddThreadProps> = ({
     },
   });
 
-  console.log('jljdljlfjdljlfm', uploadedFiles)
+  console.log('jljdljlfjdljlfm', uploadedFiles);
 
   const handleFileChange = (files: File[]) => {
     if (files && files.length > 0) {
@@ -626,7 +627,7 @@ const AddBead: React.FC<AddThreadProps> = ({
               acceptedFormats="image/jpeg, image/png"
               multiple={true}
             />
-            
+
             <div className="mt-4">
               <h3 className="text-white mb-2">Selected Files:</h3>
               <ul className="text-white space-y-2">

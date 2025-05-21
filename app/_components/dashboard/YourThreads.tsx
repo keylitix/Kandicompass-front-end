@@ -199,29 +199,29 @@ import AddThread from '../modal/AddThread';
 // ];
 
 // export const mockThreads: Thread[] = [
-  // {
-  //   id: 'thread1',
-  //   name: 'Galactic Treasures',
-  //   description:
-  //     'A collection of the rarest cosmic artifacts from across the universe',
-  //   ownerId: 'u1',
-  //   qrCode:
-  //     'https://api.qrserver.com/v1/create-qr-code/?data=thread1&size=200x200',
-  //   createdAt: '2024-05-01T10:00:00Z',
-  //   beads: mockBeads.filter((bead) => bead.threadId === 'thread1'),
+// {
+//   id: 'thread1',
+//   name: 'Galactic Treasures',
+//   description:
+//     'A collection of the rarest cosmic artifacts from across the universe',
+//   ownerId: 'u1',
+//   qrCode:
+//     'https://api.qrserver.com/v1/create-qr-code/?data=thread1&size=200x200',
+//   createdAt: '2024-05-01T10:00:00Z',
+//   beads: mockBeads.filter((bead) => bead.threadId === 'thread1'),
 
-  // },
-  // {
-  //   id: 'thread2',
-  //   name: 'Temporal Anomalies',
-  //   description: 'Items affected by time distortions and quantum fluctuations',
-  //   ownerId: 'u1',
-  //   qrCode:
-  //     'https://api.qrserver.com/v1/create-qr-code/?data=thread2&size=200x200',
-  //   createdAt: '2024-04-10T15:45:00Z',
-  //   beads: mockBeads.filter((bead) => bead.threadId === 'thread2'),
-  //   members: [mockUsers[0]],
-  // },
+// },
+// {
+//   id: 'thread2',
+//   name: 'Temporal Anomalies',
+//   description: 'Items affected by time distortions and quantum fluctuations',
+//   ownerId: 'u1',
+//   qrCode:
+//     'https://api.qrserver.com/v1/create-qr-code/?data=thread2&size=200x200',
+//   createdAt: '2024-04-10T15:45:00Z',
+//   beads: mockBeads.filter((bead) => bead.threadId === 'thread2'),
+//   members: [mockUsers[0]],
+// },
 // ];
 
 interface YourThreadsProps {
@@ -230,7 +230,11 @@ interface YourThreadsProps {
   isFetchingThreads: boolean;
 }
 
-export const YourThreads: React.FC<YourThreadsProps> = ({ threads, refetchThreads, isFetchingThreads }) => {
+export const YourThreads: React.FC<YourThreadsProps> = ({
+  threads,
+  refetchThreads,
+  isFetchingThreads,
+}) => {
   const router = useRouter();
   const { user } = useAppSelector((state) => state.auth);
   const [openThread, setOpenThread] = React.useState(false);
@@ -260,7 +264,9 @@ export const YourThreads: React.FC<YourThreadsProps> = ({ threads, refetchThread
         {ownedThreads &&
           ownedThreads
             .slice(0, 2)
-            .map((thread: any) => <ThreadCard key={thread._id} thread={thread} />)}
+            .map((thread: any) => (
+              <ThreadCard key={thread._id} thread={thread} />
+            ))}
 
         <div
           role="button"
@@ -307,7 +313,7 @@ export const YourThreads: React.FC<YourThreadsProps> = ({ threads, refetchThread
           </div>
         </>
       )}
-       <AddThread
+      <AddThread
         isOpen={openThread}
         onClose={() => setOpenThread(false)}
         refetchThreads={refetchThreads}
