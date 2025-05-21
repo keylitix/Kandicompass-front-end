@@ -11,7 +11,7 @@ interface BeadCardProps {
 export const BeadCard: React.FC<BeadCardProps> = ({ bead }) => {
   const route = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-console.log('bead==========', bead)
+  console.log('bead==========', bead);
   const handleClick = () => {
     route.push(`/dashboard/beads/${bead.id}`);
   };
@@ -62,9 +62,11 @@ console.log('bead==========', bead)
             {bead.beadName}
           </h3>
 
-         {bead.type && <span className="text-xs bg-[#00D1FF] bg-opacity-20 px-2 py-1 rounded-full text-[#8a86a0]">
-            {bead.type}
-          </span>} 
+          {bead.type && (
+            <span className="text-xs bg-[#00D1FF] bg-opacity-20 px-2 py-1 rounded-full text-[#8a86a0]">
+              {bead.type}
+            </span>
+          )}
         </div>
 
         <p className="text-[#8a86a0] text-sm mb-3 line-clamp-2">

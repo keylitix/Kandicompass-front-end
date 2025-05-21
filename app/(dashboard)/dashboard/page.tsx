@@ -30,7 +30,11 @@ const DashboardPage = () => {
           isFetchingThreads={isFetchingThreads}
         />
         <RecentActivity />
-        <YourThreads threads={threads?.data}   refetchThreads={refetchThreads} isFetchingThreads={isFetchingThreads} />
+        <YourThreads
+          threads={threads?.data}
+          refetchThreads={refetchThreads}
+          isFetchingThreads={isFetchingThreads}
+        />
         <div></div>
       </div>
       {/* <div className="flex justify-end mb-4">

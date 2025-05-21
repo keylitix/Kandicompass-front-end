@@ -6,7 +6,7 @@ import { CreateBeadRequest } from '@/app/types/bead';
 interface IBead {
   avatar: any;
   data: {
-    data: any
+    data: any;
   };
   _id?: string;
   beadName: string;
@@ -73,7 +73,10 @@ export const beadApi = createApi({
     }),
 
     //Get bead by threadId  beads/by-thread
-getBeadByThreadId: builder.query<any, { threadId: string; page_number: number; page_size: number }>({
+    getBeadByThreadId: builder.query<
+      any,
+      { threadId: string; page_number: number; page_size: number }
+    >({
       query: ({ threadId, page_number, page_size }) =>
         `beads/by-thread/${threadId}?page_no=${page_number}&page_size=${page_size}`,
 
@@ -110,8 +113,10 @@ getBeadByThreadId: builder.query<any, { threadId: string; page_number: number; p
     }),
 
     // Upload image for specific bead
-uploadBeadImage: builder.mutation<any, { beadId: string; formData: FormData }>({
-
+    uploadBeadImage: builder.mutation<
+      any,
+      { beadId: string; formData: FormData }
+    >({
       query: ({ beadId, formData }) => ({
         url: `beads/uploadImage/${beadId}`,
         method: 'POST',
