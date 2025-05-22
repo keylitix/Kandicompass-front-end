@@ -2,13 +2,20 @@
 import { BeadDetail } from '@/app/_components/beads/BeadDetail';
 // import { mockBeads } from '@/app/_components/dashboard/YourThreads';
 import { Bead } from '@/app/types/common';
+import { useGetBeadByIdQuery } from '@/redux/api/beadApi';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const BeadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [bead, setBead] = useState<Bead | null>(null);
+    const {data: beadData, isLoading: beadLoading} = useGetBeadByIdQuery(id);
+  const [_, setBead] = useState<Bead | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const bead = Array.isArray(beadData?.data) ? beadData.data[0] : [];
+
+  console.log('bead', bead)
+
 
   useEffect(() => {
     // Simulate API call
@@ -34,7 +41,7 @@ const BeadDetailPage: React.FC = () => {
     fetchBead();
   }, [id]);
 
-  if (loading) {
+  if (beadLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse-slow text-cosmic-glow">

@@ -57,7 +57,11 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
+    getAllUsers: builder.query<any, void>({
+      query: () => 'User/getAll',
+      providesTags: ['User'],
+    })
   }),
 });
 
-export const { useCreateUserMutation, useLoginUserMutation } = userApi;
+export const { useCreateUserMutation, useLoginUserMutation, useGetAllUsersQuery } = userApi;

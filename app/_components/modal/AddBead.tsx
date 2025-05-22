@@ -351,6 +351,8 @@ import {
 } from '@/redux/api/beadApi';
 import Input from '../custom-ui/Input';
 
+import { toast } from "sonner"
+
 interface UploadedFile {
   file: File;
   previewUrl: string;
@@ -435,56 +437,53 @@ const AddBead: React.FC<AddThreadProps> = ({
     enableReinitialize: true,
     onSubmit: async (values: CreateBeadRequest) => {
       try {
-        // First create the bead
         const beadResponse = await addBead(values).unwrap();
 
-        console.log('beadResponse========', beadResponse);
-        debugger;
         if (!beadResponse?.isSuccess || !beadResponse.data?._id) {
           throw new Error('Failed to create bead');
         }
 
         const beadId = beadResponse.data._id;
 
-        // If there are images to upload
         if (uploadedFiles.length > 0) {
           setIsUploadingImages(true);
 
           const formData = new FormData();
-          uploadedFiles.forEach((fileObj) => {
-            formData.append('files', fileObj.file);
+          uploadedFiles.forEach((uploaded, idx) => {
+            formData.append('files', uploaded.file);
           });
 
-          // Upload images
-          const uploadResponse = await uploadBeadImage({
-            beadId,
-            formData,
-          }).unwrap();
+          const uploadResponse = await uploadBeadImage({ beadId, formData }).unwrap();
 
-          if (!uploadResponse?.isSuccess) {
-            // If image upload fails, delete the bead we just created
+          if (!uploadResponse?._id) {
             await deleteBead(beadId);
             throw new Error('Failed to upload images');
           }
         }
 
-        // Success - close dialog and reset form
+        toast('Bead created successfully.');
         setUploadedFiles([]);
         refetchBeads?.();
         onClose();
         formik.resetForm();
       } catch (error) {
         console.error('Error creating bead:', error);
-        // Handle error (show toast, etc.)
-      } finally {
-        setIsUploadingImages(false);
+        toast((error as Error).message ?? 'Something went wrong.');
+        console.log('jljdljlfjdljlfm', uploadedFiles);
       }
-    },
+    }
   });
 
-  console.log('jljdljlfjdljlfm', uploadedFiles);
+  const handleRemoveFile = (index: number) => {
+    setUploadedFiles((prev) => {
+      const newFiles = [...prev];
+      URL.revokeObjectURL(newFiles[index].previewUrl);
+      newFiles.splice(index, 1);
+      return newFiles;
+    });
+  };
 
-  const handleFileChange = (files: File[]) => {
+  function handleFileChange(files: File[]): void {
     if (files && files.length > 0) {
       const newFiles = Array.from(files).map((file) => ({
         file,
@@ -492,17 +491,7 @@ const AddBead: React.FC<AddThreadProps> = ({
       }));
       setUploadedFiles((prev) => [...prev, ...newFiles]);
     }
-  };
-
-  const handleRemoveFile = (index: number) => {
-    setUploadedFiles((prev) => {
-      const newFiles = [...prev];
-      URL.revokeObjectURL(newFiles[index].previewUrl); // Clean up memory
-      newFiles.splice(index, 1);
-      return newFiles;
-    });
-  };
-
+  }
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -568,7 +557,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
-                  label="Size"
+                  label="Size (in MM)"
                   type="number"
                   placeholder="Enter bead size"
                   value={formik.values.size}
@@ -589,7 +578,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
-                  label="Weight"
+                  label="Weight (in Grams)"
                   type="number"
                   placeholder="Enter bead weight"
                   value={formik.values.weight}
@@ -613,6 +602,15 @@ const AddBead: React.FC<AddThreadProps> = ({
                   label="Product Code"
                   type="text"
                   placeholder="Enter product code"
+                  value={formik.values.pricePerUnit}
+                  onChange={formik.handleChange}
+                  name="productCode"
+                />
+
+                <Input
+                  label="price (Per Unit)"
+                  type="text"
+                  placeholder="Enter bead price"
                   value={formik.values.productCode}
                   onChange={formik.handleChange}
                   name="productCode"

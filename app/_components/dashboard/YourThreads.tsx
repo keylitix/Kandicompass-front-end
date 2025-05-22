@@ -240,10 +240,14 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
   const [openThread, setOpenThread] = React.useState(false);
   console.log('Threads:==============', threads);
   const ownedThreads = user
-    ? threads?.data?.filter((thread: any) => thread.ownerId[0]._id === user?.id)
+    ? threads?.data?.filter(
+        (thread: any) => thread?.ownerId[0]?._id === user?.id,
+      )
     : [];
   const joinedThreads = user
-    ? threads?.data?.filter((thread: any) => thread.ownerId[0]._id !== user?.id)
+    ? threads?.data?.filter(
+        (thread: any) => thread?.ownerId[0]?._id !== user?.id,
+      )
     : [];
 
   return (
@@ -298,16 +302,18 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
             <h2 className="text-xl font-semibold bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">
               Joined Threads
             </h2>
-            <button
-              className="text-sm text-[#FF005D] hover:text-[#00D1FF] transition-colors"
-              type="button"
-            >
-              View All
-            </button>
+            {joinedThreads.length > 3 && (
+              <button
+                className="text-sm text-[#FF005D] hover:text-[#00D1FF] transition-colors"
+                type="button"
+              >
+                View All
+              </button>
+            )}
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {joinedThreads.slice(0, 2).map((thread: any) => (
+            {joinedThreads.slice(0, 3).map((thread: any) => (
               <ThreadCard key={thread.id} thread={thread} />
             ))}
           </div>

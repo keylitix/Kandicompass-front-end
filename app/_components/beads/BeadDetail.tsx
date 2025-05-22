@@ -17,9 +17,14 @@ import { useState } from 'react';
 import { OwnershipTimeline } from './OwnershipTimeline';
 import { StoryList } from '../story/StoryList';
 import { GradientButton } from '../custom-ui/GradientButton';
+import { useParams } from 'next/navigation';
+import { useGetBeadByIdQuery } from '@/redux/api/beadApi';
+import Image from 'next/image';
+import { CORE_BACKEND_URL } from '@/helper/path';
+import WorldMap from '../Charms/world-map';
 
 interface BeadDetailProps {
-  bead: Bead;
+  bead: any;
 }
 
 export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
@@ -28,9 +33,11 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
   >('info');
   const [isRotating, setIsRotating] = useState(true);
 
+  console.log('beadbeadbeadbeadbeadbeadbead', bead)
+
   // Calculate the average rating
   const averageRating = bead.reviews.length
-    ? bead.reviews.reduce((sum, review) => sum + review.rating, 0) /
+    ? bead.reviews.reduce((sum: any, review: any) => sum + review.rating, 0) /
       bead.reviews.length
     : 0;
 
@@ -39,6 +46,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
     bead.ownershipHistory.length > 0
       ? bead.ownershipHistory[bead.ownershipHistory.length - 1]
       : null;
+
 
   return (
     <div className="max-w-6xl mx-auto bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
@@ -53,9 +61,10 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
                         ${isRotating ? 'animate-rotate-slow' : ''} border-2 border-[#00D1FF] shadow-lg`}
               onClick={() => setIsRotating(!isRotating)}
             >
-              <img
-                src={bead.image}
-                alt={bead.name}
+              <Image
+                fill
+                src={`${CORE_BACKEND_URL}${bead.thumbnail}`}
+                alt={bead.beadName || 'Bead'}
                 className="w-full h-full object-cover"
               />
 
@@ -78,11 +87,11 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
         <div className="p-6 md:w-3/5">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-2xl font-bold">{bead.name}</h1>
+              <h1 className="text-2xl font-bold">{bead.beadName}</h1>
               <div className="flex items-center mt-1 text-sm">
                 <Clock size={16} className="mr-1" />
                 <span>
-                  Created {new Date(bead.createdAt).toLocaleDateString()}
+                  Created {new Date(bead.created_at).toLocaleDateString()}
                 </span>
               </div>
             </div>
@@ -212,6 +221,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
               Ownership Timeline
             </h3>
             <OwnershipTimeline ownershipHistory={bead.ownershipHistory} />
+            <WorldMap />
           </div>
         )}
 
@@ -237,7 +247,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
             </h3>
             {bead.reviews.length > 0 ? (
               <div className="space-y-4">
-                {bead.reviews.map((review) => (
+                {bead.reviews.map((review: any) => (
                   <div
                     key={review.id}
                     className="bg-[#2a1a3d] bg-opacity-30 rounded-lg p-4"
