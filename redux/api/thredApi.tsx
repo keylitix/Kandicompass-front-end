@@ -100,11 +100,22 @@ export const threadApi = createApi({
       { page_number: number; page_size: number }
     >({
       query: ({ page_number, page_size }) => ({
-        url: `/threads/getall`,
+        url: `threads/getall`,
         method: 'GET',
         params: { page_number, page_size },
       }),
     }),
+
+    getThreadsByOwner: builder.query<
+      any,
+      { id: string; page_number: number; page_size: number }
+    >({
+      query: ({ id, page_number, page_size }) => ({
+        url: `threads/getByOwner/${id}`,
+        method: 'GET',
+        params: { page_number, page_size },
+      }),
+    })
   }),
 });
 
@@ -116,4 +127,5 @@ export const {
   useDeleteThreadMutation,
   useUploadThreadImageMutation,
   useGetAllThreadsQuery,
+  useGetThreadsByOwnerQuery,
 } = threadApi;

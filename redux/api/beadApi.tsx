@@ -68,7 +68,7 @@ export const beadApi = createApi({
 
     // Get single bead by ID
     getBeadById: builder.query<IBead, string>({
-      query: (id) => `beads/${id}`,
+      query: (id) => `beads/getById/${id}`,
       providesTags: (result, error, id) => [{ type: 'Bead', id }],
     }),
 

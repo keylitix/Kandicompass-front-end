@@ -186,6 +186,7 @@ import Image from 'next/image';
 import { useGetThreadByIdQuery } from '@/redux/api/thredApi';
 import AddBead from '@/app/_components/modal/AddBead';
 import { useGetBeadByThreadIdQuery } from '@/redux/api/beadApi';
+import AddMembers from '@/app/_components/modal/AddMember';
 
 const ThreadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -204,6 +205,7 @@ const ThreadDetailPage: React.FC = () => {
   });
   const thread = data?.data[0] ?? null;
   const [openBeadModal, setOpenBeadModal] = useState(false);
+  const [openMemberModal, setOpenMemberModal] = useState(false);
 
   // useEffect(() => {
   //   // Simulate API call
@@ -310,7 +312,9 @@ const ThreadDetailPage: React.FC = () => {
                 </div>
               ))}
 
-              <button className="w-10 h-10 rounded-full bg-[#2a1a3d] bg-opacity-50 flex items-center justify-center ml-2 border-2 border-[#00D1FF] border-dashed hover:bg-[#00D1FF] transition-colors">
+              <button
+                onClick={() => setOpenMemberModal(true)}
+                className="w-10 h-10 rounded-full bg-[#2a1a3d] bg-opacity-50 flex items-center justify-center ml-2 border-2 border-[#00D1FF] border-dashed hover:bg-[#00D1FF] transition-colors">
                 <Plus size={16} className="" />
               </button>
             </div>
@@ -371,6 +375,7 @@ const ThreadDetailPage: React.FC = () => {
         refetchBeads={refetchBeads}
         isFetchingBeads={isFetchingBeads}
       />
+      <AddMembers isOpen={openMemberModal} onClose={() => setOpenMemberModal(false)} />
     </div>
   );
 };
