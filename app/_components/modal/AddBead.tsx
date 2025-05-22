@@ -602,7 +602,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                   label="Product Code"
                   type="text"
                   placeholder="Enter product code"
-                  value={formik.values.pricePerUnit}
+                  value={formik.values.productCode}
                   onChange={formik.handleChange}
                   name="productCode"
                 />
@@ -611,7 +611,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                   label="price (Per Unit)"
                   type="text"
                   placeholder="Enter bead price"
-                  value={formik.values.productCode}
+                  value={formik.values.pricePerUnit}
                   onChange={formik.handleChange}
                   name="productCode"
                 />

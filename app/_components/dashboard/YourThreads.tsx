@@ -228,28 +228,23 @@ interface YourThreadsProps {
   threads: any;
   refetchThreads: () => void;
   isFetchingThreads: boolean;
+  memberThreads: any;
+  isLoadingMembersThreads: boolean
+  isFetchingMembersThreads: boolean
 }
 
 export const YourThreads: React.FC<YourThreadsProps> = ({
   threads,
   refetchThreads,
   isFetchingThreads,
+  memberThreads,
+  isLoadingMembersThreads,
+  isFetchingMembersThreads
 }) => {
   const router = useRouter();
-  const { user } = useAppSelector((state) => state.auth);
   const [openThread, setOpenThread] = React.useState(false);
-  console.log('Threads:==============', threads);
-  const ownedThreads = user
-    ? threads?.data?.filter(
-        (thread: any) => thread?.ownerId[0]?._id === user?.id,
-      )
-    : [];
-  const joinedThreads = user
-    ? threads?.data?.filter(
-        (thread: any) => thread?.ownerId[0]?._id !== user?.id,
-      )
-    : [];
-
+  const ownedThreads = threads ?? [];
+  const joinedThreads = memberThreads ?? [];
   return (
     <section>
       <header className="flex justify-between items-center mb-6">
