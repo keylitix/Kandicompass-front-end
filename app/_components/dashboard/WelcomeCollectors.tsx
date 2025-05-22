@@ -7,11 +7,13 @@ import AddThread from '../modal/AddThread';
 interface WelcomeCollectorsProps {
   refetchThreads?: () => void;
   isFetchingThreads?: boolean;
+  ownedThreads?: any;
 }
 
 export const WelcomeCollectors: React.FC<WelcomeCollectorsProps> = ({
   refetchThreads,
   isFetchingThreads,
+  ownedThreads,
 }) => {
   const [openThread, setOpenThread] = React.useState(false);
   const [openQrCode, setOpenQrCode] = React.useState(false);
@@ -52,7 +54,7 @@ export const WelcomeCollectors: React.FC<WelcomeCollectorsProps> = ({
           </div>
           <div>
             <div className="text-sm">Owned Threads</div>
-            <div className="text-2xl font-bold text-[#FF005D]">5</div>
+            <div className="text-2xl font-bold text-[#FF005D]">{ownedThreads}</div>
           </div>
         </div>
         <div className="text-xs">

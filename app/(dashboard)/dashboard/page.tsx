@@ -8,32 +8,47 @@ import Link from 'next/link';
 import { WelcomeCollectors } from '@/app/_components/dashboard/WelcomeCollectors';
 import { RecentActivity } from '@/app/_components/dashboard/RecentActivity';
 import { YourThreads } from '@/app/_components/dashboard/YourThreads';
-import { useGetAllThreadsQuery } from '@/redux/api/thredApi';
+import { useGetAllThreadsQuery, useGetThreadsByMemberQuery, useGetThreadsByOwnerQuery } from '@/redux/api/thredApi';
+import { useAppSelector } from '@/app/hook/useReduxApp';
 
 // export const metadata: Metadata = META.HOME;
 
 const DashboardPage = () => {
+  const {user} = useAppSelector((state) => state.auth);
   const {
     data: threads,
     isLoading: isLoadingThreads,
     refetch: refetchThreads,
     isFetching: isFetchingThreads,
-  } = useGetAllThreadsQuery(
-    { page_number: 1, page_size: 10 },
+  } = useGetThreadsByOwnerQuery(
+    { id: user?.id ?? '', page_number: 1, page_size: 10 },
     { refetchOnMountOrArgChange: true },
   );
+  const {
+    data: memberThreads,
+    isLoading: isLoadingMembersThreads,
+    isFetching: isFetchingMembersThreads,
+  } = useGetThreadsByMemberQuery(
+    { id: user?.id ?? '', page_number: 1, page_size: 10 },
+    { refetchOnMountOrArgChange: true },
+  );
+  
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="space-y-8">
         <WelcomeCollectors
           refetchThreads={refetchThreads}
           isFetchingThreads={isFetchingThreads}
+          ownedThreads={threads?.data?.length ?? 0}
         />
         <RecentActivity />
         <YourThreads
           threads={threads?.data}
           refetchThreads={refetchThreads}
           isFetchingThreads={isFetchingThreads}
+          memberThreads={memberThreads?.data}
+          isLoadingMembersThreads={isLoadingMembersThreads}
+          isFetchingMembersThreads={isFetchingMembersThreads}
         />
         <div></div>
       </div>

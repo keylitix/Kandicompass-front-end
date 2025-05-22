@@ -10,6 +10,8 @@ import {
   User,
   ReceiptText,
   MapPin,
+  User2Icon,
+  User2,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -194,14 +196,15 @@ const Dnavbar = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">
-              <div className="w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] cursor-pointer">
-                <Image
+              <div className="flex justify-center items-center w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] cursor-pointer">
+                {/* <Image
                   src="/avatar.jfif"
                   alt="Profile"
                   width={36}
                   height={36}
                   className="rounded-full object-cover w-full h-full"
-                />
+                /> */}
+                <User2 className="w-[80%] h-[80%]" />
               </div>
             </DropdownMenuTrigger>
 
@@ -216,7 +219,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 <HelpCircle className="h-4 w-4" />
                 <span>FAQ</span>
@@ -224,7 +227,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => {}}
+                onClick={() => { }}
               >
                 <ReceiptText className="h-4 w-4" />
                 <span>Terms & Conditions</span>

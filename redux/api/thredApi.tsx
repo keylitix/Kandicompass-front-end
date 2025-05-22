@@ -115,6 +115,17 @@ export const threadApi = createApi({
         method: 'GET',
         params: { page_number, page_size },
       }),
+    }),
+
+    getThreadsByMember: builder.query<
+      any,
+      { id: string; page_number: number; page_size: number }
+    >({
+      query: ({ id, page_number, page_size }) => ({
+        url: `threads/getByMember/${id}`,
+        method: 'GET',
+        params: { page_number, page_size },
+      }),
     })
   }),
 });
@@ -128,4 +139,5 @@ export const {
   useUploadThreadImageMutation,
   useGetAllThreadsQuery,
   useGetThreadsByOwnerQuery,
+  useGetThreadsByMemberQuery
 } = threadApi;
