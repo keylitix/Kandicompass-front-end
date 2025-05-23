@@ -219,7 +219,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => {}}
+                onClick={() => {route.push('/dashboard/faq')}}
               >
                 <HelpCircle className="h-4 w-4" />
                 <span>FAQ</span>
@@ -227,7 +227,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => {}}
+                onClick={() => {route.push('/terms-and-conditions')}}
               >
                 <ReceiptText className="h-4 w-4" />
                 <span>Terms & Conditions</span>
