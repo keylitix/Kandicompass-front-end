@@ -7,6 +7,7 @@ import { GradientButton } from '@/app/_components/custom-ui/GradientButton';
 import { useAppSelector } from '@/app/hook/useReduxApp';
 import Input from '@/app/_components/custom-ui/Input';
 import { useEffect } from 'react';
+import { Map, Marker, ColorScheme } from '@vis.gl/react-google-maps';
 
 export default function ContactUs() {
   const { user } = useAppSelector((state) => state.auth);
@@ -53,53 +54,79 @@ export default function ContactUs() {
     }
   }, [formik.errors.message, formik.touched.message]);
 
+  const usaLocation = {
+    lat: 40.7128,
+    lng: -74.006,
+  };
+
   return (
-    <div className="bg-wrapper">
-      <div className="bg-page">
-        <div className="left-spark" />
-        <div className="right-spark" />
-        <div className="container mx-auto px-[100px]">
-          <div className="h-[300px] flex items-center justify-center">
-            <h1 className="font-[700] text-[46px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">
-              Contact Us
-            </h1>
-          </div>
-          <div className="mb-[100px]">
-            <form className="w-[669px] mx-auto" onSubmit={formik.handleSubmit}>
-              <div className="mb-6">
-                <Input
-                  label="Name"
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.name}
-                />
-              </div>
+    <>
+      <div className="bg-wrapper">
+        <div className="bg-page">
+          <div className="left-spark" />
+          <div className="right-spark" />
+          <div className="container mx-auto px-[100px]">
+            <div className="h-[300px] flex items-center justify-center">
+              <h1 className="font-[700] text-[46px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">
+                Contact Us
+              </h1>
+            </div>
+            <div className="mb-[100px]">
+              <form className="w-[669px] mx-auto" onSubmit={formik.handleSubmit}>
+                <div className="mb-6">
+                  <Input
+                    label="Name"
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.name}
+                  />
+                </div>
 
-              <div className="mb-6">
-                <Input
-                  label="Message"
-                  type="textarea"
-                  name="message"
-                  rows={4}
-                  placeholder="Your Message"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.message}
-                />
-              </div>
+                <div className="mb-6">
+                  <Input
+                    label="Message"
+                    type="textarea"
+                    name="message"
+                    rows={4}
+                    placeholder="Your Message"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.message}
+                  />
+                </div>
 
-              <div className="flex justify-center">
-                <GradientButton type="submit">
-                  {formik.isSubmitting ? 'Submitting...' : 'SUBMIT'}
-                </GradientButton>
-              </div>
-            </form>
+                <div className="flex justify-center">
+                  <GradientButton type="submit">
+                    {formik.isSubmitting ? 'Submitting...' : 'SUBMIT'}
+                  </GradientButton>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="w-full relative mx-auto h-[250px] lg:h-[500px] border-0 rounded-none border-gray-700 overflow-hidden">
+        <Map
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            zIndex: 0,
+            borderRadius: 'inherit',
+            border: 'none',
+          }}
+          defaultCenter={usaLocation}
+          defaultZoom={5}
+          gestureHandling="greedy"
+          disableDefaultUI={false}
+          colorScheme={ColorScheme.DARK}
+        >
+          <Marker position={usaLocation} />
+        </Map>
+      </div>
+    </>
   );
 }
