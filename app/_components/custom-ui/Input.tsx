@@ -1,74 +1,3 @@
-// import React from 'react';
-
-// interface InputProps {
-//   label: string;
-//   type: string;
-//   name?: string;
-//   value?: string | number;
-//   onChange?: (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-//   ) => void;
-//   readOnly?: boolean;
-//   placeholder?: string;
-//   additionalStyles?: string;
-//   rows?: number;
-//   cols?: number;
-// }
-
-// const Input: React.FC<InputProps> = ({
-//   label,
-//   type,
-//   name,
-//   value,
-//   onChange,
-//   readOnly = false,
-//   placeholder = '',
-//   additionalStyles = '',
-//   rows = 4,
-//   cols = 50,
-// }) => {
-//   return (
-//     <div className="mb-6">
-//       <label className="block text-white mb-2" htmlFor={name}>
-//         {label}
-//       </label>
-//       {type === 'textarea' ? (
-//         <textarea
-//           id={name}
-//           value={value}
-//           onChange={onChange}
-//           readOnly={readOnly}
-//           placeholder={placeholder}
-//           rows={rows}
-//           cols={cols}
-//           className={`w-full p-3 text-white bg-transparent border-2 border-transparent ${additionalStyles}`}
-//           style={{
-//             borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
-//             outline: 'none',
-//           }}
-//         />
-//       ) : (
-//         <input
-//           id={name}
-//           type={type}
-//           name={name}
-//           value={value}
-//           onChange={onChange}
-//           readOnly={readOnly}
-//           placeholder={placeholder}
-//           className={`w-full p-3 text-white bg-transparent border-2 border-transparent ${additionalStyles}`}
-//           style={{
-//             borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
-//             outline: 'none',
-//           }}
-//         />
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Input;
-
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
 
@@ -86,7 +15,19 @@ interface InputProps {
   rows?: number;
   cols?: number;
   icon?: LucideIcon; // Lucide icon component
+  onBlur?: any;
 }
+export const inputBaseClasses = (hasIcon: boolean) => {
+  return [
+    'w-full',
+    'p-3',
+    'text-white',
+    'bg-transparent',
+    'border-2',
+    'border-transparent',
+    hasIcon ? 'pl-10' : '',
+  ].join(' ');
+};
 
 const Input: React.FC<InputProps> = ({
   label,
@@ -99,12 +40,10 @@ const Input: React.FC<InputProps> = ({
   additionalStyles = '',
   rows = 4,
   cols = 50,
-  icon: Icon, // aliasing LucideIcon as Icon
+  icon: Icon,
+  onBlur,
 }) => {
-  const inputBaseClasses =
-    'w-full p-3 text-white bg-transparent border-2 border-transparent pl-10'; // pl-10 gives room for the icon
   const wrapperClasses = 'relative w-full';
-
   return (
     <div className="mb-6">
       {label && (
@@ -128,9 +67,10 @@ const Input: React.FC<InputProps> = ({
             onChange={onChange}
             readOnly={readOnly}
             placeholder={placeholder}
+            onBlur={onBlur}
             rows={rows}
             cols={cols}
-            className={`${inputBaseClasses} ${additionalStyles}`}
+            className={`${inputBaseClasses(Icon ? true : false)} ${additionalStyles}`}
             style={{
               borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
               outline: 'none',
@@ -143,9 +83,10 @@ const Input: React.FC<InputProps> = ({
             name={name}
             value={value}
             onChange={onChange}
+            onBlur={onBlur}
             readOnly={readOnly}
             placeholder={placeholder}
-            className={`${inputBaseClasses} ${additionalStyles}`}
+            className={`${inputBaseClasses(Icon ? true : false)} ${additionalStyles}`}
             style={{
               borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
               outline: 'none',
@@ -158,4 +99,3 @@ const Input: React.FC<InputProps> = ({
 };
 
 export default Input;
-

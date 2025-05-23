@@ -18,8 +18,8 @@ export default function SignIn() {
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: 'sahil@gmail.com',
-    password: '@Charri184',
+    email: '',
+    password: '',
   });
   const dispatch = useDispatch<AppDispatch>();
 
@@ -65,13 +65,13 @@ export default function SignIn() {
       {/* Main content */}
       <div className="relative z-10 w-full max-w-md mx-auto">
         <div className="bg-transparent border border-white/30 rounded-lg p-6 sm:p-8 backdrop-blur-md">
-          <h1 className="text-center font-semibold text-white text-2xl sm:text-3xl mb-6">
+          <h1 className="text-center font-semibold text-white text-2xl sm:text-3xl b-6">
             Log In
           </h1>
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-4"
+            className="space-y-4 mt-6"
             autoComplete="off"
           >
             <div className="space-y-4">

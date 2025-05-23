@@ -351,7 +351,18 @@ import {
 } from '@/redux/api/beadApi';
 import Input from '../custom-ui/Input';
 
-import { toast } from "sonner"
+import { toast } from 'sonner';
+import {
+  Binary,
+  DollarSign,
+  FileText,
+  Palette,
+  Ruler,
+  Scale,
+  Shapes,
+  Tag,
+  WeightIcon,
+} from 'lucide-react';
 
 interface UploadedFile {
   file: File;
@@ -453,7 +464,10 @@ const AddBead: React.FC<AddThreadProps> = ({
             formData.append('files', uploaded.file);
           });
 
-          const uploadResponse = await uploadBeadImage({ beadId, formData }).unwrap();
+          const uploadResponse = await uploadBeadImage({
+            beadId,
+            formData,
+          }).unwrap();
 
           if (!uploadResponse?._id) {
             await deleteBead(beadId);
@@ -471,7 +485,7 @@ const AddBead: React.FC<AddThreadProps> = ({
         toast((error as Error).message ?? 'Something went wrong.');
         console.log('jljdljlfjdljlfm', uploadedFiles);
       }
-    }
+    },
   });
 
   const handleRemoveFile = (index: number) => {
@@ -504,6 +518,7 @@ const AddBead: React.FC<AddThreadProps> = ({
 
           <form onSubmit={formik.handleSubmit}>
             <Input
+              icon={Tag}
               label="Title"
               type="text"
               placeholder="Enter bead title"
@@ -513,6 +528,7 @@ const AddBead: React.FC<AddThreadProps> = ({
             />
 
             <Input
+              icon={FileText}
               label="Description"
               type="textarea"
               placeholder="Enter bead description"
@@ -527,6 +543,7 @@ const AddBead: React.FC<AddThreadProps> = ({
               </div>
               <div className="grid grid-cols-2 gap-x-8">
                 <Input
+                  icon={Shapes}
                   label="Bead Type"
                   type="text"
                   placeholder="Enter bead type"
@@ -548,6 +565,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
+                  icon={Palette}
                   label="Color"
                   type="text"
                   placeholder="Enter bead color"
@@ -557,6 +575,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
+                  icon={Ruler}
                   label="Size (in MM)"
                   type="number"
                   placeholder="Enter bead size"
@@ -578,6 +597,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
+                  icon={Scale}
                   label="Weight (in Grams)"
                   type="number"
                   placeholder="Enter bead weight"
@@ -599,6 +619,7 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
+                  icon={Binary}
                   label="Product Code"
                   type="text"
                   placeholder="Enter product code"
@@ -608,12 +629,13 @@ const AddBead: React.FC<AddThreadProps> = ({
                 />
 
                 <Input
+                  icon={DollarSign}
                   label="price (Per Unit)"
-                  type="text"
+                  type="number"
                   placeholder="Enter bead price"
                   value={formik.values.pricePerUnit}
                   onChange={formik.handleChange}
-                  name="productCode"
+                  name="pricePerUnit"
                 />
               </div>
             </div>

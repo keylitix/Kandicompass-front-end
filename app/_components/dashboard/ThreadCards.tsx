@@ -16,19 +16,25 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
     name: string;
   }>({ qrCode: null, name: '' });
   const router = useRouter();
+  const shouldIgnoreNextClick = React.useRef(false);
 
   const handleCardClick = (e: React.MouseEvent) => {
+    if (shouldIgnoreNextClick.current) {
+      return;
+    }
+
     const target = e.target as HTMLElement;
     if (target.closest('button') || target.closest('svg')) {
       return;
     }
-    if (thread && thread?._id) {
+
+    if (thread && thread?._id && shouldIgnoreNextClick.current === false) {
       router.push(`/dashboard/thread/${thread._id}`);
     }
   };
+
   return (
     <div
-      role="button"
       tabIndex={0}
       onClick={handleCardClick}
       className="bg-[#1c102b] rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-70
@@ -68,6 +74,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
+              shouldIgnoreNextClick.current = true;
               setQrCode({ qrCode: thread.qrCode, name: thread.threadName });
               setOpenQrCode(true);
             }}
@@ -107,9 +114,11 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
 
       <ViewQrCodeModal
         isOpen={openQrCode}
-        onClose={() => setOpenQrCode(false)}
+        onClose={() => {
+          setOpenQrCode(false), (shouldIgnoreNextClick.current = false);
+        }}
         qrURL={qrCode.qrCode ?? ''}
-        title={qrCode.name}
+        title={qrCode.name ?? ''}
       />
     </div>
   );

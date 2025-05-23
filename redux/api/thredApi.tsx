@@ -126,7 +126,7 @@ export const threadApi = createApi({
         method: 'GET',
         params: { page_number, page_size },
       }),
-    })
+    }),
   }),
 });
 
@@ -139,5 +139,5 @@ export const {
   useUploadThreadImageMutation,
   useGetAllThreadsQuery,
   useGetThreadsByOwnerQuery,
-  useGetThreadsByMemberQuery
+  useGetThreadsByMemberQuery,
 } = threadApi;

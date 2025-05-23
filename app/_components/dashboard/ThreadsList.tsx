@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useRouter } from 'next/navigation';
 import { debounce } from 'lodash';
+import { CORE_BACKEND_URL } from '@/helper/path';
 
 export default function ThreadsList() {
   const router = useRouter();
@@ -25,6 +26,8 @@ export default function ThreadsList() {
   const [hasMore, setHasMore] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedThread, setSelectedThread] = useState<any>(null);
+
+  console.log();
 
   const { ref, inView } = useInView();
 
@@ -141,7 +144,7 @@ export default function ThreadsList() {
                       <Image
                         src={
                           thread.avatar
-                            ? `https://kandi-backend.cradle.services/${thread.avatar}`
+                            ? `${CORE_BACKEND_URL}${thread.avatar}`
                             : threadURL.src
                         }
                         fill
@@ -188,7 +191,6 @@ export default function ThreadsList() {
                     onClose={handleCloseModal}
                     title={selectedThread?.threadName}
                     qrURL={selectedThread?.qrCode}
-                    status={selectedThread?.status || ''}
                   />
                 </div>
               ))}

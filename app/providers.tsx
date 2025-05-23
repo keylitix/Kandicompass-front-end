@@ -4,6 +4,7 @@ import { store, persistor } from '@/redux/store/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { APIProvider } from '@vis.gl/react-google-maps';
+import { Toaster } from 'sonner';
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
@@ -15,6 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           {children}
         </APIProvider>
       </PersistGate>
+      <Toaster />
     </Provider>
   );
 }

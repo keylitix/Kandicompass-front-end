@@ -60,8 +60,12 @@ export const userApi = createApi({
     getAllUsers: builder.query<any, void>({
       query: () => 'User/getAll',
       providesTags: ['User'],
-    })
+    }),
   }),
 });
 
-export const { useCreateUserMutation, useLoginUserMutation, useGetAllUsersQuery } = userApi;
+export const {
+  useCreateUserMutation,
+  useLoginUserMutation,
+  useGetAllUsersQuery,
+} = userApi;

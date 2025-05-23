@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Orbitron, Montserrat } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
-import { Toaster } from '@/components/ui/sonner';
 
 const orbitron = Orbitron({
   subsets: ['latin'],
@@ -28,10 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${orbitron.className} ${montserrat.variable}  antialiased`}
+        className={`${orbitron.className} ${montserrat.variable} antialiased`}
+        data-new-gr-c-s-check-loaded="14.1235.0"
+        data-gr-ext-installed=""
       >
         <Providers>{children}</Providers>
-        <Toaster />
       </body>
     </html>
   );

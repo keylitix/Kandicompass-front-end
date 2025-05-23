@@ -1,4 +1,58 @@
+'use client';
+
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { toast } from 'sonner';
+import { GradientButton } from '@/app/_components/custom-ui/GradientButton';
+import { useAppSelector } from '@/app/hook/useReduxApp';
+import Input from '@/app/_components/custom-ui/Input';
+import { useEffect } from 'react';
+
 export default function ContactUs() {
+  const { user } = useAppSelector((state) => state.auth);
+  const formik = useFormik({
+    initialValues: {
+      name: user?.fullName ?? '',
+      email: user?.email ?? '',
+      message: '',
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Name is required'),
+      message: Yup.string().required('Message is required'),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        });
+        console.log('res', res);
+
+        if (res.ok) {
+          toast.success('Message sent successfully!');
+          resetForm();
+        } else {
+          toast.error('Failed to send message. Try again.');
+        }
+      } catch (error) {
+        toast.error('An error occurred. Please try later.');
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (formik.touched.name && formik.errors.name) {
+      toast.error(formik.errors.name);
+    }
+  }, [formik.errors.name, formik.touched.name]);
+
+  useEffect(() => {
+    if (formik.touched.message && formik.errors.message) {
+      toast.error(formik.errors.message);
+    }
+  }, [formik.errors.message, formik.touched.message]);
+
   return (
     <div className="bg-wrapper">
       <div className="bg-page">
@@ -11,78 +65,36 @@ export default function ContactUs() {
             </h1>
           </div>
           <div className="mb-[100px]">
-            <form className="w-[669px] mx-auto">
+            <form className="w-[669px] mx-auto" onSubmit={formik.handleSubmit}>
               <div className="mb-6">
-                <label className="block text-white mb-2">Name</label>
-                <input
+                <Input
+                  label="Name"
                   type="text"
-                  placeholder="xyz"
-                  className="w-full p-3 text-white bg-transparent border-2 border-transparent"
-                  style={{
-                    borderImage:
-                      'linear-gradient(to right, #FF005D, #00D1FF) 1',
-                    outline: 'none',
-                  }}
+                  name="name"
+                  placeholder="Your Name"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.name}
                 />
               </div>
 
               <div className="mb-6">
-                <label className="block text-white mb-2">Email</label>
-                <input
-                  type="text"
-                  placeholder="xyz"
-                  className="w-full p-3 text-white border-2 border-transparent bg-[#170F24]"
-                  style={{
-                    borderImage:
-                      'linear-gradient(to right, #FF005D, #00D1FF) 1',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-white mb-2">Message</label>
-                <textarea
+                <Input
+                  label="Message"
+                  type="textarea"
+                  name="message"
                   rows={4}
-                  placeholder="xyz"
-                  className="w-full p-3 text-white border-2 border-transparent bg-[#170F24]"
-                  style={{
-                    borderImage:
-                      'linear-gradient(to right, #FF005D, #00D1FF) 1',
-                    outline: 'none',
-                  }}
+                  placeholder="Your Message"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.message}
                 />
               </div>
+
               <div className="flex justify-center">
-                <button
-                  className="
-        w-full max-w-[350px] h-12 md:h-14 
-        border border-white 
-        text-white font-medium
-        relative
-        overflow-hidden
-        transition-all
-        duration-300
-        hover:text-black
-        before:content-['']
-        before:absolute
-        before:top-0
-        before:left-0
-        before:w-0
-        before:h-full
-        before:bg-gradient-to-r
-        before:from-[#FF005D]
-        before:to-[#00D1FF]
-        before:transition-all
-        before:duration-300
-        before:opacity-80
-        hover:before:w-full
-        z-10
-        mb-8
-      "
-                >
-                  <span className="relative z-20">SUBMIT</span>
-                </button>
+                <GradientButton type="submit">
+                  {formik.isSubmitting ? 'Submitting...' : 'SUBMIT'}
+                </GradientButton>
               </div>
             </form>
           </div>

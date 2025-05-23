@@ -54,7 +54,9 @@ export const WelcomeCollectors: React.FC<WelcomeCollectorsProps> = ({
           </div>
           <div>
             <div className="text-sm">Owned Threads</div>
-            <div className="text-2xl font-bold text-[#FF005D]">{ownedThreads}</div>
+            <div className="text-2xl font-bold text-[#FF005D]">
+              {ownedThreads}
+            </div>
           </div>
         </div>
         <div className="text-xs">
