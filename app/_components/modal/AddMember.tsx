@@ -16,37 +16,34 @@ interface AddMembersProps {
   onClose: () => void;
 }
 
-const AddMembers: React.FC<AddMembersProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose }) => {
   const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState<string[]>([]);
 
-  const users = usersData?.data ?? []
+  const users = usersData?.data ?? [];
 
   const toggleSelect = (email: string) => {
     setSelected((prev) =>
-      prev.includes(email) ? prev.filter((e) => e !== email) : [...prev, email]
+      prev.includes(email) ? prev.filter((e) => e !== email) : [...prev, email],
     );
   };
 
-  useEffect(() => {
-    if (search.trim() !== "") {
-      const filtered = users.filter((u: any) =>
-        u?.email?.toLowerCase().includes(search.toLowerCase())
-      );
-      setResults(filtered);
-    } else {
-      setResults([]);
-    }
-  }, [search, users]);
+  // useEffect(() => {
+  //   if (search.trim() !== "") {
+  //     const filtered = users.filter((u: any) =>
+  //       u?.email?.toLowerCase().includes(search.toLowerCase())
+  //     );
+  //     setResults(filtered);
+  //   } else {
+  //     setResults([]);
+  //   }
+  // }, [search, users]);
 
   const onInvitationSend = () => {
     console.log(selected);
-  }
+  };
 
   return (
     <div>
@@ -66,7 +63,7 @@ const AddMembers: React.FC<AddMembersProps> = ({
             <>
               <Input
                 icon={Search}
-                label=''
+                label=""
                 type="text"
                 placeholder="Search by email..."
                 value={search}
@@ -106,7 +103,8 @@ const AddMembers: React.FC<AddMembersProps> = ({
                           key={email}
                           className="inline-flex items-center rounded-full border px-3 py-1 text-sm text-white bg-transparent"
                           style={{
-                            borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+                            borderImage:
+                              'linear-gradient(to right, #FF005D, #00D1FF) 1',
                             borderStyle: 'solid',
                             borderWidth: '1px',
                           }}
@@ -115,7 +113,9 @@ const AddMembers: React.FC<AddMembersProps> = ({
                           <button
                             className="ml-2 text-white hover:text-red-500 transition cursor-pointer"
                             onClick={() =>
-                              setSelected((prev) => prev.filter((e) => e !== email))
+                              setSelected((prev) =>
+                                prev.filter((e) => e !== email),
+                              )
                             }
                           >
                             <X size={14} />
@@ -123,7 +123,6 @@ const AddMembers: React.FC<AddMembersProps> = ({
                         </span>
                       ))}
                     </div>
-
                   </ul>
                 </div>
               )}
@@ -131,8 +130,12 @@ const AddMembers: React.FC<AddMembersProps> = ({
           )}
 
           <DialogFooter>
-            <GradientButton variant="outline" onClick={onClose}>Cancel</GradientButton>
-            <GradientButton onClick={onInvitationSend}>Send Invitaion</GradientButton>
+            <GradientButton variant="outline" onClick={onClose}>
+              Cancel
+            </GradientButton>
+            <GradientButton onClick={onInvitationSend}>
+              Send Invitaion
+            </GradientButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

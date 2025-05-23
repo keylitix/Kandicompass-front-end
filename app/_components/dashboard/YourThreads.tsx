@@ -7,6 +7,7 @@ import userImg from '@/public/User.svg';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/app/hook/useReduxApp';
 import AddThread from '../modal/AddThread';
+import Link from 'next/link';
 
 // export const mockUsers: User[] = [
 //   {
@@ -229,8 +230,8 @@ interface YourThreadsProps {
   refetchThreads: () => void;
   isFetchingThreads: boolean;
   memberThreads: any;
-  isLoadingMembersThreads: boolean
-  isFetchingMembersThreads: boolean
+  isLoadingMembersThreads: boolean;
+  isFetchingMembersThreads: boolean;
 }
 
 export const YourThreads: React.FC<YourThreadsProps> = ({
@@ -239,7 +240,7 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
   isFetchingThreads,
   memberThreads,
   isLoadingMembersThreads,
-  isFetchingMembersThreads
+  isFetchingMembersThreads,
 }) => {
   const router = useRouter();
   const [openThread, setOpenThread] = React.useState(false);
@@ -251,12 +252,13 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
         <h2 className="text-xl font-semibold bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">
           Your Threads
         </h2>
-        <button
+        <Link
+          href="/dashboard/thread"
           className="text-sm text-[#FF005D] hover:text-[#00D1FF] transition-colors"
           type="button"
         >
           View All
-        </button>
+        </Link>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -298,12 +300,13 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
               Joined Threads
             </h2>
             {joinedThreads.length > 3 && (
-              <button
+              <Link
+                href="/dashboard/thread"
                 className="text-sm text-[#FF005D] hover:text-[#00D1FF] transition-colors"
                 type="button"
               >
                 View All
-              </button>
+              </Link>
             )}
           </header>
 

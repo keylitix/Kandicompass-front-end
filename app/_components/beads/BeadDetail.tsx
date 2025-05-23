@@ -22,6 +22,7 @@ import { useGetBeadByIdQuery } from '@/redux/api/beadApi';
 import Image from 'next/image';
 import { CORE_BACKEND_URL } from '@/helper/path';
 import WorldMap from '../Charms/world-map';
+import { DEFAULT_IMAGE } from '@/lib/variables';
 
 interface BeadDetailProps {
   bead: any;
@@ -33,7 +34,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
   >('info');
   const [isRotating, setIsRotating] = useState(true);
 
-  console.log('beadbeadbeadbeadbeadbeadbead', bead)
+  console.log('beadbeadbeadbeadbeadbeadbead', bead);
 
   // Calculate the average rating
   const averageRating = bead.reviews.length
@@ -46,7 +47,6 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
     bead.ownershipHistory.length > 0
       ? bead.ownershipHistory[bead.ownershipHistory.length - 1]
       : null;
-
 
   return (
     <div className="max-w-6xl mx-auto bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
@@ -63,7 +63,12 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
             >
               <Image
                 fill
-                src={`${CORE_BACKEND_URL}${bead.thumbnail}`}
+                unoptimized
+                src={
+                  bead.thumbnail
+                    ? `${CORE_BACKEND_URL}${bead?.thumbnail}`
+                    : DEFAULT_IMAGE
+                }
                 alt={bead.beadName || 'Bead'}
                 className="w-full h-full object-cover"
               />
@@ -109,7 +114,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
             {/* Value */}
             <div className="bg-[#2a1a3d] bg-opacity-40 rounded-lg p-3 text-center">
               <div className="text-[#00D1FF] text-xl font-semibold">
-                ${bead.value}
+                ${bead?.pricePerUnit}
               </div>
               <div className="text-xs text-[#8a86a0] mt-1">Current Value</div>
             </div>

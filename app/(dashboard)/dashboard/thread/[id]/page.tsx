@@ -187,6 +187,7 @@ import { useGetThreadByIdQuery } from '@/redux/api/thredApi';
 import AddBead from '@/app/_components/modal/AddBead';
 import { useGetBeadByThreadIdQuery } from '@/redux/api/beadApi';
 import AddMembers from '@/app/_components/modal/AddMember';
+import ViewQrCodeModal from '@/app/_components/modal/view-qr-code';
 
 const ThreadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -203,10 +204,13 @@ const ThreadDetailPage: React.FC = () => {
     page_number: 1,
     page_size: 50,
   });
-  const thread = data?.data[0] ?? null;
+  const thread = data?.data[0] ?? {};
   const [openBeadModal, setOpenBeadModal] = useState(false);
   const [openMemberModal, setOpenMemberModal] = useState(false);
-
+  const [qrCode, setQrCode] = React.useState<{
+    qrCode: string | null;
+    name: string;
+  }>({ qrCode: null, name: '' });
   // useEffect(() => {
   //   // Simulate API call
   //   const fetchThread = async () => {
@@ -279,7 +283,10 @@ const ThreadDetailPage: React.FC = () => {
               <GradientButton
                 variant="fill"
                 icon={QrCode}
-                onClick={() => setShowQrCode(!showQrCode)}
+                onClick={() => {
+                  setQrCode({ qrCode: thread.qrCode, name: thread.threadName });
+                  setShowQrCode(!showQrCode);
+                }}
               >
                 QR Code
               </GradientButton>
@@ -314,29 +321,15 @@ const ThreadDetailPage: React.FC = () => {
 
               <button
                 onClick={() => setOpenMemberModal(true)}
-                className="w-10 h-10 rounded-full bg-[#2a1a3d] bg-opacity-50 flex items-center justify-center ml-2 border-2 border-[#00D1FF] border-dashed hover:bg-[#00D1FF] transition-colors">
+                className="w-10 h-10 rounded-full bg-[#2a1a3d] bg-opacity-50 flex items-center justify-center ml-2 border-2 border-[#00D1FF] border-dashed hover:bg-[#00D1FF] transition-colors"
+              >
                 <Plus size={16} className="" />
               </button>
             </div>
           </div>
-
-          {showQrCode && (
-            <div className="flex justify-center items-center py-4 animate-float">
-              <div className="bg-white p-2 rounded-lg">
-                <Image
-                  src={thread?.qrCode}
-                  alt="Thread QR Code"
-                  width={200}
-                  height={200}
-                  className="max-w-full h-auto"
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Beads in this thread */}
       <div>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-[#00D1FF]">Thread Beads</h2>
@@ -375,7 +368,19 @@ const ThreadDetailPage: React.FC = () => {
         refetchBeads={refetchBeads}
         isFetchingBeads={isFetchingBeads}
       />
-      <AddMembers isOpen={openMemberModal} onClose={() => setOpenMemberModal(false)} />
+      <AddMembers
+        isOpen={openMemberModal}
+        onClose={() => setOpenMemberModal(false)}
+      />
+
+      <ViewQrCodeModal
+        isOpen={showQrCode}
+        onClose={() => {
+          setShowQrCode(false);
+        }}
+        qrURL={qrCode.qrCode ?? ''}
+        title={qrCode.name ?? ''}
+      />
     </div>
   );
 };

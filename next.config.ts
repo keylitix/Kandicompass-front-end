@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['kandi-backend.cradle.services', 'localhost'],
+    domains: ['backend.kandicompass.com'],
   },
 };
 

@@ -5,28 +5,34 @@ import { Bead } from '@/app/types/common';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CORE_BACKEND_URL } from '@/helper/path';
+import { DEFAULT_IMAGE } from '@/lib/variables';
 
 interface BeadCardProps {
   bead: any;
 }
 
+const loaderProp = ({ src }: any) => {
+  return src;
+};
+
 export const BeadCard: React.FC<BeadCardProps> = ({ bead }) => {
   const route = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-  console.log('bead==========', bead);
   const handleClick = () => {
     route.push(`/dashboard/beads/${bead._id}`);
   };
 
   const averageRating = bead.reviews.length
     ? bead.reviews.reduce((sum: any, review: any) => sum + review.rating, 0) /
-    bead.reviews.length
+      bead.reviews.length
     : 0;
 
   const latestLocation = bead.ownershipHistory.length
     ? bead.ownershipHistory[bead.ownershipHistory.length - 1].location.name
     : 'Unknown';
 
+  const imageUrl = `${CORE_BACKEND_URL}${bead?.thumbnail}`;
+  console.log(imageUrl);
   return (
     <div
       className="relative bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 
@@ -35,12 +41,13 @@ export const BeadCard: React.FC<BeadCardProps> = ({ bead }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Bead Image with rotating effect */}
       <div className="relative w-full h-48 overflow-hidden">
         <Image
           fill
-          src={`${CORE_BACKEND_URL}${bead.thumbnail}`}
-          alt={bead.name || "Bead Image"}
+          unoptimized
+          src={bead.thumbnail ? imageUrl : DEFAULT_IMAGE}
+          overrideSrc={bead.thumbnail ? imageUrl : DEFAULT_IMAGE}
+          alt={bead.name || 'Bead Image'}
           className={`w-full h-full object-cover transition-transform duration-7000 ease-in-out
                      ${isHovered ? 'scale-110 rotate-3' : 'scale-100 rotate-0'}`}
         />

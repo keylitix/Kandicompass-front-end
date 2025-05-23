@@ -8,13 +8,17 @@ import Link from 'next/link';
 import { WelcomeCollectors } from '@/app/_components/dashboard/WelcomeCollectors';
 import { RecentActivity } from '@/app/_components/dashboard/RecentActivity';
 import { YourThreads } from '@/app/_components/dashboard/YourThreads';
-import { useGetAllThreadsQuery, useGetThreadsByMemberQuery, useGetThreadsByOwnerQuery } from '@/redux/api/thredApi';
+import {
+  useGetAllThreadsQuery,
+  useGetThreadsByMemberQuery,
+  useGetThreadsByOwnerQuery,
+} from '@/redux/api/thredApi';
 import { useAppSelector } from '@/app/hook/useReduxApp';
 
 // export const metadata: Metadata = META.HOME;
 
 const DashboardPage = () => {
-  const {user} = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const {
     data: threads,
     isLoading: isLoadingThreads,
@@ -32,7 +36,7 @@ const DashboardPage = () => {
     { id: user?.id ?? '', page_number: 1, page_size: 10 },
     { refetchOnMountOrArgChange: true },
   );
-  
+
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="space-y-8">

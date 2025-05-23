@@ -8,14 +8,13 @@ import React, { useEffect, useState } from 'react';
 
 const BeadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-    const {data: beadData, isLoading: beadLoading} = useGetBeadByIdQuery(id);
+  const { data: beadData, isLoading: beadLoading } = useGetBeadByIdQuery(id);
   const [_, setBead] = useState<Bead | null>(null);
   const [loading, setLoading] = useState(true);
 
   const bead = Array.isArray(beadData?.data) ? beadData.data[0] : [];
 
-  console.log('bead', bead)
-
+  console.log('bead', bead);
 
   useEffect(() => {
     // Simulate API call
