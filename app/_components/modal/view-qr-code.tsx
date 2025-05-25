@@ -1,18 +1,17 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogFooter,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import { CORE_BACKEND_URL } from '@/helper/path';
 import Image from 'next/image';
 import { inputBaseClasses } from '../custom-ui/Input';
 import { GradientButton } from '../custom-ui/GradientButton';
 import { Download, Printer } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 interface ViewQrCodeModalType {
   isOpen: boolean;
@@ -29,15 +28,13 @@ export default function ViewQrCodeModal({
   title,
   status,
 }: ViewQrCodeModalType) {
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [copyCount, setCopyCount] = useState<number>(1);
+  const [isMultiple, setIsMultiple] = useState<boolean>(false);
+  const [copyCount, setCopyCount] = useState<number>(4);
+  const [perRow, setPerRow] = useState<number>(2);
 
   useEffect(() => {
-    if (copyCount > 100) {
-      setCopyCount(100);
-    } else if (copyCount < 1) {
-      setCopyCount(1);
-    }
+    if (copyCount > 100) setCopyCount(100);
+    if (copyCount < 1) setCopyCount(1);
   }, [copyCount]);
 
   const downloadQRCode = async (name: string) => {
@@ -57,28 +54,58 @@ export default function ViewQrCodeModal({
     }
   };
 
-  const printMultipleQRCodes = () => {
+  const printQRCodes = () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
-    const qrHTML = Array.from({ length: copyCount })
-      .map(() => {
-        return `<div style="page-break-after: always; display: flex; justify-content: center; align-items: center; height: 100vh;">
-                <img src="${CORE_BACKEND_URL}${qrURL}" width="250" height="250" style="object-fit: contain;" />
-              </div>`;
-      })
-      .join('');
+    const imageSrc = `${CORE_BACKEND_URL}${qrURL}`;
+
+    const qrHTML = isMultiple
+      ? Array.from({ length: copyCount })
+          .map(() => `<div class="qr"><img src="${imageSrc}" /></div>`)
+          .join('')
+      : `<div class="qr qr-single"><img src="${imageSrc}" /></div>`;
 
     printWindow.document.write(`
       <html>
         <head>
-          <title>Print QR Codes</title>
+          <title>Print QR Code</title>
+          <style>
+            body {
+              margin: 20px;
+              padding: 0;
+              font-family: sans-serif;
+            }
+            .grid {
+              display: ${isMultiple ? 'grid' : 'flex'};
+              grid-template-columns: repeat(${perRow}, 1fr);
+              gap: 20px;
+              justify-items: center;
+              align-items: center;
+              justify-content: center;
+            }
+            .qr img {
+              width: ${isMultiple ? '150px' : '100%'};
+              height: ${isMultiple ? '150px' : '100%'};
+              object-fit: contain;
+            }
+            .qr-single {
+              width: 100vw;
+              height: 100vh;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          </style>
         </head>
         <body>
-          ${qrHTML}
+          <div class="grid">
+            ${qrHTML}
+          </div>
         </body>
       </html>
     `);
+
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
@@ -92,63 +119,92 @@ export default function ViewQrCodeModal({
         className="bg-white"
         aria-describedby={undefined}
       >
-        <>
-          <DialogHeader>
-            <h2 className="text-3xl font-bold">{title}</h2>
-          </DialogHeader>
+        <DialogHeader>
+          <h2 className="text-2xl font-bold">{title}</h2>
+        </DialogHeader>
 
-          <div className="flex flex-col items-center space-y-4">
-            <Image
-              ref={imageRef}
-              src={`${CORE_BACKEND_URL}${qrURL}`}
-              alt="QR Code"
-              width={250}
-              height={250}
-              className="object-contain"
+        <div className="flex flex-col items-center space-y-4">
+          <Image
+            src={`${CORE_BACKEND_URL}${qrURL}`}
+            alt="QR Code"
+            width={250}
+            height={250}
+            className="object-contain"
+          />
+        </div>
+
+        <div className="mt-4">
+          <div className="flex items-center gap-3">
+            <label className="font-semibold text-black">Print Multiple?</label>
+            <Switch
+              checked={isMultiple}
+              onCheckedChange={setIsMultiple}
+              className={`data-[state=checked]:bg-[#FF005D] bg-gray-300 `}
             />
           </div>
+        </div>
 
-          <div className="mt-4">
-            <label className="font-semibold text-black">How many copies?</label>
-            <input
-              type="number"
-              min={1}
-              max={100}
-              className={`${inputBaseClasses(false)} text-black`}
-              value={copyCount}
-              onChange={(e) => setCopyCount(parseInt(e.target.value))}
-              style={{
-                borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
-                outline: 'none',
-                color: 'black',
-              }}
-            />
-          </div>
-
-          <DialogFooter className="flex flex-col gap-2 mt-4">
-            <div className="flex flex-wrap gap-2 justify-center">
-              <GradientButton
-                icon={Download}
-                variant="outline"
-                onClick={() => {
-                  downloadQRCode(title);
+        {isMultiple && (
+          <>
+            <div className="mt-4">
+              <label className="font-semibold text-black">
+                How many copies?
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={100}
+                className={`${inputBaseClasses(false)} text-black`}
+                value={copyCount}
+                onChange={(e) => setCopyCount(parseInt(e.target.value))}
+                style={{
+                  borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+                  outline: 'none',
+                  color: 'black',
                 }}
-              >
-                Download QR
-              </GradientButton>
-
-              <GradientButton
-                icon={Printer}
-                variant="outline"
-                onClick={printMultipleQRCodes}
-              >
-                Print QR
-              </GradientButton>
-
-              <GradientButton onClick={onClose}>Close</GradientButton>
+              />
             </div>
-          </DialogFooter>
-        </>
+
+            <div className="mt-4">
+              <label className="font-semibold text-black">QRs per row?</label>
+              <input
+                type="number"
+                min={1}
+                max={10}
+                className={`${inputBaseClasses(false)} text-black`}
+                value={perRow}
+                onChange={(e) => setPerRow(parseInt(e.target.value))}
+                style={{
+                  borderImage: 'linear-gradient(to right, #FF005D, #00D1FF) 1',
+                  outline: 'none',
+                  color: 'black',
+                }}
+              />
+            </div>
+          </>
+        )}
+
+        <DialogFooter className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-wrap gap-2 justify-center">
+            <GradientButton
+              icon={Download}
+              variant="outline"
+              onClick={() => downloadQRCode(title)}
+            >
+              Download QR
+            </GradientButton>
+
+            <GradientButton
+              icon={Printer}
+              variant="outline"
+              onClick={printQRCodes}
+            >
+              Print QR
+            </GradientButton>
+
+            <GradientButton onClick={onClose}>Close</GradientButton>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
