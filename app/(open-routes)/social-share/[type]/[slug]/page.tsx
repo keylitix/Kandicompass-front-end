@@ -39,7 +39,7 @@ export default async function SharePage({
         <div className="bg-wrapper">
             <div className="left-spark" />
             <div className="right-spark" />
-            <div className="min-h-screen flex flex-col items-center justify-center">
+            <div className="h-[calc(100vh-100px)] flex flex-col items-center justify-center">
                 <h1 className="text-3xl font-bold text-center">{data.title}</h1>
                 <p className="text-white text-center mt-2">{data.description}</p>
 

@@ -10,7 +10,10 @@ import {
   TwitterIcon,
     TelegramShareButton,
   TelegramIcon,
+    WhatsappShareButton,
+  WhatsappIcon,
 } from 'next-share';
+import { toast } from 'sonner';
 
 interface Props {
   url: any;
@@ -22,7 +25,7 @@ export default function SocialButtons({ url, title, description }: Props) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      alert('URL copied to clipboard!');
+      toast.success('URL copied to clipboard!');
     } catch (err) {
       console.error('Failed to copy URL:', err);
     }
@@ -39,6 +42,11 @@ export default function SocialButtons({ url, title, description }: Props) {
       <FacebookMessengerShareButton url={url} appId="YOUR_FACEBOOK_APP_ID">
         <FacebookMessengerIcon size={50} round />
       </FacebookMessengerShareButton>
+      
+      {/* WhatsApp */}
+      <WhatsappShareButton url={url} title={title} separator=":: ">
+        <WhatsappIcon size={50} round />
+      </WhatsappShareButton>
 
       
       {/* Telegram */}
