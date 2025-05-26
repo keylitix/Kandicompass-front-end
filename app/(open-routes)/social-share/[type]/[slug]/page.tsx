@@ -1,27 +1,19 @@
-// app/social-share/[type]/[slug]/page.tsx
-
 import { getShareContent } from '@/lib/socialShareData';
-import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import SocialButtons from '../../components/SocialButtons';
 import { GradientButton } from '@/app/_components/custom-ui/GradientButton';
-import { CORE_FRONTEND_URL } from '@/helper/path';
+import { Metadata, ResolvingMetadata } from 'next';
 
-interface Props {
-    params: {
-        type: string;
-        slug: string;
-    };
-    searchParams: {
-        from?: string;
-    };
+interface PageProps {
+  params: { type: string; slug: string };
+  searchParams?: { from?: string };
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { type, slug } = params;
-    const data = await getShareContent(type, slug);
-
+export async function generateMetadata(
+    { params }: { params: { type: string; slug: string } }
+): Promise<Metadata> {
+    const data = await getShareContent(params.type, params.slug);
     return {
         title: data.title,
         description: data.description,
@@ -40,12 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-
-export default async function SharePage(props: Props) {
-    const { type, slug } = props.params;
-    const from = props.searchParams?.from || '/';
-
-    const data = await getShareContent(type, slug);
+export default async function SharePage({ params, searchParams }: PageProps) {
+    const from = searchParams?.from || '/';
+    const data = await getShareContent(params.type, params.slug);
 
     return (
         <div className="bg-wrapper">
