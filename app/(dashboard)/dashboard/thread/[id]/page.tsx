@@ -77,7 +77,7 @@ const ThreadDetailPage: React.FC = () => {
 
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
+    <div className="container mx-auto px-4 pb-8 mt-8 space-y-6">
       <div className="bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20">
         <div className="p-6">
           <div className="flex justify-between items-start mb-4">

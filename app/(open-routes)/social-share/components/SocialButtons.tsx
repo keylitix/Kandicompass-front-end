@@ -27,7 +27,7 @@ export default function SocialButtons({ url, title, description }: Props) {
       await navigator.clipboard.writeText(url);
       toast.success('URL copied to clipboard!');
     } catch (err) {
-      console.error('Failed to copy URL:', err);
+      toast.error('Failed to copy URL');
     }
   };
 

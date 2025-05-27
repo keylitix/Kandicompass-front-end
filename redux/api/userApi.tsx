@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
+import { GetUserByIdResponse, userDataUpdateRequest } from '@/app/types/UserType';
 
 export interface User {
   fullName: string;
@@ -16,7 +17,6 @@ export interface LoginResponse {
   user: any;
   message: string;
 }
-
 export interface LoginRequest {
   email: string;
   password: string;
@@ -36,6 +36,7 @@ export const userApi = createApi({
   }),
   tagTypes: ['User'],
   endpoints: (builder) => ({
+    // sign up a new user
     createUser: builder.mutation<
       {
         user: User & { id: string };
@@ -50,6 +51,7 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    // login a user
     loginUser: builder.mutation<any, any>({
       query: (credentials) => ({
         url: 'User/login',
@@ -57,10 +59,37 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
-    getAllUsers: builder.query<any, void>({
+    getAllUsers: builder.query<GetUserByIdResponse, void>({
       query: () => 'User/getAll',
       providesTags: ['User'],
     }),
+    // get user by id
+    getUserById: builder.query<GetUserByIdResponse, { id: string }>({
+      query: ({ id }) => `User/getById/${id}`,
+      providesTags: (result, error, { id }) => [{ type: 'User', id }],
+    }),
+    // upload user profile picture
+    uploadProfilePicture: builder.mutation<any, { id: string; file: File }>({
+      query: ({ id, file }) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return {
+          url: `User/uploadImage/${id}`,
+          method: 'POST',
+          body: formData,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
+    }),
+    // update user profile
+    updateUserProfile: builder.mutation<any, { id: string; data: userDataUpdateRequest }>({
+      query: ({ id, data }) => ({
+        url: `User/update/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
+
   }),
 });
 
@@ -68,4 +97,6 @@ export const {
   useCreateUserMutation,
   useLoginUserMutation,
   useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useUploadProfilePictureMutation,
 } = userApi;

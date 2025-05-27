@@ -49,7 +49,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
       : null;
 
   return (
-    <div className="max-w-6xl mx-auto bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
+    <div className="max-w-6xl mx-auto bg-[#1c102b] mt-8 backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
       {/* Hero section with bead image and basic info */}
       <div className="relative md:flex">
         {/* Bead 3D visualization */}

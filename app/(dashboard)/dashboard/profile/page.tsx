@@ -1,0 +1,67 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+import { User } from '../../../types/mock';
+import { mockUsers } from '@/app/data/mockdata';
+import { useParams } from 'next/navigation';
+import { UserProfile } from '@/app/_components/user/UserProfile';
+
+const ProfilePage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        // In a real app, this would be an API call
+        const foundUser = id 
+          ? mockUsers.find(u => u.id === id)
+          : mockUsers[0]; // Default to first user if no ID
+        
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        if (foundUser) {
+          setUser(foundUser);
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-pulse-slow text-cosmic-glow">
+          <div className="w-16 h-16 border-4 border-cosmic-glow border-t-transparent rounded-full animate-rotate-slow"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="bg-cosmic-card backdrop-blur-md rounded-xl overflow-hidden border border-cosmic-glow border-opacity-20 p-8 text-center">
+        <h2 className="text-xl font-semibold text-cosmic-accent mb-2">User Not Found</h2>
+        <p className="text-cosmic-text-secondary mb-4">The user you're looking for does not exist or has transcended to another plane.</p>
+        <button 
+          onClick={() => window.history.back()}
+          className="bg-cosmic-accent text-white px-4 py-2 rounded-lg hover:bg-cosmic-glow transition-colors"
+        >
+          Go Back
+        </button>
+      </div>
+    );
+  }
+
+  return <UserProfile user={user} />;
+};
+
+export default ProfilePage;
