@@ -1,7 +1,8 @@
 "use client"
 import type React from "react"
-import { useEffect, useState } from "react"
-import { Formik, Form, Field, ErrorMessage } from "formik"
+import { useEffect, useRef, useState } from "react"
+import { Formik, Form, Field, ErrorMessage, useField, useFormikContext } from "formik"
+
 import * as Yup from "yup"
 import { MapPin, Bell, Camera, Save, User, Mail, Phone, Shield, Eye } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
@@ -11,10 +12,14 @@ import { useAppSelector } from "@/app/hook/useReduxApp"
 import Input from "@/app/_components/custom-ui/Input"
 import { GradientButton } from "@/app/_components/custom-ui/GradientButton"
 import { CORE_BACKEND_URL } from "@/helper/path"
-import Loader from "@/app/_components/custom-ui/Loader"
 import { DEFAULT_PROFILE_PICTURE } from "@/lib/variables"
 import { userDataUpdateRequest } from "@/app/types/UserType"
 import PhoneInput from "@/app/_components/custom-ui/PhoneInput"
+import {
+    Drawer,
+    DrawerContent,
+    DrawerClose,
+} from "@/components/ui/drawer"
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -36,26 +41,56 @@ export default function UpdateProfilePage() {
     const { data, isLoading: isLoadingUser, refetch: refetchUser, isFetching: isFetchingUser } = useGetUserByIdQuery({ id: userId });
     const userData = data?.data?.[0] || null;
     const [uploadProfilePicture, { isLoading: isUploading }] = useUploadProfilePictureMutation();
+    const [open, setOpen] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const handleClose = () => setOpen(false);
+    console.log('userDatauserDatauserData', userData)
 
-    // initial form values that will be used in the form
+
+    const locationInputRef = useRef<HTMLInputElement>(null);
+    const { setFieldValue } = useFormikContext();
+
     const initialValues = {
         fullName: userData?.fullName || '',
         email: userData?.email || '',
-        // bio: userData?.bio || '',
+        bio: userData?.bio || '',
         phoneNumber: userData?.phoneNumber || '',
         notifications: {
-            email: true,
-            push: true,
-            sms: false,
-            marketing: false,
+            email: userData?.notifications?.email || false,
+            push: userData?.notifications?.push || false,
+            sms: userData?.notifications?.sms || false,
+            marketing: userData?.notifications?.marketing || false,
         },
         privacy: {
-            profileVisible: true,
-            showEmail: false,
-            showPhone: false,
+            profileVisible: userData?.privacy?.profileVisible || false,
+            showEmail: userData?.privacy?.showEmail || false,
+            showPhone: userData?.privacy?.showPhone || false,
+        },
+        location: {
+            city: userData?.location?.city || '',
+            country: userData?.location?.country || '',
+            lat: userData?.location?.lat || 0,
+            lon: userData?.location?.lon || 0,
         },
     }
+
+
+    const [field, helpers] = useField(initialValues.location.city);
+    useEffect(() => {
+        if (!window.google || !locationInputRef.current) return;
+
+        const autocomplete = new google.maps.places.Autocomplete(locationInputRef.current, {
+            types: ['geocode'],
+            componentRestrictions: { country: ['us', 'in'] },
+        });
+
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (place.formatted_address) {
+                setFieldValue(initialValues.location.city, place.formatted_address);
+            }
+        });
+    }, [locationInputRef]);
 
     console.log('initialValues', initialValues)
 
@@ -161,8 +196,6 @@ export default function UpdateProfilePage() {
                                             name="fullName"
                                             value={values.fullName}
                                             onChange={(e) => setFieldValue("fullName", e.target.value)}
-                                            errors={errors.fullName}
-                                            touched={touched.fullName}
                                         />
                                     </div>
 
@@ -174,8 +207,6 @@ export default function UpdateProfilePage() {
                                             name="email"
                                             value={values.email}
                                             onChange={(e) => setFieldValue("email", e.target.value)}
-                                            errors={errors.email}
-                                            touched={touched.email}
                                         />
                                     </div>
 
@@ -189,8 +220,6 @@ export default function UpdateProfilePage() {
                                         />
                                     </div>
 
-
-
                                     <div>
                                         <Label htmlFor="location" className="text-[#ffff] flex items-center mb-2">
                                             <MapPin className="mr-1" size={16} />
@@ -198,13 +227,15 @@ export default function UpdateProfilePage() {
                                         </Label>
                                         <div className="relative w-full ">
                                             <Field
+                                                {...field}
+                                                ref={locationInputRef}
                                                 as={Input}
                                                 id="location"
                                                 name="location"
                                                 placeholder="Enter your location"
-                                                value={values.location}
                                             />
                                         </div>
+                                        {/* <GoogleLocationInput name="location" label="Location" /> */}
                                         <ErrorMessage name="location" component="div" className="text-[#FF005D] text-sm mt-1" />
                                     </div>
                                 </div>
@@ -217,12 +248,9 @@ export default function UpdateProfilePage() {
                                     label="Bio"
                                     placeholder="Tell us about yourself..."
                                     name="bio"
-                                    value={values.bio}
                                     onChange={(e) => setFieldValue("bio", e.target.value)}
-                                    errors={errors.bio}
-                                    touched={touched.bio}
                                 />
-                                <p className="text-sm text-[#8a86a0] mt-1">{values?.bio?.length || 0}/500 characters</p>
+                                {/* <p className="text-sm text-[#8a86a0] mt-1">{values?.bio?.length || 0}/500 characters</p> */}
                             </div>
                         </div>
 
@@ -341,29 +369,42 @@ export default function UpdateProfilePage() {
                             </div>
                         </div>
 
-                        {/* Submit Button */}
-                        <div className="flex justify-end space-x-4">
-                            <GradientButton type="button" variant="outline" className="border border-[#3f2e6a] text-[#8a86a0] hover:bg-[#2a1f3d]">
-                                Cancel
-                            </GradientButton>
-                            <GradientButton
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="bg-[#00D1FF] text-black hover:bg-[#00D1FF]/80 flex items-center"
+                        <Drawer open={open} onOpenChange={setOpen}>
+                            <DrawerContent
+                                className="bg-[#1c102b] backdrop-transparent border-l border-[#3f2e6a] h-[100px] fixed bottom-0  w-full shadow-lg"
+                                style={{ pointerEvents: 'auto' }}
                             >
-                                {isSubmitting ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
-                                        Saving...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Save className="mr-2" size={16} />
-                                        Save Changes
-                                    </>
-                                )}
-                            </GradientButton>
-                        </div>
+                                <div className="flex justify-end space-x-4">
+                                    <DrawerClose asChild>
+                                        <GradientButton
+                                            type="button"
+                                            variant="outline"
+                                            className="border border-[#3f2e6a] text-[#8a86a0] hover:bg-[#2a1f3d]"
+                                        >
+                                            Cancel
+                                        </GradientButton>
+                                    </DrawerClose>
+
+                                    <GradientButton
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="bg-[#00D1FF] text-black hover:bg-[#00D1FF]/80 flex items-center"
+                                    >
+                                        {isSubmitting ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2" />
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Save className="mr-2" size={16} />
+                                                Save Changes
+                                            </>
+                                        )}
+                                    </GradientButton>
+                                </div>
+                            </DrawerContent>
+                        </Drawer>
                     </Form>
                 )}
             </Formik>

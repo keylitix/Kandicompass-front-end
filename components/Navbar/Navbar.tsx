@@ -27,7 +27,7 @@ const Navbar = () => {
       >
         SHOP NOW
       </Link>
-      {user && user.token ? (
+      {user ? (
         <>
           <div className="bg-red">
             <DropdownMenu>

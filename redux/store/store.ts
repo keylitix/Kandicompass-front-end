@@ -5,6 +5,7 @@ import { beadApi } from '../api/beadApi';
 import { userApi } from '../api/userApi';
 import { threadApi } from '../api/thredApi';
 import authReducer from '../slice/UserSlice';
+import notificationReducer from '../slice/Notification';
 import { combineReducers } from 'redux';
 
 const persistConfig = {
@@ -15,6 +16,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  notification: notificationReducer,
   [beadApi.reducerPath]: beadApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [threadApi.reducerPath]: threadApi.reducer,

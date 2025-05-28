@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   Menu,
@@ -12,6 +12,7 @@ import {
   MapPin,
   User2Icon,
   User2,
+  MailIcon,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -31,6 +32,10 @@ import {
 } from '@/redux/slice/UserSlice';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
+import { useAppSelector } from '@/app/hook/useReduxApp';
+import { useGetInvitationsQuery } from '@/redux/api/thredApi';
+import { AppNotification } from '@/app/types/notification';
+import { toast } from 'sonner';
 
 const DashboardRoutes = [
   {
@@ -38,77 +43,65 @@ const DashboardRoutes = [
     label: 'HOME',
     link: '/dashboard',
   },
-  // {
-  //   id: 2,
-  //   label: "Thred",
-  //   link: "/dashboard/thred"
-  // },
-  // {
-  //   id: 3,
-  //   label: "NOTIFICATIONS",
-  //   link: "/dashboard/notifications"
-  // },
-  // {
-  //   id: 4,
-  //   label: "ACCOUNT",
-  //   link: "/dashboard/account"
-  // },
-  // {
-  //   id: 5,
-  //   label: "CHANGE",
-  //   link: "/dashboard/change"
-  // },
   {
-    id: 6,
+    id: 2,
     label: 'ABOUT US',
     link: '/dashboard/about',
   },
-  // {
-  //   id: 7,
-  //   label: "Privacy Policy",
-  //   link: "/dashboard/privacy-policy"
-  // },
   {
-    id: 8,
+    id: 3,
     label: 'Contact Us',
     link: '/dashboard/contact-us',
   },
 ];
 
-const notifications = [
-  {
-    id: 1,
-    title: 'Tracking Update',
-    time: '10 PM',
-    content:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sit amet lectus elit.',
-    action: null,
-  },
-  {
-    id: 2,
-    title: 'New Charm Rivaltakia!',
-    time: '10 PM',
-    content: 'Check out our newest charm collection.',
-    action: 'VIEW NOW',
-  },
-  {
-    id: 3,
-    title: 'Exclusive Offer',
-    time: '10 PM',
-    content: 'Special discounts for our premium members.',
-    action: 'SHOP NOW',
-  },
-];
+const statusColors = {
+  pending: 'bg-yellow-800 text-white',
+  accepted: 'bg-green-800 text-white',
+  declined: 'bg-red-800 text-white',
+};
 
 const Dnavbar = () => {
+  const { user } = useAppSelector((state) => state.auth);
+  const { refecthNotification } = useAppSelector((state) => state.notification);
+  const userEmail = user?.email as string;
+  const { data: invitations, isLoading } = useGetInvitationsQuery(userEmail, {
+    skip: !userEmail,
+    refetchOnMountOrArgChange: refecthNotification,
+  });
+  const invitationsData = invitations?.data;
+  console.log('invitationsData', refecthNotification)
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(3);
+  const [unreadCount, setUnreadCount] = useState<number | undefined>();
+  const prevIdsRef = useRef<Set<string>>(new Set());
+
   const dispatch = useDispatch<AppDispatch>();
   const route = useRouter();
 
   const { isLocationEnabled, locationDenied } = useSelector(
     (state: RootState) => state.auth,
   );
+
+  const threadInvitations: AppNotification[] =
+    invitationsData?.map((invite) => ({
+      id: invite._id,
+      title: 'Thread Invitation',
+      content: `You have been invited to "${invite.threadName}"`,
+      time: new Date(invite.createdAt).toLocaleTimeString(),
+      type: 'thread_invitation',
+      icon: <MailIcon size={16} className="text-[#FF005D]" />,
+      status: invite.status,
+      action: {
+        label: 'View Thread',
+        onClick: () => {
+          route.push(`/dashboard/thread/${invite.threadId}?inviteId=${invite._id}`);
+        },
+      },
+    })) || [];
+
+  const allNotifications = [...threadInvitations];
+
 
   const toggleLocation = () => {
     if (isLocationEnabled) {
@@ -117,6 +110,25 @@ const Dnavbar = () => {
       dispatch(enableLocation());
     }
   };
+
+  useEffect(() => {
+    if (!invitationsData) return;
+    const currentIds = new Set(invitationsData.map((invite) => invite._id));
+    const prevIds = prevIdsRef.current;
+    const newInvites = invitationsData.filter(
+      (invite) => !prevIds.has(invite._id),
+    );
+    if (newInvites.length > 0) {
+      toast.message(`You have ${newInvites.length} new thread invitation${newInvites.length > 0 ? 's' : ''}.`);
+      prevIdsRef.current = currentIds;
+    };
+  }, [invitationsData]);
+
+  useEffect(() => {
+    const pendingInvitations = invitationsData?.filter(inv => inv.status === 'pending') || [];
+    const unreadCount = [...pendingInvitations];
+    setUnreadCount(unreadCount.length);
+  }, [invitationsData, refecthNotification]);
 
   return (
     <nav className="w-full relative">
@@ -145,52 +157,67 @@ const Dnavbar = () => {
             <DropdownMenuTrigger asChild>
               <div className="relative cursor-pointer">
                 <Bell className="text-white h-6 w-6 hover:opacity-80" />
-                {unreadCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 bg-red-500 text-white">
+                {typeof unreadCount === 'number' && unreadCount > 0 && (
+                  <Badge className="absolute -top-2 -right-1 h-4  w-4 flex items-center justify-center rounded-full p-0 bg-red-500 text-white text-[10px]">
                     {unreadCount}
                   </Badge>
                 )}
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-80 bg-gray-900 border-gray-700 text-white rounded-lg shadow-lg"
+              className="w-xl h-[calc(100vh-30vh)] overflow-y-auto bg-[#1c102b] border border-white/20 text-white rounded-2xl shadow-2xl shadow-[#1c102b]/50 space-y-2"
               align="end"
             >
               <div className="p-2 border-b border-gray-700">
                 <div className="flex justify-between items-center px-2">
                   <h3 className="font-bold">NOTIFICATIONS</h3>
-                  <div className="flex gap-2">
-                    <button className="text-xs text-blue-400 hover:text-blue-300">
-                      VIEW ALL
-                    </button>
-                    <button className="text-xs text-blue-400 hover:text-blue-300">
-                      MARK AS READ
-                    </button>
-                  </div>
                 </div>
               </div>
 
-              {notifications.map((notification) => (
+              {allNotifications.map((notification) => (
                 <DropdownMenuItem
                   key={notification.id}
-                  className="flex flex-col items-start gap-1 p-3 hover:bg-gray-800 rounded cursor-pointer"
+                  className={`flex flex-col items-start gap-1 p-3 ${notification.status === 'pending' ? 'bg-gray-600' : ''} hover:bg-gray-800 rounded-xl cursor-pointer focus:bg-gray-900`}
+                  onClick={() => {
+                    if (notification.action) {
+                      notification.action.onClick();
+                    }
+                  }}
                 >
                   <div className="flex justify-between w-full">
-                    <span className="font-semibold">{notification.title}</span>
-                    <span className="text-xs text-gray-400">
-                      {notification.time}
+                    <span className="font-semibold flex items-center gap-2">
+                      {notification.icon}
+                      {notification.title}
+                    </span>
+                    <span className='flex flex-col items-end justify-between'>
+                      <Badge className={`text-[8px] ${statusColors[notification.status]}`}>
+                        {notification.status.toUpperCase()}
+                      </Badge>
                     </span>
                   </div>
-                  <p className="text-sm text-gray-300">
-                    {notification.content}
-                  </p>
-                  {notification.action && (
+
+                  <p className="text-sm text-gray-300">{notification.content}</p>
+
+                  <span className='flex items-end justify-between w-full'>
+                    {notification.action && (
+                      <button
+                        className="text-xs text-blue-400 hover:text-blue-300 mt-1"
+                        onClick={notification.action.onClick}
+                      >
+                        {notification.action.label}
+                      </button>
+                    )}
+                    <span className="text-xs text-gray-400">{notification.time}</span>
+                  </span>
+
+                  {/* {notification.action && (
                     <button className="text-xs text-blue-400 hover:text-blue-300 mt-1">
                       {notification.action}
                     </button>
-                  )}
+                  )} */}
                 </DropdownMenuItem>
               ))}
+
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -219,7 +246,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => {route.push('/dashboard/faq')}}
+                onClick={() => { route.push('/dashboard/faq') }}
               >
                 <HelpCircle className="h-4 w-4" />
                 <span>FAQ</span>
@@ -227,7 +254,7 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => {route.push('/terms-and-conditions')}}
+                onClick={() => { route.push('/terms-and-conditions') }}
               >
                 <ReceiptText className="h-4 w-4" />
                 <span>Terms & Conditions</span>

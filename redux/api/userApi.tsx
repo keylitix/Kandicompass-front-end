@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
-import { GetUserByIdResponse, userDataUpdateRequest } from '@/app/types/UserType';
+import {  GetUserResponse, userDataUpdateRequest } from '@/app/types/UserType';
 
 export interface User {
   fullName: string;
@@ -9,7 +9,6 @@ export interface User {
   password: string;
   phoneNumber: string;
 }
-
 export interface LoginResponse {
   statusCode: number;
   data(arg0: string, data: any): unknown;
@@ -59,12 +58,12 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
-    getAllUsers: builder.query<GetUserByIdResponse, void>({
+    getAllUsers: builder.query<GetUserResponse, void>({
       query: () => 'User/getAll',
       providesTags: ['User'],
     }),
     // get user by id
-    getUserById: builder.query<GetUserByIdResponse, { id: string }>({
+    getUserById: builder.query<GetUserResponse, { id: string }>({
       query: ({ id }) => `User/getById/${id}`,
       providesTags: (result, error, { id }) => [{ type: 'User', id }],
     }),

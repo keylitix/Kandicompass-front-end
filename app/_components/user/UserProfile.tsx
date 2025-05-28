@@ -1,9 +1,11 @@
 'use client';
 import React, { useState } from 'react';
-import { MapPin, Award, Sparkles, BookOpen, Users, Calendar } from 'lucide-react';
+import { MapPin, Award, Sparkles, BookOpen, Users, Calendar, Pencil } from 'lucide-react';
 import { User, } from '@/app/types/mock';
 import { mockBeads } from '@/app/data/mockdata';
 import { BeadCard } from '../beads/BeadCard';
+import { GradientButton } from '../custom-ui/GradientButton';
+import { useRouter } from 'next/navigation';
 
 interface UserProfileProps {
   user: User;
@@ -11,38 +13,40 @@ interface UserProfileProps {
 
 export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState<'beads' | 'stories' | 'badges' | 'meetings'>('beads');
-  
+
+  const router = useRouter();
+
   // Filter beads owned by this user
   const userBeads = mockBeads.filter((bead) => bead.currentOwnerId === user.id);
-  
+
   return (
     <div className="max-w-6xl mx-auto mt-8">
       {/* Hero section with user info */}
-      <div className="bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-neon-sm mb-6">
+      <div className="relative bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-neon-sm mb-6">
         <div className="md:flex">
           {/* Avatar section */}
           <div className="relative p-6 md:w-1/3 flex flex-col items-center justify-center">
             <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-cosmic-accent shadow-neon mb-4">
               <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-              
+
               {/* Energy aura effect */}
               <div className="absolute inset-0 border-4 border-[#3f2e6a] rounded-full opacity-30 animate-pulse-slow"></div>
             </div>
-            
+
             <h1 className="text-2xl font-bold text-cosmic-accent text-center">{user.name}</h1>
-            
+
             <div className="flex items-center mt-2 text-sm text-[#8a86a0]">
               <MapPin size={16} className="mr-1 text-cosmic-highlight" />
               <span>{user.location.name}</span>
             </div>
           </div>
-          
+
           {/* User stats */}
           <div className="p-6 md:w-2/3 border-t md:border-t-0 md:border-l border-[#3f2e6a] border-opacity-20">
             <p className="text-[#ffff] mb-6">
               {user.bio}
             </p>
-            
+
             {/* Stats grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               {/* Beads */}
@@ -50,26 +54,26 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                 <div className="text-cosmic-accent text-xl font-semibold">{user.ownedBeads.length}</div>
                 <div className="text-xs text-[#8a86a0] mt-1">Beads Owned</div>
               </div>
-              
+
               {/* Threads */}
               <div className="bg-cosmic-background bg-opacity-40 rounded-lg p-3 text-center">
                 <div className="text-cosmic-highlight text-xl font-semibold">{user.joinedThreads.length}</div>
                 <div className="text-xs text-[#8a86a0] mt-1">Threads Joined</div>
               </div>
-              
+
               {/* Stories */}
               <div className="bg-cosmic-background bg-opacity-40 rounded-lg p-3 text-center">
                 <div className="text-cosmic-glow text-xl font-semibold">{user.stories.length}</div>
                 <div className="text-xs text-[#8a86a0] mt-1">Stories Shared</div>
               </div>
-              
+
               {/* Badges */}
               <div className="bg-cosmic-background bg-opacity-40 rounded-lg p-3 text-center">
                 <div className="text-cosmic-warning text-xl font-semibold">{user.badges.length}</div>
                 <div className="text-xs text-[#8a86a0] mt-1">Badges Earned</div>
               </div>
             </div>
-            
+
             {/* Badges showcase */}
             <div className="mb-4">
               <h3 className="text-sm font-medium text-[#8a86a0] mb-2">Top Badges</h3>
@@ -81,18 +85,26 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             </div>
           </div>
         </div>
+
+        <GradientButton 
+          className='absolute bottom-4 right-4'
+          variant='outline'
+          icon={Pencil}
+          onClick={() => router.push(`/dashboard/profile/update`)}
+        >
+          Update
+        </GradientButton>
       </div>
-      
+
       {/* Tab navigation */}
       <div className="bg-cosmic-card backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-neon-sm">
         <div className="px-6 border-b border-[#3f2e6a] border-opacity-20">
           <div className="flex overflow-x-auto scrollbar-none">
-            <button 
-              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'beads' 
-                  ? 'border-[#00D1FF] text-[#00D1FF]' 
+            <button
+              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'beads'
+                  ? 'border-[#00D1FF] text-[#00D1FF]'
                   : 'border-transparent text-[#FF005D] hover:text-cosmic-text-primary'
-              }`}
+                }`}
               onClick={() => setActiveTab('beads')}
             >
               <div className="flex items-center">
@@ -100,12 +112,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                 Beads Collection
               </div>
             </button>
-            <button 
-              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'stories' 
-                  ? 'border-[#00D1FF] text-[#00D1FF]' 
+            <button
+              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'stories'
+                  ? 'border-[#00D1FF] text-[#00D1FF]'
                   : 'border-transparent text-[#FF005D] hover:text-cosmic-text-primary'
-              }`}
+                }`}
               onClick={() => setActiveTab('stories')}
             >
               <div className="flex items-center">
@@ -113,12 +124,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                 Stories
               </div>
             </button>
-            <button 
-              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'badges' 
-                  ? 'border-[#00D1FF] text-[#00D1FF]' 
+            <button
+              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'badges'
+                  ? 'border-[#00D1FF] text-[#00D1FF]'
                   : 'border-transparent text-[#FF005D] hover:text-cosmic-text-primary'
-              }`}
+                }`}
               onClick={() => setActiveTab('badges')}
             >
               <div className="flex items-center">
@@ -126,12 +136,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
                 Badges
               </div>
             </button>
-            <button 
-              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'meetings' 
-                  ? 'border-[#00D1FF] text-[#00D1FF]' 
+            <button
+              className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'meetings'
+                  ? 'border-[#00D1FF] text-[#00D1FF]'
                   : 'border-transparent text-[#FF005D] hover:text-cosmic-text-primary'
-              }`}
+                }`}
               onClick={() => setActiveTab('meetings')}
             >
               <div className="flex items-center">
@@ -141,7 +150,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
             </button>
           </div>
         </div>
-        
+
         {/* Tab content */}
         <div className="p-6">
           {activeTab === 'beads' && (
@@ -158,7 +167,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               )}
             </div>
           )}
-          
+
           {activeTab === 'stories' && (
             <div>
               <h3 className="text-xl font-semibold text-cosmic-highlight mb-4">Shared Stories</h3>
@@ -171,7 +180,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               )}
             </div>
           )}
-          
+
           {activeTab === 'badges' && (
             <div>
               <h3 className="text-xl font-semibold text-cosmic-highlight mb-4">Earned Badges</h3>
@@ -196,7 +205,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
               )}
             </div>
           )}
-          
+
           {activeTab === 'meetings' && (
             <div>
               <h3 className="text-xl font-semibold text-cosmic-highlight mb-4">Meeting History</h3>

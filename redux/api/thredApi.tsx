@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
+import { GetInvitationsResponse, RespondToInvitationRequest, RespondToInvitationResponse, sendInvitationRequest, SendInvitationResponse } from '@/app/types/threads';
+import { getIn } from 'formik';
 
 interface IThread {
   data: any;
@@ -34,7 +36,7 @@ export const threadApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Thread'],
+  tagTypes: ['Thread', 'Invitations'],
   endpoints: (builder) => ({
     // Get all threads
     getThreads: builder.query<{ data: IThread[] }, void>({
@@ -127,6 +129,34 @@ export const threadApi = createApi({
         params: { page_number, page_size },
       }),
     }),
+
+    // send invitation to user
+    sendInvitation: builder.mutation<SendInvitationResponse, sendInvitationRequest>({
+      query: (payload) => ({
+        url: `threads/create-invite`,
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+
+    //get invitations by user email
+    getInvitations: builder.query<GetInvitationsResponse, string>({
+      query: (email) => ({
+        url: `threads/get-invitations-by-email/${email}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, email) => [{ type: 'Invitations', id: `invites-${email}` }],
+      keepUnusedDataFor: 300,
+    }),
+
+    // respond to invitation
+    respondeToInvitation: builder.mutation<RespondToInvitationResponse, RespondToInvitationRequest>({
+      query: (payload) => ({
+        url: `threads/respond-to-invite`,
+        method: 'POST',
+        body: payload,
+      }),
+    })
   }),
 });
 
@@ -140,4 +170,7 @@ export const {
   useGetAllThreadsQuery,
   useGetThreadsByOwnerQuery,
   useGetThreadsByMemberQuery,
+  useSendInvitationMutation,
+  useGetInvitationsQuery,
+  useRespondeToInvitationMutation
 } = threadApi;

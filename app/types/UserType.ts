@@ -1,4 +1,27 @@
-export interface SecurityInfo {
+export interface UserNotifications {
+  email: boolean;
+  marketing: boolean;
+  push: boolean;
+  sms: boolean;
+  _id?: string;
+}
+
+export interface UserPrivacy {
+  profileVisible: boolean;
+  showEmail: boolean;
+  showPhone: boolean;
+  _id?: string;
+}
+
+export interface UserLocation {
+  city: string;
+  country: string;
+  lat: number;
+  lon: number;
+  _id?: string;
+}
+
+export interface UserSecurity {
   lastIpAddress: string;
   loginAttempts: number;
   securityQuestions: any[];
@@ -7,11 +30,13 @@ export interface SecurityInfo {
 
 export interface UserType {
   id: string;
+  _id: string;
   fullName: string;
+  bio: string;
   email: string;
   phoneNumber: string;
   role: string;
-  accountStatus: string;
+  accountStatus: 'Active' | 'Inactive' | string;
   emailVerified: boolean;
   is_activated: boolean;
   is_deleted: boolean;
@@ -24,8 +49,14 @@ export interface UserType {
   password: string;
   orderHistory: any[];
   portfolio: any[];
-  security: SecurityInfo;
   twoFactorAuthEnabled: boolean;
+  token: string;
+  securityQuestions: any[];
+  location: UserLocation;
+  notifications: UserNotifications;
+  privacy: UserPrivacy;
+  security: UserSecurity;
+  __v: number;
 }
 
 export interface UserSecurity {
@@ -39,6 +70,7 @@ export interface User {
   _id: string;
   fullName: string;
   email: string;
+  bio: string;
   password: string;
   phoneNumber: string;
   profilePicture: string;
@@ -48,7 +80,6 @@ export interface User {
   emailVerified: boolean;
   twoFactorAuthEnabled: boolean;
   orderHistory: any[];
-  security: UserSecurity;
   portfolio: any[];
   is_activated: boolean;
   is_deleted: boolean;
@@ -56,11 +87,15 @@ export interface User {
   updated_at: string;
   createdAt: string;
   updatedAt: string;
+  location: UserLocation;
+  notifications: UserNotifications;
+  privacy: UserPrivacy;
+  security: UserSecurity;
   __v: number;
   token: string;
 }
 
-export interface GetUserByIdResponse {
+export interface GetUserResponse {
   isSuccess: boolean;
   data: User[];
   statusCode: number;

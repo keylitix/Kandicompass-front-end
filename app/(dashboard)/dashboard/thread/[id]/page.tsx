@@ -1,12 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   QrCode,
   Calendar,
   Plus,
   Share2Icon,
 } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { BeadCard } from '@/app/_components/beads/BeadCard';
 import { GradientButton } from '@/app/_components/custom-ui/GradientButton';
 import Image from 'next/image';
@@ -17,13 +17,19 @@ import AddMembers from '@/app/_components/modal/AddMember';
 import ViewQrCodeModal from '@/app/_components/modal/view-qr-code';
 import SocialShare from '@/app/_components/modal/SocialShare';
 import { CORE_BACKEND_URL } from '@/helper/path';
+import { toast } from 'sonner';
+import InvitationAction from '@/app/_components/modal/InvitationAction';
+import { set } from 'lodash';
 
 const ThreadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const inviteId = searchParams.get('inviteId');
   const router = useRouter();
   // const [thread, setThread] = useState<Thread | null>(null);
   const [showQrCode, setShowQrCode] = useState(false);
   const [shareQrCode, setShareQrCode] = useState(false);
+
   const { data, isLoading: isThreadLoading } = useGetThreadByIdQuery(id);
   const {
     data: beadData,
@@ -35,9 +41,13 @@ const ThreadDetailPage: React.FC = () => {
     page_number: 1,
     page_size: 50,
   });
+
   const thread = data?.data[0] ?? {};
+
   const [openBeadModal, setOpenBeadModal] = useState(false);
   const [openMemberModal, setOpenMemberModal] = useState(false);
+  const [openInvitationActionModal, setOpenInvitationActionModal] = useState(false);
+
   const [qrCode, setQrCode] = useState<{
     qrCode: string | null;
     name: string;
@@ -47,6 +57,15 @@ const ThreadDetailPage: React.FC = () => {
     title: string;
     link?: string;
   }>({ qrCode: null, title: '', link: document.location.href });
+
+  useEffect(() => {
+    if (inviteId && typeof window !== 'undefined') {
+      setOpenInvitationActionModal(true);
+    }
+  }, [inviteId]);
+
+
+
 
   if (isThreadLoading) {
     return (
@@ -74,6 +93,8 @@ const ThreadDetailPage: React.FC = () => {
       </div>
     );
   }
+
+
 
 
   return (
@@ -186,6 +207,7 @@ const ThreadDetailPage: React.FC = () => {
       <AddMembers
         isOpen={openMemberModal}
         onClose={() => setOpenMemberModal(false)}
+        threadId={id}
       />
 
       <ViewQrCodeModal
@@ -204,6 +226,16 @@ const ThreadDetailPage: React.FC = () => {
         imageURL={`${CORE_BACKEND_URL ?? ''}${SocialShareData.qrCode ?? ''}`}
         shareURL={SocialShareData.link ?? ''}
         title={SocialShareData.title ?? ''}
+      />
+      <InvitationAction
+        inviteId={inviteId ?? ''}
+        threadName={thread.threadName}
+        isOpen={openInvitationActionModal}
+        onClose={() => {
+          setOpenInvitationActionModal(false);
+          router.back();
+        }}
+        onSuccessResponse={() => setOpenInvitationActionModal(false)}
       />
     </div>
   );
