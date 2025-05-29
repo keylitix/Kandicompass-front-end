@@ -20,16 +20,20 @@ import { CORE_BACKEND_URL } from '@/helper/path';
 import { toast } from 'sonner';
 import InvitationAction from '@/app/_components/modal/InvitationAction';
 import { set } from 'lodash';
+import { Bead } from '@/app/types/bead';
+import JoiningRequest from '@/app/_components/modal/JoiningRequest';
+import { DEFAULT_PROFILE_PICTURE } from '@/lib/variables';
 
 const ThreadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const inviteId = searchParams.get('inviteId');
+  const forJoining = searchParams.get('jt');
   const router = useRouter();
   // const [thread, setThread] = useState<Thread | null>(null);
   const [showQrCode, setShowQrCode] = useState(false);
   const [shareQrCode, setShareQrCode] = useState(false);
-
+  const [hasThreadAccess, setHasThreadAccess] = useState(false);
   const { data, isLoading: isThreadLoading } = useGetThreadByIdQuery(id);
   const {
     data: beadData,
@@ -43,10 +47,12 @@ const ThreadDetailPage: React.FC = () => {
   });
 
   const thread = data?.data[0] ?? {};
+  const beads = beadData?.data?.data ?? [];
 
   const [openBeadModal, setOpenBeadModal] = useState(false);
   const [openMemberModal, setOpenMemberModal] = useState(false);
   const [openInvitationActionModal, setOpenInvitationActionModal] = useState(false);
+  const [openJoiningRequestModal, setOpenJoiningRequestModal] = useState(false);
 
   const [qrCode, setQrCode] = useState<{
     qrCode: string | null;
@@ -62,9 +68,17 @@ const ThreadDetailPage: React.FC = () => {
     if (inviteId && typeof window !== 'undefined') {
       setOpenInvitationActionModal(true);
     }
-  }, [inviteId]);
+
+    if (forJoining && typeof window !== 'undefined') {
+      setOpenJoiningRequestModal(true);
+    }
+  }, [inviteId, forJoining]);
 
 
+  useEffect(() => {
+    const hasAccess = beads.length >= 2 && beads.filter((b: Bead) => b.images.length > 0).length >= 2;
+    setHasThreadAccess(hasAccess);
+  }, [beads]);
 
 
   if (isThreadLoading) {
@@ -137,32 +151,36 @@ const ThreadDetailPage: React.FC = () => {
           </div>
 
           <p className=" mb-6">{thread?.description}</p>
+          {hasThreadAccess && (
+            <div className="mb-6">
+              <h3 className="text-sm font-medium pb-2">Members</h3>
+              <div className="flex items-center -space-x-2">
+                {thread?.members?.map((member: any, index: any) => (
+                  <div
+                    key={member._id}
+                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#2a1a3d]"
+                    style={{ zIndex: 10 - index }}
+                  >
+                    <Image
+                      width={50}
+                      height={50}
+                      unoptimized
+                      src={member.avatar ? CORE_BACKEND_URL + member.avatar : DEFAULT_PROFILE_PICTURE}
+                      alt={member.name}
+                      className="object-cover p-1"
+                    />
+                  </div>
+                ))}
 
-          <div className="mb-6">
-            <h3 className="text-sm font-medium  mb-2">Members</h3>
-            <div className="flex items-center -space-x-2">
-              {thread?.members?.map((member: any, index: any) => (
-                <div
-                  key={member.id}
-                  className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#2a1a3d]"
-                  style={{ zIndex: 10 - index }}
+                <button
+                  onClick={() => setOpenMemberModal(true)}
+                  className="w-10 h-10 rounded-full bg-[#2a1a3d] bg-opacity-50 flex items-center justify-center ml-2 border-2 border-[#00D1FF] border-dashed hover:bg-[#00D1FF] transition-colors"
                 >
-                  <Image
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-
-              <button
-                onClick={() => setOpenMemberModal(true)}
-                className="w-10 h-10 rounded-full bg-[#2a1a3d] bg-opacity-50 flex items-center justify-center ml-2 border-2 border-[#00D1FF] border-dashed hover:bg-[#00D1FF] transition-colors"
-              >
-                <Plus size={16} className="" />
-              </button>
+                  <Plus size={16} className="" />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -209,7 +227,6 @@ const ThreadDetailPage: React.FC = () => {
         onClose={() => setOpenMemberModal(false)}
         threadId={id}
       />
-
       <ViewQrCodeModal
         isOpen={showQrCode}
         onClose={() => {
@@ -233,6 +250,16 @@ const ThreadDetailPage: React.FC = () => {
         isOpen={openInvitationActionModal}
         onClose={() => {
           setOpenInvitationActionModal(false);
+          router.back();
+        }}
+        onSuccessResponse={() => setOpenInvitationActionModal(false)}
+      />
+      <JoiningRequest
+        inviteId={inviteId ?? ''}
+        threadName={thread.threadName}
+        isOpen={openJoiningRequestModal}
+        onClose={() => {
+          setOpenJoiningRequestModal(false);
           router.back();
         }}
         onSuccessResponse={() => setOpenInvitationActionModal(false)}

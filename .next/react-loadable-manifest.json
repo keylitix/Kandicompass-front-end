@@ -1,0 +1,22 @@
+{
+  "app\\(dashboard)\\dashboard\\charms\\[charmsId]\\page.tsx -> @/components/LeafletMap": {
+    "id": 11746,
+    "files": [
+      "static/css/1de76be520b4de19.css",
+      "static/chunks/d0deef33.6b9be80f0cb4606a.js",
+      "static/chunks/1746.e5c9b84e8d2401d7.js"
+    ]
+  },
+  "node_modules\\next\\dist\\client\\index.js -> ../pages/_app": {
+    "id": 90472,
+    "files": [
+      "static/chunks/472.2c08b965bd9148e2.js"
+    ]
+  },
+  "node_modules\\next\\dist\\client\\index.js -> ../pages/_error": {
+    "id": 99341,
+    "files": [
+      "static/chunks/9341.c00e1bbc955787be.js"
+    ]
+  }
+}

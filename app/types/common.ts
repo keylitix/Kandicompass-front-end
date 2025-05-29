@@ -40,6 +40,7 @@ export interface Thread {
   memberCount: number;
   members: string[];
   beads: any[];
+  visibility: 'Public' | 'Private';
   __v: number;
 }
 

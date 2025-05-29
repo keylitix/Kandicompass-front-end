@@ -1,3 +1,22 @@
+// Thread
+export interface Thread {
+  _id: string;
+  threadName: string;
+  description: string;
+  ownerId: string;
+  owner: string;
+  qrCode: string;
+  created_at: string;
+  updated_at: string;
+  is_activated: boolean;
+  is_deleted: boolean;
+  memberCount: number;
+  members: string[];
+  beads: any[];
+  visibility: 'Public' | 'Private';	
+  __v: number;
+}
+
 // send invitation
 export interface sendInvitationRequest {
   email: string;
@@ -51,4 +70,12 @@ export interface RespondToInvitationResponse {
   data: Responde;
   statusCode: number;
   message: string;
+}
+
+
+// delete response
+export interface ThreadDeleteResponse {
+  isSuccess: boolean;
+  message: string;
+  statusCode: number;
 }

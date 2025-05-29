@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
-import {  GetUserResponse, userDataUpdateRequest } from '@/app/types/UserType';
+import {  GetUserResponse, UpdateUserProfileResponse, userDataUpdateRequest } from '@/app/types/UserType';
 
 export interface User {
   fullName: string;
@@ -58,6 +58,7 @@ export const userApi = createApi({
         body: credentials,
       }),
     }),
+    // get all users
     getAllUsers: builder.query<GetUserResponse, void>({
       query: () => 'User/getAll',
       providesTags: ['User'],
@@ -81,7 +82,7 @@ export const userApi = createApi({
       invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
     }),
     // update user profile
-    updateUserProfile: builder.mutation<any, { id: string; data: userDataUpdateRequest }>({
+    updateUserProfile: builder.mutation<UpdateUserProfileResponse, { id: string; data: userDataUpdateRequest }>({
       query: ({ id, data }) => ({
         url: `User/update/${id}`,
         method: 'PUT',
@@ -98,4 +99,5 @@ export const {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
   useUploadProfilePictureMutation,
+  useUpdateUserProfileMutation,
 } = userApi;

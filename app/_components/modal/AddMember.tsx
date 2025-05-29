@@ -170,7 +170,7 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
               Cancel
             </GradientButton>
             <GradientButton onClick={onInvitationSend}>
-              {invitationLoading ? 'Sending...' : 'Send Invitaion'}
+              {invitationLoading ? 'Sending...' : 'Send Invitation'}
             </GradientButton>
           </DialogFooter>
         </DialogContent>

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
-import { GetInvitationsResponse, RespondToInvitationRequest, RespondToInvitationResponse, sendInvitationRequest, SendInvitationResponse } from '@/app/types/threads';
+import { GetInvitationsResponse, RespondToInvitationRequest, RespondToInvitationResponse, sendInvitationRequest, SendInvitationResponse, ThreadDeleteResponse } from '@/app/types/threads';
 import { getIn } from 'formik';
 
 interface IThread {
@@ -74,9 +74,9 @@ export const threadApi = createApi({
     }),
 
     // Delete thread
-    deleteThread: builder.mutation<void, string>({
+    deleteThread: builder.mutation<ThreadDeleteResponse, string>({
       query: (id) => ({
-        url: `threads/delete/${id}`,
+        url: `threads/deleteThread/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Thread'],
@@ -156,7 +156,8 @@ export const threadApi = createApi({
         method: 'POST',
         body: payload,
       }),
-    })
+    }),
+
   }),
 });
 

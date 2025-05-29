@@ -119,3 +119,10 @@ export interface userDataUpdateRequest {
     showPhone?: boolean;
   };
 }
+
+export interface UpdateUserProfileResponse {
+  isSuccess: boolean;
+  statusCode: number;
+  message: string;
+  data: User;
+}

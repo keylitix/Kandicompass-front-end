@@ -19,12 +19,7 @@ const HomeOne = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-0">
           <div className="w-full pl-0 lg:pl-[90px] pt-[100px] lg:mt-[-100px] space-y-4">
             <h1 className="relative font-orbitron font-bold text-3xl sm:text-4xl md:text-[46px] leading-[52px] text-white">
-              <span className="text-shadow-pink absolute inset-0 text-[#ff005d] z-0">
-                Track Your <br /> Kandi's Journey <br /> Across the World!
-              </span>
-              <span className="relative bg-gradient-to-r from-[#ff005d] to-[#00D1FF] bg-clip-text text-transparent z-10">
-                Track Your <br /> Kandi's Journey <br /> Across the World!
-              </span>
+               Track Your <br /> Kandi's Journey <br /> Across the World!
             </h1>
 
             <p className="font-sans text-white font-medium text-sm sm:text-base md:text-sm">
