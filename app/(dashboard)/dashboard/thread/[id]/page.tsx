@@ -5,6 +5,8 @@ import {
   Calendar,
   Plus,
   Share2Icon,
+  Users,
+  X,
 } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { BeadCard } from '@/app/_components/beads/BeadCard';
@@ -23,6 +25,16 @@ import { set } from 'lodash';
 import { Bead } from '@/app/types/bead';
 import JoiningRequest from '@/app/_components/modal/JoiningRequest';
 import { DEFAULT_PROFILE_PICTURE } from '@/lib/variables';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 
 const ThreadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +46,7 @@ const ThreadDetailPage: React.FC = () => {
   const [showQrCode, setShowQrCode] = useState(false);
   const [shareQrCode, setShareQrCode] = useState(false);
   const [hasThreadAccess, setHasThreadAccess] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { data, isLoading: isThreadLoading } = useGetThreadByIdQuery(id);
   const {
     data: beadData,
@@ -181,6 +194,15 @@ const ThreadDetailPage: React.FC = () => {
               </div>
             </div>
           )}
+
+          <div className='absolute bottom-4 right-4'>
+            <GradientButton
+              icon={Users}
+              onClick={() => setIsDrawerOpen(true)}
+              variant="fill">
+              Members
+            </GradientButton>
+          </div>
         </div>
       </div>
 
@@ -264,6 +286,44 @@ const ThreadDetailPage: React.FC = () => {
         }}
         onSuccessResponse={() => setOpenInvitationActionModal(false)}
       />
+
+      <Drawer direction="right"
+        open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent
+          className="mt-0 w-[500px] rounded-xl bg-[#1c102b] border border-[#3f2e6a] px-6 py-4"
+        >
+          <DrawerHeader>
+            <div className='flex items-center justify-between'>
+              <h2 className="text-xl font-semibold text-[#00D1FF]">Thread Members</h2>
+              <button
+                className="text-white hover:text-[#00D1FF] transition-colors"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                <X size={18} className="mr-1" />
+              </button>
+            </div>
+          </DrawerHeader>
+
+          <div className="flex flex-col gap-4 mb-4	">
+            {thread?.members?.map((member: any) => (
+              <div key={member?._id} className="flex items-center gap-4 bg-[#2a1c40] hover:bg-[#3f2e6a] rounded-md p-2 cursor-pointer">
+                <Image
+                  src={member?.avatar ? CORE_BACKEND_URL + member?.avatar : DEFAULT_PROFILE_PICTURE}
+                  width={50}
+                  height={50}
+                  unoptimized
+                  className="w-10 h-10 rounded-full"
+                  alt={member?.name}
+                />
+                <div className="flex flex-col">
+                  <h3 className="text-sm font-semibold">{member?.fullName}</h3>
+                  <p className="text-xs text-gray-400">{member?.email}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
