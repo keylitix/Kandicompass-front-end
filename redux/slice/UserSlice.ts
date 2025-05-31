@@ -8,6 +8,7 @@ interface InitialStateType {
   isLocationEnabled: boolean;
   coordinates: { latitude: number; longitude: number } | null;
   locationDenied: boolean;
+  shouldRefetchUser: boolean;
 }
 
 const initialState: InitialStateType = {
@@ -16,6 +17,7 @@ const initialState: InitialStateType = {
   isLocationEnabled: false,
   coordinates: null,
   locationDenied: false,
+  shouldRefetchUser: false,
 };
 
 export const enableLocation = () => async (dispatch: AppDispatch) => {
@@ -74,6 +76,9 @@ const authSlice = createSlice({
       state.coordinates = null;
       state.locationDenied = false;
     },
+    setRefetchUser: (state) => {
+      state.shouldRefetchUser = !state.shouldRefetchUser;
+    },
   },
 });
 
@@ -83,5 +88,6 @@ export const {
   setCoordinates,
   setLocationDenied,
   disableLocation,
+  setRefetchUser
 } = authSlice.actions;
 export default authSlice.reducer;

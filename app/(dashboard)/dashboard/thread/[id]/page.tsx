@@ -35,9 +35,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
+import { useAppSelector } from '@/app/hook/useReduxApp';
 
 const ThreadDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAppSelector((state) => state.auth);
   const searchParams = useSearchParams();
   const inviteId = searchParams.get('inviteId');
   const forJoining = searchParams.get('jt');
@@ -61,6 +63,7 @@ const ThreadDetailPage: React.FC = () => {
 
   const thread = data?.data[0] ?? {};
   const beads = beadData?.data?.data ?? [];
+  const isOwner = thread?.ownerId === user?.id
 
   const [openBeadModal, setOpenBeadModal] = useState(false);
   const [openMemberModal, setOpenMemberModal] = useState(false);
@@ -209,13 +212,15 @@ const ThreadDetailPage: React.FC = () => {
       <div>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-[#00D1FF]">Thread Beads</h2>
-          <button
-            className="flex items-center text-[#FF005D] hover:text-[#00D1FF] transition-colors"
-            onClick={() => setOpenBeadModal(true)}
-          >
-            <Plus size={18} className="mr-1" />
-            Add Bead
-          </button>
+          {isOwner && (
+            <button
+              className="flex items-center text-[#FF005D] hover:text-[#00D1FF] transition-colors"
+              onClick={() => setOpenBeadModal(true)}
+            >
+              <Plus size={18} className="mr-1" />
+              Add Bead
+            </button>
+          )}
         </div>
 
         {beadData && beadData?.data?.data?.length > 0 ? (

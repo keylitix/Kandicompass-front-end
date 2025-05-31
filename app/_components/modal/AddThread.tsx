@@ -65,47 +65,6 @@ const AddThread: React.FC<AddThreadProps> = ({
     },
   });
 
-  // const handleFileChange = useCallback((files: File[]) => {
-  //   if (files && files.length > 0) {
-  //     const newFiles = Array.from(files).map((file) => ({
-  //       file,
-  //       previewUrl: URL.createObjectURL(file),
-  //     }));
-  //     setUploadedFile((prev) => [...prev, ...newFiles]);
-  //   }
-  // }, []);
-
-  // const handleSaveThread = async (values: any) => {
-  //   try {
-  //     const { threadName, description, location, isPrivate } = values;
-  //     const threadPayload = {
-  //       threadName,
-  //       description,
-  //       charmLocation: location,
-  //     };
-
-  //     const threadRes = await addThread(threadPayload).unwrap();
-  //     console.log("Thread created:", threadRes);
-
-  //     for (const uploaded of uploadedFile) {
-  //       const formData = new FormData();
-  //       formData.append("image", uploaded.file);
-
-  //       const uploadRes = await uploadImage({
-  //         threadId: threadRes.threadId,
-  //         formData,
-  //       }).unwrap();
-
-  //       console.log("Image uploaded:", uploadRes);
-  //     }
-
-  //     alert("Thread created and images uploaded successfully!");
-  //   } catch (error) {
-  //     console.error("Error saving thread:", error);
-  //     alert("Something went wrong while saving the thread.");
-  //   }
-  // };
-
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -139,23 +98,6 @@ const AddThread: React.FC<AddThreadProps> = ({
               onChange={formik.handleChange}
               name="description"
             />
-
-            {/* <ImageUpload
-              label="Upload thread Images"
-              onChange={handleFileChange}
-              acceptedFormats="image/jpeg, image/png"
-              multiple={true}
-            />
-            <div className="mt-6">
-              <h3 className="text-white">Selected Files:</h3>
-              <ul className="text-white">
-                <ul className="text-white">
-                  {uploadedFile.map((uploaded, index) => (
-                    <li key={index}>{uploaded.file.name}</li>
-                  ))}
-                </ul>
-              </ul>
-            </div> */}
 
             <div className="mt-6 flex items-center space-x-2">
               <input

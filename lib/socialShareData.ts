@@ -5,6 +5,11 @@ const getThreadById = async (slug: string) => {
   return res && res.json();
 };
 
+const getBeadById = async (slug: string) => {
+  const res = await fetch(`${CORE_BACKEND_URL}beads/getById/${slug}`);
+  return res && res.json();
+};
+
 export async function getShareContent(
   type: string,
   slug?: string,
@@ -20,7 +25,19 @@ export async function getShareContent(
         imageURL: thread.qrCode
           ? CORE_BACKEND_URL + thread.qrCode
           : `${CORE_BACKEND_URL}/default-thread.png`,
-        link: `${CORE_FRONTEND_URL}/thread/${slug}`,
+        link: `${CORE_FRONTEND_URL}dashboard/thread/${slug}`,
+      };
+    }
+    case 'beads': {
+      const fetchBead = await getBeadById(slug || '');
+      const bead = fetchBead.data[0];
+      return {
+        title: bead.beadName || 'Untitled Thread',
+        description: bead.description || 'No description available.',
+        imageURL: bead.qrCode
+          ? CORE_BACKEND_URL + bead.qrCode
+          : `${CORE_BACKEND_URL}/default-thread.png`,
+        link: `${CORE_FRONTEND_URL}dashboard/beads/${slug}`,
       };
     }
 

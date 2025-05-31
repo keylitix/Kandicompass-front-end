@@ -1,13 +1,13 @@
 "use client"
 import type React from "react"
-import {  useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { Formik, Form, ErrorMessage, FormikHelpers } from "formik"
 import * as Yup from "yup"
 import { MapPin, Bell, Camera, Save, User, Mail, Phone, Shield, Eye } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { useGetUserByIdQuery, useUpdateUserProfileMutation, useUploadProfilePictureMutation } from "@/redux/api/userApi"
-import { useAppSelector } from "@/app/hook/useReduxApp"
+import { useAppDispatch, useAppSelector } from "@/app/hook/useReduxApp"
 import Input from "@/app/_components/custom-ui/Input"
 import { GradientButton } from "@/app/_components/custom-ui/GradientButton"
 import { CORE_BACKEND_URL } from "@/helper/path"
@@ -15,6 +15,7 @@ import { DEFAULT_PROFILE_PICTURE } from "@/lib/variables"
 import { userDataUpdateRequest } from "@/app/types/UserType"
 import PhoneInput from "@/app/_components/custom-ui/PhoneInput"
 import { toast } from "sonner"
+import { setRefetchUser } from "@/redux/slice/UserSlice"
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -38,7 +39,7 @@ export default function UpdateProfilePage() {
     const [uploadProfilePicture, { isLoading: isUploading }] = useUploadProfilePictureMutation();
     const [updateUserProfile, { isLoading: isUpdating }] = useUpdateUserProfileMutation();
 
-
+    const dispatch = useAppDispatch();
 
     const initialValues = {
         fullName: userData?.fullName || '',
@@ -74,6 +75,7 @@ export default function UpdateProfilePage() {
         const file = event.target.files?.[0]
         if (file) {
             await uploadProfilePicture({ id: userId, file: file });
+            dispatch(setRefetchUser());
         }
     }
 
@@ -87,6 +89,7 @@ export default function UpdateProfilePage() {
             const res = await updateUserProfile({ id: userId, data: values }).unwrap();
             if (res.isSuccess) {
                 refetchUser();
+                dispatch(setRefetchUser());
                 toast.success('Profile updated successfully!');
             }
         } catch (error) {
@@ -131,7 +134,6 @@ export default function UpdateProfilePage() {
                         autocomplete.addListener('place_changed', () => {
                             const place = autocomplete.getPlace();
                             if (!place.geometry || !place.address_components) return;
-
                             const locationName = place.name || place.formatted_address || '';
                             let lat = 0;
                             let lon = 0;
@@ -383,6 +385,7 @@ export default function UpdateProfilePage() {
                                     </div>
                                 </div>
                             </div>
+
                             {dirty &&
                                 <div className="flex justify-end space-x-4">
                                     <GradientButton

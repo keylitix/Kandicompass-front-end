@@ -12,17 +12,20 @@ import {
   Globe,
   Share2Icon,
   QrCode,
+  ShoppingBag,
 } from 'lucide-react';
 import { useState } from 'react';
 import { OwnershipTimeline } from './OwnershipTimeline';
 import { StoryList } from '../story/StoryList';
 import { GradientButton } from '../custom-ui/GradientButton';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useGetBeadByIdQuery } from '@/redux/api/beadApi';
 import Image from 'next/image';
 import { CORE_BACKEND_URL } from '@/helper/path';
 import WorldMap from '../Charms/world-map';
 import { DEFAULT_IMAGE } from '@/lib/variables';
+import BeadPurchaseRQ from '../modal/BeadPurchaseRQ';
+import ViewQrCodeModal from '../modal/view-qr-code';
 
 interface BeadDetailProps {
   bead: any;
@@ -30,16 +33,23 @@ interface BeadDetailProps {
 
 export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
   const [activeTab, setActiveTab] = useState<
-    'info' | 'history' | 'stories' | 'reviews'
-  >('info');
+    'history' | 'stories' | 'reviews'
+  >('history');
   const [isRotating, setIsRotating] = useState(true);
+  const [isBeadPurchaseRQOpen, setIsBeadPurchaseRQOpen] = useState(false);
+  const router = useRouter();
+  const [showQrCode, setBeadQrCode] = useState(false);
+  const [qrCode, setQrCode] = useState<{
+    qrCode: string | null;
+    name: string;
+  }>({ qrCode: null, name: '' });
 
   console.log('beadbeadbeadbeadbeadbeadbead', bead);
 
   // Calculate the average rating
   const averageRating = bead.reviews.length
     ? bead.reviews.reduce((sum: any, review: any) => sum + review.rating, 0) /
-      bead.reviews.length
+    bead.reviews.length
     : 0;
 
   // Get the current owner
@@ -47,6 +57,18 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
     bead.ownershipHistory.length > 0
       ? bead.ownershipHistory[bead.ownershipHistory.length - 1]
       : null;
+
+  const locations = bead.ownerId.map((owner: any, index: number) => ({
+    id: index + 1,
+    title: owner.location.city + ', ' + owner.location.country,
+    lat: owner.location.lat,
+    lng: owner.location.lon
+  }))
+
+
+  const handleCloseBeadPurchaseRQ = () => {
+    setIsBeadPurchaseRQOpen(false);
+  };
 
   return (
     <div className="max-w-6xl mx-auto bg-[#1c102b] mt-8 backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
@@ -170,9 +192,24 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2">
-            <GradientButton icon={Share2Icon}>Share Bead</GradientButton>
+            <GradientButton
+              variant="outline"
+              icon={ShoppingBag}
+              onClick={() => setIsBeadPurchaseRQOpen(true)}
+            >Request to Buy</GradientButton>
 
-            <GradientButton variant="outline" icon={QrCode}>
+            <GradientButton
+              variant="outline"
+              icon={Share2Icon}
+              onClick={() => router.push(`/social-share/beads/${bead._id}?from=${encodeURIComponent(window.location.href)}`)}
+            > Share Bead</GradientButton>
+
+            <GradientButton
+              onClick={() => {
+                setQrCode({ qrCode: bead.qrCode, name: bead.beadName });
+                setBeadQrCode(!showQrCode);
+              }}
+              variant="outline" icon={QrCode}>
               Show QR Code
             </GradientButton>
           </div>
@@ -182,12 +219,6 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
       {/* Tab navigation */}
       <div className="px-6 border-b border-[#3f2e6a] border-opacity-20">
         <div className="flex overflow-x-auto scrollbar-none">
-          <button
-            className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'info' ? 'border-[#00D1FF] text-[#00D1FF]' : 'border-transparent text-[#FF005D]'}`}
-            onClick={() => setActiveTab('info')}
-          >
-            Origin Story
-          </button>
           <button
             className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${activeTab === 'history' ? 'border-[#00D1FF] text-[#00D1FF]' : 'border-transparent text-[#FF005D]'}`}
             onClick={() => setActiveTab('history')}
@@ -211,22 +242,19 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
 
       {/* Tab content */}
       <div className="p-6">
-        {activeTab === 'info' && (
-          <div className="prose prose-lg prose-invert max-w-none">
-            <h3 className="text-xl font-semibold text-[#00D1FF] mb-4">
-              Origin Story
-            </h3>
-            <p>{bead.originStory}</p>
-          </div>
-        )}
-
         {activeTab === 'history' && (
           <div>
             <h3 className="text-xl font-semibold text-[#00D1FF] mb-4">
               Ownership Timeline
             </h3>
-            <OwnershipTimeline ownershipHistory={bead.ownershipHistory} />
-            <WorldMap />
+            <div className="flex gap-4 mt-4">
+              <div className="flex-1">
+                <OwnershipTimeline ownershipHistory={bead.ownerId} />
+              </div>
+              <div className="flex-1">
+                <WorldMap locations={locations} />
+              </div>
+            </div>
           </div>
         )}
 
@@ -302,6 +330,20 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
           </div>
         )}
       </div>
-    </div>
+      <BeadPurchaseRQ
+        isOpen={isBeadPurchaseRQOpen}
+        onClose={handleCloseBeadPurchaseRQ}
+        beadName={bead.beadName}
+        currentPrice={bead?.pricePerUnit} />
+
+      <ViewQrCodeModal
+        isOpen={showQrCode}
+        onClose={() => {
+          setBeadQrCode(false);
+        }}
+        qrURL={qrCode.qrCode ?? ''}
+        title={qrCode.name ?? ''}
+      />
+    </div >
   );
 };

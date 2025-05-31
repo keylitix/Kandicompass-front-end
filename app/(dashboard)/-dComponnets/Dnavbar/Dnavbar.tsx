@@ -29,6 +29,7 @@ import {
   disableLocation,
   enableLocation,
   logout,
+  setRefetchUser,
 } from '@/redux/slice/UserSlice';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
@@ -36,6 +37,9 @@ import { useAppSelector } from '@/app/hook/useReduxApp';
 import { useGetInvitationsQuery } from '@/redux/api/thredApi';
 import { AppNotification } from '@/app/types/notification';
 import { toast } from 'sonner';
+import { CORE_BACKEND_URL } from '@/helper/path';
+import { DEFAULT_PROFILE_PICTURE } from '@/lib/variables';
+import { useGetUserByIdQuery } from '@/redux/api/userApi';
 
 const DashboardRoutes = [
   {
@@ -62,7 +66,10 @@ const statusColors = {
 };
 
 const Dnavbar = () => {
-  const { user } = useAppSelector((state) => state.auth);
+  const { user, shouldRefetchUser } = useAppSelector((state) => state.auth);
+  const userId = user?.id || "";
+  const { data, isLoading: isLoadingUser, refetch: refetchUser, isFetching: isFetchingUser } = useGetUserByIdQuery({ id: userId });
+  const userData = data?.data?.[0] || null;
   const { refecthNotification } = useAppSelector((state) => state.notification);
   const userEmail = user?.email as string;
   const { data: invitations, isLoading } = useGetInvitationsQuery(userEmail, {
@@ -102,7 +109,6 @@ const Dnavbar = () => {
 
   const allNotifications = [...threadInvitations];
 
-
   const toggleLocation = () => {
     if (isLocationEnabled) {
       dispatch(disableLocation());
@@ -129,6 +135,13 @@ const Dnavbar = () => {
     const unreadCount = [...pendingInvitations];
     setUnreadCount(unreadCount.length);
   }, [invitationsData, refecthNotification]);
+
+  useEffect(() => {
+    if(shouldRefetchUser){
+      refetchUser();
+      dispatch(setRefetchUser());
+    }
+  }, [shouldRefetchUser])
 
   return (
     <nav className="w-full relative">
@@ -224,14 +237,14 @@ const Dnavbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">
               <div className="flex justify-center items-center w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] cursor-pointer">
-                {/* <Image
-                  src="/avatar.jfif"
+                <Image
+                  src={userData?.avatar ? CORE_BACKEND_URL + userData.avatar : DEFAULT_PROFILE_PICTURE}
                   alt="Profile"
+                  unoptimized
                   width={36}
                   height={36}
                   className="rounded-full object-cover w-full h-full"
-                /> */}
-                <User2 className="w-[80%] h-[80%]" />
+                />
               </div>
             </DropdownMenuTrigger>
 

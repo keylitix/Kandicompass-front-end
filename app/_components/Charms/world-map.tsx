@@ -155,14 +155,15 @@ const LocationMarkers = ({ locations }: { locations: Location[] }) => {
   return null;
 };
 
-const WorldMap = () => {
-  const locations = [
-    { id: 1, lat: 40.7128, lng: -74.006, title: 'New York' },
-    { id: 7, lat: 41.8781, lng: -87.6298, title: 'Chicago' },
-    { id: 8, lat: 29.7604, lng: -95.3698, title: 'Houston' },
-    { id: 6, lat: 34.0522, lng: -118.2437, title: 'Los Angeles' },
-    { id: 5, lat: 37.7749, lng: -122.4194, title: 'San Francisco' },
-  ];
+const WorldMap = ({ locations }: { locations: Location[] }) => {
+  console.log('locations', locations);
+  // const locations = [
+  //   { id: 1, lat: 40.7128, lng: -74.006, title: 'New York' },
+  //   { id: 7, lat: 41.8781, lng: -87.6298, title: 'Chicago' },
+  //   { id: 8, lat: 29.7604, lng: -95.3698, title: 'Houston' },
+  //   { id: 6, lat: 34.0522, lng: -118.2437, title: 'Los Angeles' },
+  //   { id: 5, lat: 37.7749, lng: -122.4194, title: 'San Francisco' },
+  // ];
 
   const mapContext = useMap();
   const map = mapContext as google.maps.Map | null;
@@ -208,8 +209,8 @@ const WorldMap = () => {
           borderRadius: 'inherit',
           border: 'none',
         }}
-        defaultCenter={{ lat: locations[0].lat, lng: locations[0].lng }}
-        defaultZoom={3}
+        defaultCenter={{ lng: locations[0].lng, lat: locations[0].lat }}
+        defaultZoom={5}
         gestureHandling="greedy"
         disableDefaultUI={false}
         colorScheme={ColorScheme.DARK}
