@@ -3,6 +3,7 @@ import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
 import { GetInvitationsResponse, RespondToInvitationRequest, RespondToInvitationResponse, sendInvitationRequest, SendInvitationResponse, ThreadDeleteResponse } from '@/app/types/threads';
 import { getIn } from 'formik';
+import { BeadPurchaseRequest } from '@/app/types/bead';
 
 interface IThread {
   data: any;
@@ -36,7 +37,7 @@ export const threadApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Thread', 'Invitations'],
+  tagTypes: ['Thread', 'Invitations', 'Bead'],
   endpoints: (builder) => ({
     // Get all threads
     getThreads: builder.query<{ data: IThread[] }, void>({
@@ -158,6 +159,24 @@ export const threadApi = createApi({
       }),
     }),
 
+    // bead purchase request
+    beadPurchaseRequest: builder.mutation<any, BeadPurchaseRequest>({
+      query: (data) => ({
+        url: `threads/request-bead-purchase`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
+    // bead request by email id
+    getBeadRequestByEmail: builder.query<any, string>({
+      query: (email) => ({
+        url: `threads/bead-requests/${email}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, email) => [{ type: 'Bead', id: `bead-request-${email}` }],
+    }),
+
   }),
 });
 
@@ -173,5 +192,7 @@ export const {
   useGetThreadsByMemberQuery,
   useSendInvitationMutation,
   useGetInvitationsQuery,
-  useRespondeToInvitationMutation
+  useRespondeToInvitationMutation,
+  useBeadPurchaseRequestMutation,
+  useGetBeadRequestByEmailQuery,
 } = threadApi;

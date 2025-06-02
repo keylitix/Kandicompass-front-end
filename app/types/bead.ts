@@ -49,3 +49,11 @@ export interface Bead {
   __v: number;
 }
 
+export interface BeadPurchaseRequest {
+  threadId: string;
+  beadId: string;
+  buyerId: string;
+  offerPrice: number;
+  message: string;
+};
+

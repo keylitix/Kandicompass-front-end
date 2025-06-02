@@ -11,12 +11,16 @@ import { useAppDispatch } from '@/app/hook/useReduxApp';
 import { useState } from 'react';
 import Input from '../custom-ui/Input';
 import { DollarSign } from 'lucide-react';
+import { useBeadPurchaseRequestMutation } from '@/redux/api/thredApi';
 
 interface BeadPurchaseRQProps {
     isOpen: boolean;
     onClose: () => void;
     beadName: string;
     currentPrice: number;
+    threadId: string;
+    beadId: string;
+    buyerId: string;
 }
 
 const BeadPurchaseRQ: React.FC<BeadPurchaseRQProps> = ({
@@ -24,14 +28,33 @@ const BeadPurchaseRQ: React.FC<BeadPurchaseRQProps> = ({
     onClose,
     beadName,
     currentPrice,
+    threadId,
+    beadId,
+    buyerId
 }) => {
     const dispatch = useAppDispatch();
+    const [beadPurchaseRequest, { isLoading: isBeadPurchaseRQLoading }] = useBeadPurchaseRequestMutation();
     const [offerPrice, setOfferPrice] = useState<number>(currentPrice);
+    const [message, setMessage] = useState<string>('Interested in purchasing this bead');
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         console.log(`Offer submitted: ${offerPrice} for bead "${beadName}"`);
+        if (!beadId || !buyerId || !threadId || !offerPrice) return;
+
+        const payload = {
+            threadId: threadId,
+            beadId: beadId,
+            buyerId: buyerId,
+            offerPrice: offerPrice,
+            message: message,
+        };
+
+        const res = await beadPurchaseRequest(payload)?.unwrap();
+        console.log('Bead Purchase Request Response:', res);
         onClose();
     };
+
+
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -58,6 +81,15 @@ const BeadPurchaseRQ: React.FC<BeadPurchaseRQProps> = ({
                         type="number"
                         value={offerPrice}
                         onChange={(e) => setOfferPrice(Number(e.target.value))}
+                    />
+                </div>
+
+                <div className="mt-4">
+                    <Input
+                        label='Your Message'
+                        type='textarea'
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                     />
                 </div>
 

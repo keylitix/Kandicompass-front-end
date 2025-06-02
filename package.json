@@ -61,6 +61,7 @@
     "nodemailer": "^7.0.3",
     "npm": "^11.4.1",
     "react": "^19.0.0",
+    "react-circular-progressbar": "^2.2.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^19.0.0",
     "react-globe.gl": "^2.33.2",

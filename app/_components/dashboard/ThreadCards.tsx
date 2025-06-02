@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useDeleteThreadMutation } from '@/redux/api/thredApi';
 import { toast } from 'sonner';
+import { CORE_BACKEND_URL } from '@/helper/path';
+import { DEFAULT_PROFILE_PICTURE } from '@/lib/variables';
 
 interface ThreadCardProps {
   thread: Thread;
@@ -142,7 +144,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
               className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden border border-[#FF005D] border-opacity-60"
             >
               <img
-                src={bead.image}
+                src={bead.image ? CORE_BACKEND_URL + bead.image : DEFAULT_PROFILE_PICTURE}
                 alt={bead.name || 'Bead image'}
                 className="w-full h-full object-cover"
                 loading="lazy"

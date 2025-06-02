@@ -26,6 +26,8 @@ import WorldMap from '../Charms/world-map';
 import { DEFAULT_IMAGE } from '@/lib/variables';
 import BeadPurchaseRQ from '../modal/BeadPurchaseRQ';
 import ViewQrCodeModal from '../modal/view-qr-code';
+import { useBeadPurchaseRequestMutation } from '@/redux/api/thredApi';
+import { useAppSelector } from '@/app/hook/useReduxApp';
 
 interface BeadDetailProps {
   bead: any;
@@ -43,6 +45,8 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
     qrCode: string | null;
     name: string;
   }>({ qrCode: null, name: '' });
+  const { user } = useAppSelector((state) => state.auth);
+
 
   console.log('beadbeadbeadbeadbeadbeadbead', bead);
 
@@ -66,9 +70,11 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
   }))
 
 
-  const handleCloseBeadPurchaseRQ = () => {
+  const handleCloseBeadPurchaseRQ = async () => {
     setIsBeadPurchaseRQOpen(false);
   };
+
+
 
   return (
     <div className="max-w-6xl mx-auto bg-[#1c102b] mt-8 backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
@@ -242,7 +248,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
 
       {/* Tab content */}
       <div className="p-6">
-        {activeTab === 'history' && (
+        {activeTab === 'history'  && (
           <div>
             <h3 className="text-xl font-semibold text-[#00D1FF] mb-4">
               Ownership Timeline
@@ -334,7 +340,11 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
         isOpen={isBeadPurchaseRQOpen}
         onClose={handleCloseBeadPurchaseRQ}
         beadName={bead.beadName}
-        currentPrice={bead?.pricePerUnit} />
+        currentPrice={bead?.pricePerUnit}
+        threadId={bead.threadId[0]._id}
+        beadId={bead._id}
+        buyerId={user.id }
+      />
 
       <ViewQrCodeModal
         isOpen={showQrCode}

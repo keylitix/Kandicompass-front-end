@@ -1,6 +1,8 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { buildStyles, CircularProgressbar, CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import {
   Menu,
   X,
@@ -34,7 +36,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { useAppSelector } from '@/app/hook/useReduxApp';
-import { useGetInvitationsQuery } from '@/redux/api/thredApi';
+import { useGetBeadRequestByEmailQuery, useGetInvitationsQuery } from '@/redux/api/thredApi';
 import { AppNotification } from '@/app/types/notification';
 import { toast } from 'sonner';
 import { CORE_BACKEND_URL } from '@/helper/path';
@@ -76,8 +78,13 @@ const Dnavbar = () => {
     skip: !userEmail,
     refetchOnMountOrArgChange: refecthNotification,
   });
+  const { data: beadRequests } = useGetBeadRequestByEmailQuery(userEmail, {
+    skip: !userEmail,
+    refetchOnMountOrArgChange: refecthNotification,
+  });
   const invitationsData = invitations?.data;
-  console.log('invitationsData', refecthNotification)
+  const beadRequestsData = beadRequests?.data?.data;
+  console.log('invitationsData', beadRequestsData)
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number | undefined>();
@@ -89,6 +96,17 @@ const Dnavbar = () => {
   const { isLocationEnabled, locationDenied } = useSelector(
     (state: RootState) => state.auth,
   );
+
+  const isToday = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
 
   const threadInvitations: AppNotification[] =
     invitationsData?.map((invite) => ({
@@ -107,7 +125,25 @@ const Dnavbar = () => {
       },
     })) || [];
 
-  const allNotifications = [...threadInvitations];
+  const beadRequestsNotifications: AppNotification[] =
+    beadRequestsData?.map((request: any) => ({
+      id: request._id,
+      title: 'Bead Purchase Request',
+      content: `${request.buyerId.email} wants to purchase a bead: "${request.message}"`,
+      time: new Date(request.createdAt).toLocaleTimeString(),
+      type: 'bead_purchase_request',
+      icon: <User2Icon size={16} className="text-[#FF005D]" />,
+      status: request.status,
+      action: {
+        label: 'View Request',
+        onClick: () => {
+          route.push(`/dashboard/beads/${request._id}`);
+        },
+      },
+    })) || [];
+
+
+  const allNotifications = [...threadInvitations, ...beadRequestsNotifications];
 
   const toggleLocation = () => {
     if (isLocationEnabled) {
@@ -119,16 +155,43 @@ const Dnavbar = () => {
 
   useEffect(() => {
     if (!invitationsData) return;
-    const currentIds = new Set(invitationsData.map((invite) => invite._id));
+
+    const currentIds: Set<string> = new Set(invitationsData.map((invite) => invite._id));
     const prevIds = prevIdsRef.current;
+
     const newInvites = invitationsData.filter(
-      (invite) => !prevIds.has(invite._id),
+      (invite) =>
+        !prevIds.has(invite._id) &&
+        invite.status === 'pending'
     );
+
     if (newInvites.length > 0) {
-      toast.message(`You have ${newInvites.length} new thread invitation${newInvites.length > 0 ? 's' : ''}.`);
+      setUnreadCount((prevCount) => (prevCount || 0) + newInvites.length);
+      toast.message(`You have ${newInvites.length} new thread invitation${newInvites.length > 1 ? 's' : ''}.`);
       prevIdsRef.current = currentIds;
-    };
+    }
   }, [invitationsData]);
+
+
+  useEffect(() => {
+    if (!beadRequestsData) return;
+
+    const currentIds: Set<string> = new Set(beadRequestsData.map((request: any) => request._id));
+    const prevIds = prevIdsRef.current;
+
+    const newRequests = beadRequestsData.filter(
+      (request: any) =>
+        !prevIds.has(request._id) &&
+        request.status === 'pending'
+    );
+
+    if (newRequests.length > 0) {
+      setUnreadCount((prevCount) => (prevCount || 0) + newRequests.length);
+      toast.message(`You have ${newRequests.length} new bead purchase request${newRequests.length > 1 ? 's' : ''}.`);
+      prevIdsRef.current = currentIds;
+    }
+  }, [beadRequestsData]);
+
 
   useEffect(() => {
     const pendingInvitations = invitationsData?.filter(inv => inv.status === 'pending') || [];
@@ -137,7 +200,7 @@ const Dnavbar = () => {
   }, [invitationsData, refecthNotification]);
 
   useEffect(() => {
-    if(shouldRefetchUser){
+    if (shouldRefetchUser) {
       refetchUser();
       dispatch(setRefetchUser());
     }
@@ -236,15 +299,32 @@ const Dnavbar = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">
-              <div className="flex justify-center items-center w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] cursor-pointer">
-                <Image
-                  src={userData?.avatar ? CORE_BACKEND_URL + userData.avatar : DEFAULT_PROFILE_PICTURE}
-                  alt="Profile"
-                  unoptimized
-                  width={36}
-                  height={36}
-                  className="rounded-full object-cover w-full h-full"
-                />
+              <div className="relative cursor-pointer flex items-center justify-center w-[50px] h-[50px] rounded-full relative">
+                <CircularProgressbarWithChildren
+                  strokeWidth={5}
+                  value={60}
+                  styles={buildStyles({
+                    pathColor: '#FF005D',
+                    trailColor: 'transparent',
+                    rotation: 1,
+                  })}
+                >
+                  <div className="flex justify-center items-center w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF]">
+                    <Image
+                      src={userData?.avatar
+                        ? `${CORE_BACKEND_URL}${userData.avatar}`
+                        : DEFAULT_PROFILE_PICTURE}
+                      alt="Profile"
+                      unoptimized
+                      width={36}
+                      height={36}
+                      className="rounded-full object-cover w-full h-full"
+                    />
+                  </div>
+                </CircularProgressbarWithChildren>
+                <div className="absolute -bottom-4 w-[130px] h-[15px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] rounded-xl flex items-center justify-center">
+                  <span className="text-[8px] text-white">{`${60}%`} profile complete</span>
+                </div>
               </div>
             </DropdownMenuTrigger>
 

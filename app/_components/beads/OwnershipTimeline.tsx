@@ -39,7 +39,7 @@ export const OwnershipTimeline: React.FC<OwnershipTimelineProps> = ({
             <div className="flex items-center mb-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-cosmic-glow mr-3">
                 <img
-                  src={ CORE_BACKEND_URL + record.avatar}
+                  src={  CORE_BACKEND_URL + record.avatar}
                   alt={record.fullName}
                   className="w-full h-full object-cover"
                 />

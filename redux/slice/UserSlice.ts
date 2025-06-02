@@ -4,7 +4,7 @@ import { AppDispatch } from '../store/store';
 
 interface InitialStateType {
   token: any;
-  user: UserType | null;
+  user: UserType;
   isLocationEnabled: boolean;
   coordinates: { latitude: number; longitude: number } | null;
   locationDenied: boolean;
@@ -12,7 +12,7 @@ interface InitialStateType {
 }
 
 const initialState: InitialStateType = {
-  user: null,
+  user: {} as UserType,
   token: undefined,
   isLocationEnabled: false,
   coordinates: null,
@@ -56,7 +56,7 @@ const authSlice = createSlice({
       fetch('/api/auth/logout', { method: 'POST' }).then(() => {
         window.location.href = '/';
       });
-      state.user = null;
+      state.user = {} as UserType;
     },
     setCoordinates: (
       state,

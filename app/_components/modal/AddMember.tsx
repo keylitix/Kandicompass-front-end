@@ -37,6 +37,7 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
   };
 
   useEffect(() => {
+    if (!users) return;
     if (search.trim() !== "") {
       const filtered = users.filter((u) =>
         u?.email?.toLowerCase().includes(search.toLowerCase())
