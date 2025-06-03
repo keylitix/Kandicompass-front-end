@@ -8,9 +8,9 @@ import {
   FacebookMessengerIcon,
   TwitterShareButton,
   TwitterIcon,
-    TelegramShareButton,
+  TelegramShareButton,
   TelegramIcon,
-    WhatsappShareButton,
+  WhatsappShareButton,
   WhatsappIcon,
 } from 'next-share';
 import { toast } from 'sonner';
@@ -42,13 +42,12 @@ export default function SocialButtons({ url, title, description }: Props) {
       <FacebookMessengerShareButton url={url} appId="YOUR_FACEBOOK_APP_ID">
         <FacebookMessengerIcon size={50} round />
       </FacebookMessengerShareButton>
-      
+
       {/* WhatsApp */}
       <WhatsappShareButton url={url} title={title} separator=":: ">
         <WhatsappIcon size={50} round />
       </WhatsappShareButton>
 
-      
       {/* Telegram */}
       <TelegramShareButton url={url} title={title}>
         <TelegramIcon size={50} round />
@@ -62,7 +61,7 @@ export default function SocialButtons({ url, title, description }: Props) {
       {/* SMS */}
       <a href={`sms:?body=${encodeURIComponent(`${title} - ${url}`)}`}>
         <button className="bg-green-600 text-white p-2 py-2 rounded-full cursor-pointer">
-            <MailIcon size={30} />
+          <MailIcon size={30} />
         </button>
       </a>
 

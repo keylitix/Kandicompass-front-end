@@ -44,10 +44,11 @@ const DashboardPage = () => {
           refetchThreads={refetchThreads}
           isFetchingThreads={isFetchingThreads}
           ownedThreads={threads?.data?.length ?? 0}
+          threads={[...(memberThreads?.data || []), ...(threads?.data || [])]}
         />
         <RecentActivity />
         <YourThreads
-          threads={threads?.data}
+          threads={[...(memberThreads?.data || []), ...(threads?.data || [])]}
           refetchThreads={refetchThreads}
           isFetchingThreads={isFetchingThreads}
           memberThreads={memberThreads?.data}
@@ -65,7 +66,7 @@ const DashboardPage = () => {
         </div>
 
         <div className="w-full lg:w-2/5 order-1 lg:order-2 lg:sticky lg:top-0 lg:self-start">
-          <ThreadsList />
+          {/* <ThreadsList /> */}
         </div>
 
         {/* <LoggedThread /> */}

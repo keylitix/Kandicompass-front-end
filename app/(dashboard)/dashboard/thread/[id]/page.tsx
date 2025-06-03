@@ -1,13 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  QrCode,
-  Calendar,
-  Plus,
-  Share2Icon,
-  Users,
-  X,
-} from 'lucide-react';
+import { QrCode, Calendar, Plus, Share2Icon, Users, X } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { BeadCard } from '@/app/_components/beads/BeadCard';
 import { GradientButton } from '@/app/_components/custom-ui/GradientButton';
@@ -34,7 +27,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
+} from '@/components/ui/drawer';
 import { useAppSelector } from '@/app/hook/useReduxApp';
 
 const ThreadDetailPage: React.FC = () => {
@@ -63,11 +56,12 @@ const ThreadDetailPage: React.FC = () => {
 
   const thread = data?.data[0] ?? {};
   const beads = beadData?.data?.data ?? [];
-  const isOwner = thread?.ownerId === user?.id
+  const isOwner = thread?.ownerId === user?.id;
 
   const [openBeadModal, setOpenBeadModal] = useState(false);
   const [openMemberModal, setOpenMemberModal] = useState(false);
-  const [openInvitationActionModal, setOpenInvitationActionModal] = useState(false);
+  const [openInvitationActionModal, setOpenInvitationActionModal] =
+    useState(false);
   const [openJoiningRequestModal, setOpenJoiningRequestModal] = useState(false);
 
   const [qrCode, setQrCode] = useState<{
@@ -90,12 +84,12 @@ const ThreadDetailPage: React.FC = () => {
     }
   }, [inviteId, forJoining]);
 
-
   useEffect(() => {
-    const hasAccess = beads.length >= 2 && beads.filter((b: Bead) => b.images.length > 0).length >= 2;
+    const hasAccess =
+      beads.length >= 2 &&
+      beads.filter((b: Bead) => b.images.length > 0).length >= 2;
     setHasThreadAccess(hasAccess);
   }, [beads]);
-
 
   if (isThreadLoading) {
     return (
@@ -123,9 +117,6 @@ const ThreadDetailPage: React.FC = () => {
       </div>
     );
   }
-
-
-
 
   return (
     <div className="container mx-auto px-4 pb-8 mt-8 space-y-6">
@@ -158,7 +149,10 @@ const ThreadDetailPage: React.FC = () => {
               <GradientButton
                 variant="outline"
                 icon={Share2Icon}
-                onClick={() => router.push(`/social-share/thread/${thread._id}?from=${encodeURIComponent(window.location.href)}`)
+                onClick={() =>
+                  router.push(
+                    `/social-share/thread/${thread._id}?from=${encodeURIComponent(window.location.href)}`,
+                  )
                 }
               >
                 Share Qr Code
@@ -181,7 +175,11 @@ const ThreadDetailPage: React.FC = () => {
                       width={50}
                       height={50}
                       unoptimized
-                      src={member.avatar ? CORE_BACKEND_URL + member.avatar : DEFAULT_PROFILE_PICTURE}
+                      src={
+                        member.avatar
+                          ? CORE_BACKEND_URL + member.avatar
+                          : DEFAULT_PROFILE_PICTURE
+                      }
                       alt={member.name}
                       className="object-cover p-1"
                     />
@@ -198,11 +196,12 @@ const ThreadDetailPage: React.FC = () => {
             </div>
           )}
 
-          <div className='absolute bottom-4 right-4'>
+          <div className="absolute bottom-4 right-4">
             <GradientButton
               icon={Users}
               onClick={() => setIsDrawerOpen(true)}
-              variant="fill">
+              variant="fill"
+            >
               Members
             </GradientButton>
           </div>
@@ -292,14 +291,17 @@ const ThreadDetailPage: React.FC = () => {
         onSuccessResponse={() => setOpenInvitationActionModal(false)}
       />
 
-      <Drawer direction="right"
-        open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <DrawerContent
-          className="mt-0 w-[500px] rounded-xl bg-[#1c102b] border border-[#3f2e6a] px-6 py-4"
-        >
+      <Drawer
+        direction="right"
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+      >
+        <DrawerContent className="mt-0 w-[500px] rounded-xl bg-[#1c102b] border border-[#3f2e6a] px-6 py-4">
           <DrawerHeader>
-            <div className='flex items-center justify-between'>
-              <h2 className="text-xl font-semibold text-[#00D1FF]">Thread Members</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-[#00D1FF]">
+                Thread Members
+              </h2>
               <button
                 className="text-white hover:text-[#00D1FF] transition-colors"
                 onClick={() => setIsDrawerOpen(false)}
@@ -311,9 +313,16 @@ const ThreadDetailPage: React.FC = () => {
 
           <div className="flex flex-col gap-4 mb-4	">
             {thread?.members?.map((member: any) => (
-              <div key={member?._id} className="flex items-center gap-4 bg-[#2a1c40] hover:bg-[#3f2e6a] rounded-md p-2 cursor-pointer">
+              <div
+                key={member?._id}
+                className="flex items-center gap-4 bg-[#2a1c40] hover:bg-[#3f2e6a] rounded-md p-2 cursor-pointer"
+              >
                 <Image
-                  src={member?.avatar ? CORE_BACKEND_URL + member?.avatar : DEFAULT_PROFILE_PICTURE}
+                  src={
+                    member?.avatar
+                      ? CORE_BACKEND_URL + member?.avatar
+                      : DEFAULT_PROFILE_PICTURE
+                  }
                   width={50}
                   height={50}
                   unoptimized

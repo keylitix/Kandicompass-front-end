@@ -1,9 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
-import { GetInvitationsResponse, RespondToInvitationRequest, RespondToInvitationResponse, sendInvitationRequest, SendInvitationResponse, ThreadDeleteResponse } from '@/app/types/threads';
+import {
+  GetInvitationsResponse,
+  RespondToInvitationRequest,
+  RespondToInvitationResponse,
+  sendInvitationRequest,
+  SendInvitationResponse,
+  ThreadDeleteResponse,
+} from '@/app/types/threads';
 import { getIn } from 'formik';
-import { BeadPurchaseRequest } from '@/app/types/bead';
+import {
+  BeadPurchaseRequest,
+  respondeToBeadPurchaseRQ,
+} from '@/app/types/bead';
 
 interface IThread {
   data: any;
@@ -132,7 +142,10 @@ export const threadApi = createApi({
     }),
 
     // send invitation to user
-    sendInvitation: builder.mutation<SendInvitationResponse, sendInvitationRequest>({
+    sendInvitation: builder.mutation<
+      SendInvitationResponse,
+      sendInvitationRequest
+    >({
       query: (payload) => ({
         url: `threads/create-invite`,
         method: 'POST',
@@ -146,12 +159,17 @@ export const threadApi = createApi({
         url: `threads/get-invitations-by-email/${email}`,
         method: 'GET',
       }),
-      providesTags: (result, error, email) => [{ type: 'Invitations', id: `invites-${email}` }],
+      providesTags: (result, error, email) => [
+        { type: 'Invitations', id: `invites-${email}` },
+      ],
       keepUnusedDataFor: 300,
     }),
 
     // respond to invitation
-    respondeToInvitation: builder.mutation<RespondToInvitationResponse, RespondToInvitationRequest>({
+    respondeToInvitation: builder.mutation<
+      RespondToInvitationResponse,
+      RespondToInvitationRequest
+    >({
       query: (payload) => ({
         url: `threads/respond-to-invite`,
         method: 'POST',
@@ -174,9 +192,22 @@ export const threadApi = createApi({
         url: `threads/bead-requests/${email}`,
         method: 'GET',
       }),
-      providesTags: (result, error, email) => [{ type: 'Bead', id: `bead-request-${email}` }],
+      providesTags: (result, error, email) => [
+        { type: 'Bead', id: `bead-request-${email}` },
+      ],
     }),
 
+    // responde to bead purchase request
+    respondToBeadPurchaseRequest: builder.mutation<
+      any,
+      respondeToBeadPurchaseRQ
+    >({
+      query: (payload) => ({
+        url: `threads/respond-to-bead-purchase`,
+        method: 'POST',
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -195,4 +226,5 @@ export const {
   useRespondeToInvitationMutation,
   useBeadPurchaseRequestMutation,
   useGetBeadRequestByEmailQuery,
+  useRespondToBeadPurchaseRequestMutation,
 } = threadApi;

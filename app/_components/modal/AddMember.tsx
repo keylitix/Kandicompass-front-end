@@ -12,7 +12,10 @@ import { useGetAllUsersQuery } from '@/redux/api/userApi';
 import { Search, X } from 'lucide-react';
 import { User } from '@/app/types/UserType';
 import { useSendInvitationMutation } from '@/redux/api/thredApi';
-import { sendInvitationRequest, SendInvitationResponse } from '@/app/types/threads';
+import {
+  sendInvitationRequest,
+  SendInvitationResponse,
+} from '@/app/types/threads';
 import { toast } from 'sonner';
 
 interface AddMembersProps {
@@ -21,10 +24,14 @@ interface AddMembersProps {
   threadId: string;
 }
 
-const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) => {
+const AddMembers: React.FC<AddMembersProps> = ({
+  isOpen,
+  onClose,
+  threadId,
+}) => {
   const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
-  const [sendInvitation, { isLoading: invitationLoading }
-  ] = useSendInvitationMutation();
+  const [sendInvitation, { isLoading: invitationLoading }] =
+    useSendInvitationMutation();
 
   const [search, setSearch] = useState('');
   const [results, setResults] = useState<User[]>([]);
@@ -38,9 +45,9 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
 
   useEffect(() => {
     if (!users) return;
-    if (search.trim() !== "") {
+    if (search.trim() !== '') {
       const filtered = users.filter((u) =>
-        u?.email?.toLowerCase().includes(search.toLowerCase())
+        u?.email?.toLowerCase().includes(search.toLowerCase()),
       );
       setResults(filtered);
     } else {
@@ -52,11 +59,11 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
     const payload = {
       email: selected,
       threadId: threadId,
-    }
+    };
     if (!selected || !threadId) return;
     const res = await sendInvitation(payload);
-    const {isSuccess} = res?.data as SendInvitationResponse;
-    if(isSuccess) {
+    const { isSuccess } = res?.data as SendInvitationResponse;
+    if (isSuccess) {
       toast.success('Invitation sent successfully!');
       onClose();
     } else {
@@ -90,8 +97,10 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
               />
 
               <div className="space-y-2 max-h-64 overflow-y-auto mt-4">
-                {search.trim() === "" ? (
-                  <p className="text-gray-400 text-sm">Start typing to search users by email...</p>
+                {search.trim() === '' ? (
+                  <p className="text-gray-400 text-sm">
+                    Start typing to search users by email...
+                  </p>
                 ) : results.length > 0 ? (
                   results.map((user) => (
                     <div
@@ -109,7 +118,6 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
                 ) : (
                   <p className="text-gray-500">No users found.</p>
                 )}
-
               </div>
 
               {selected.length > 0 && (
@@ -141,24 +149,23 @@ const AddMembers: React.FC<AddMembersProps> = ({ isOpen, onClose, threadId }) =>
                           </button>
                         </span>
                       ))} */}
-                        <span
-                          className="inline-flex items-center rounded-full border px-3 py-1 text-sm text-white bg-transparent"
-                          style={{
-                            borderImage:
-                              'linear-gradient(to right, #FF005D, #00D1FF) 1',
-                            borderStyle: 'solid',
-                            borderWidth: '1px',
-                          }}
+                      <span
+                        className="inline-flex items-center rounded-full border px-3 py-1 text-sm text-white bg-transparent"
+                        style={{
+                          borderImage:
+                            'linear-gradient(to right, #FF005D, #00D1FF) 1',
+                          borderStyle: 'solid',
+                          borderWidth: '1px',
+                        }}
+                      >
+                        {selected}
+                        <button
+                          className="ml-2 text-white hover:text-red-500 transition cursor-pointer"
+                          onClick={() => setSelected(selected)}
                         >
-                          {selected}
-                          <button
-                            className="ml-2 text-white hover:text-red-500 transition cursor-pointer"
-                            onClick={() =>
-                              setSelected(selected)
-                            }>
-                            <X size={14} />
-                          </button>
-                        </span>
+                          <X size={14} />
+                        </button>
+                      </span>
                     </div>
                   </ul>
                 </div>

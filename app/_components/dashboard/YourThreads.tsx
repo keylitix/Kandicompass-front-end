@@ -46,7 +46,7 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
         {ownedThreads &&
           ownedThreads
             .slice(0, 2)
-            .map((thread : any) => (
+            .map((thread: any) => (
               <ThreadCard
                 key={thread._id}
                 thread={thread}
@@ -102,7 +102,8 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
                 key={thread.id}
                 thread={thread}
                 refetchThreads={refetchThreads}
-                isFetchingThreads={isFetchingThreads} />
+                isFetchingThreads={isFetchingThreads}
+              />
             ))}
           </div>
         </>

@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer/Footer';
 import Dnavbar from '../-dComponnets/Dnavbar/Dnavbar';
+import BeadAcceptRequestModal from '@/app/_components/modal/BeadAcceptRQ';
 
 const DashboardLayoutPage = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -176,9 +176,6 @@ export const beadApi = createApi({
       },
       invalidatesTags: ['Bead'],
     }),
-
-  
-
   }),
 });
 

@@ -88,6 +88,6 @@ export const {
   setCoordinates,
   setLocationDenied,
   disableLocation,
-  setRefetchUser
+  setRefetchUser,
 } = authSlice.actions;
 export default authSlice.reducer;

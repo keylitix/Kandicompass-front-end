@@ -13,7 +13,7 @@ export interface Thread {
   memberCount: number;
   members: string[];
   beads: any[];
-  visibility: 'Public' | 'Private';	
+  visibility: 'Public' | 'Private';
   __v: number;
 }
 
@@ -60,10 +60,10 @@ export interface RespondToInvitationRequest {
 }
 
 export interface Responde {
-    success: boolean;
-    threadId: string;
-    status: 'accepted' | 'pending' | 'declined';
-  }
+  success: boolean;
+  threadId: string;
+  status: 'accepted' | 'pending' | 'declined';
+}
 
 export interface RespondToInvitationResponse {
   isSuccess: boolean;
@@ -71,7 +71,6 @@ export interface RespondToInvitationResponse {
   statusCode: number;
   message: string;
 }
-
 
 // delete response
 export interface ThreadDeleteResponse {

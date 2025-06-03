@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { User } from '../../../types/mock';
 import { mockUsers } from '@/app/data/mockdata';
 import { useParams } from 'next/navigation';
 import { UserProfile } from '@/app/_components/user/UserProfile';
@@ -8,37 +7,14 @@ import { useAppSelector } from '@/app/hook/useReduxApp';
 import { useGetUserByIdQuery } from '@/redux/api/userApi';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAppSelector((state) => state.auth);
-  const userId = user?.id || '';
+  const { id } = useParams<{ id: string }>();
   const {
     data,
     isLoading: isLoadingUser,
     refetch: refetchUser,
     isFetching: isFetchingUser,
-  } = useGetUserByIdQuery({ id: userId });
+  } = useGetUserByIdQuery({ id: id });
   const userData = data?.data?.[0] || null;
-
-  // useEffect(() => {
-  //   // Simulate API call
-  //   const fetchUser = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const foundUser = id
-  //         ? mockUsers.find(u => u.id === id)
-  //         : mockUsers[0];
-
-  //       if (foundUser) {
-  //         setUser(foundUser);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, [id]);
 
   if (isLoadingUser) {
     return (

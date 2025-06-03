@@ -12,7 +12,7 @@ import { inputBaseClasses } from '../custom-ui/Input';
 import { GradientButton } from '../custom-ui/GradientButton';
 import { Download, Printer } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
- 
+
 interface ViewQrCodeModalType {
   isOpen: boolean;
   onClose: () => void;
@@ -20,7 +20,7 @@ interface ViewQrCodeModalType {
   title: string;
   status?: string;
 }
- 
+
 export default function ViewQrCodeModal({
   isOpen,
   onClose,
@@ -32,12 +32,12 @@ export default function ViewQrCodeModal({
   const [copyCount, setCopyCount] = useState<number>(4);
   const [perRow, setPerRow] = useState<number>(2);
   const totalQRCodeCount = 1000;
- 
+
   useEffect(() => {
     if (copyCount > totalQRCodeCount) setCopyCount(totalQRCodeCount);
     if (copyCount < 1) setCopyCount(1);
   }, [copyCount]);
- 
+
   const downloadQRCode = async (name: string) => {
     try {
       const response = await fetch(`${CORE_BACKEND_URL}${qrURL}`);
@@ -54,19 +54,19 @@ export default function ViewQrCodeModal({
       console.error('Failed to download QR code:', error);
     }
   };
- 
+
   const printQRCodes = () => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
- 
+
     const imageSrc = `${CORE_BACKEND_URL}${qrURL}`;
- 
+
     const qrHTML = isMultiple
       ? Array.from({ length: copyCount })
           .map(() => `<div class="qr"><img src="${imageSrc}" /></div>`)
           .join('')
       : `<div class="qr qr-single"><img src="${imageSrc}" /></div>`;
- 
+
     printWindow.document.write(`
       <html>
         <head>
@@ -106,12 +106,12 @@ export default function ViewQrCodeModal({
         </body>
       </html>
     `);
- 
+
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
   };
- 
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => open && onClose()}>
       <DialogContent
@@ -123,7 +123,7 @@ export default function ViewQrCodeModal({
         <DialogHeader>
           <h2 className="text-2xl font-bold">{title}</h2>
         </DialogHeader>
- 
+
         <div className="flex flex-col items-center space-y-4">
           <Image
             src={`${CORE_BACKEND_URL}${qrURL}`}
@@ -133,7 +133,7 @@ export default function ViewQrCodeModal({
             className="object-contain"
           />
         </div>
- 
+
         <div className="mt-4">
           <div className="flex items-center gap-3">
             <label className="font-semibold text-black">Print Multiple?</label>
@@ -144,7 +144,7 @@ export default function ViewQrCodeModal({
             />
           </div>
         </div>
- 
+
         {isMultiple && (
           <>
             <div className="mt-4">
@@ -165,7 +165,7 @@ export default function ViewQrCodeModal({
                 }}
               />
             </div>
- 
+
             <div className="mt-4">
               <label className="font-semibold text-black">QRs per row?</label>
               <input
@@ -184,7 +184,7 @@ export default function ViewQrCodeModal({
             </div>
           </>
         )}
- 
+
         <DialogFooter className="flex flex-col gap-2 mt-4">
           <div className="flex flex-wrap gap-2 justify-center">
             <GradientButton
@@ -194,7 +194,7 @@ export default function ViewQrCodeModal({
             >
               Download QR
             </GradientButton>
- 
+
             <GradientButton
               icon={Printer}
               variant="outline"
@@ -202,7 +202,7 @@ export default function ViewQrCodeModal({
             >
               Print QR
             </GradientButton>
- 
+
             <GradientButton onClick={onClose}>Close</GradientButton>
           </div>
         </DialogFooter>
@@ -210,5 +210,3 @@ export default function ViewQrCodeModal({
     </Dialog>
   );
 }
- 
- 

@@ -72,7 +72,10 @@ export default function ContactUs() {
               </h1>
             </div>
             <div className="mb-[100px]">
-              <form className="w-[669px] mx-auto" onSubmit={formik.handleSubmit}>
+              <form
+                className="w-[669px] mx-auto"
+                onSubmit={formik.handleSubmit}
+              >
                 <div className="mb-6">
                   <Input
                     label="Name"

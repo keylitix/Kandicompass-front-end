@@ -34,9 +34,9 @@ interface BeadDetailProps {
 }
 
 export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
-  const [activeTab, setActiveTab] = useState<
-    'history' | 'stories' | 'reviews'
-  >('history');
+  const [activeTab, setActiveTab] = useState<'history' | 'stories' | 'reviews'>(
+    'history',
+  );
   const [isRotating, setIsRotating] = useState(true);
   const [isBeadPurchaseRQOpen, setIsBeadPurchaseRQOpen] = useState(false);
   const router = useRouter();
@@ -47,13 +47,12 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
   }>({ qrCode: null, name: '' });
   const { user } = useAppSelector((state) => state.auth);
 
-
   console.log('beadbeadbeadbeadbeadbeadbead', bead);
 
   // Calculate the average rating
   const averageRating = bead.reviews.length
     ? bead.reviews.reduce((sum: any, review: any) => sum + review.rating, 0) /
-    bead.reviews.length
+      bead.reviews.length
     : 0;
 
   // Get the current owner
@@ -66,15 +65,12 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
     id: index + 1,
     title: owner.location.city + ', ' + owner.location.country,
     lat: owner.location.lat,
-    lng: owner.location.lon
-  }))
-
+    lng: owner.location.lon,
+  }));
 
   const handleCloseBeadPurchaseRQ = async () => {
     setIsBeadPurchaseRQOpen(false);
   };
-
-
 
   return (
     <div className="max-w-6xl mx-auto bg-[#1c102b] mt-8 backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20 shadow-lg">
@@ -202,20 +198,31 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
               variant="outline"
               icon={ShoppingBag}
               onClick={() => setIsBeadPurchaseRQOpen(true)}
-            >Request to Buy</GradientButton>
+            >
+              Request to Buy
+            </GradientButton>
 
             <GradientButton
               variant="outline"
               icon={Share2Icon}
-              onClick={() => router.push(`/social-share/beads/${bead._id}?from=${encodeURIComponent(window.location.href)}`)}
-            > Share Bead</GradientButton>
+              onClick={() =>
+                router.push(
+                  `/social-share/beads/${bead._id}?from=${encodeURIComponent(window.location.href)}`,
+                )
+              }
+            >
+              {' '}
+              Share Bead
+            </GradientButton>
 
             <GradientButton
               onClick={() => {
                 setQrCode({ qrCode: bead.qrCode, name: bead.beadName });
                 setBeadQrCode(!showQrCode);
               }}
-              variant="outline" icon={QrCode}>
+              variant="outline"
+              icon={QrCode}
+            >
               Show QR Code
             </GradientButton>
           </div>
@@ -248,7 +255,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
 
       {/* Tab content */}
       <div className="p-6">
-        {activeTab === 'history'  && (
+        {activeTab === 'history' && (
           <div>
             <h3 className="text-xl font-semibold text-[#00D1FF] mb-4">
               Ownership Timeline
@@ -343,7 +350,7 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
         currentPrice={bead?.pricePerUnit}
         threadId={bead.threadId[0]._id}
         beadId={bead._id}
-        buyerId={user.id }
+        buyerId={user.id}
       />
 
       <ViewQrCodeModal
@@ -354,6 +361,6 @@ export const BeadDetail: React.FC<BeadDetailProps> = ({ bead }) => {
         qrURL={qrCode.qrCode ?? ''}
         title={qrCode.name ?? ''}
       />
-    </div >
+    </div>
   );
 };

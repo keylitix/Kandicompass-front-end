@@ -1,6 +1,15 @@
 'use client';
 import React from 'react';
-import { Users, Sparkles, QrCode, Pencil, Trash, Globe, Lock, Globe2 } from 'lucide-react';
+import {
+  Users,
+  Sparkles,
+  QrCode,
+  Pencil,
+  Trash,
+  Globe,
+  Lock,
+  Globe2,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ViewQrCodeModal from '../modal/view-qr-code';
 import { Thread } from '@/app/types/common';
@@ -15,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import { useDeleteThreadMutation } from '@/redux/api/thredApi';
 import { toast } from 'sonner';
 import { CORE_BACKEND_URL } from '@/helper/path';
@@ -27,8 +36,13 @@ interface ThreadCardProps {
   isFetchingThreads?: boolean;
 }
 
-export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, isFetchingThreads }) => {
-  const [deleteThread, { isLoading: isDeletingThread }] = useDeleteThreadMutation();
+export const ThreadCard: React.FC<ThreadCardProps> = ({
+  thread,
+  refetchThreads,
+  isFetchingThreads,
+}) => {
+  const [deleteThread, { isLoading: isDeletingThread }] =
+    useDeleteThreadMutation();
   const [openQrCode, setOpenQrCode] = React.useState(false);
   const [qrCode, setQrCode] = React.useState<{
     qrCode: string | null;
@@ -39,7 +53,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 
   const { user } = useAppSelector((state) => state.auth);
-  const isOwner = thread?.ownerId === user?.id
+  const isOwner = thread?.ownerId === user?.id;
   const handleCardClick = (e: React.MouseEvent) => {
     if (shouldIgnoreNextClick.current) {
       return;
@@ -53,7 +67,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
       router.push(`/dashboard/thread/${thread._id}`);
     }
   };
-  console.log('refetchThreads, isFetchingThreads', thread)
+  console.log('refetchThreads, isFetchingThreads', thread);
 
   const handleDeleteThread = async (id: string) => {
     shouldIgnoreNextClick.current = true;
@@ -83,8 +97,8 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
           >
             {thread?.threadName}
           </h3>
-          <div className='flex space-x-4'>
-            <div className='flex items-center space-x-2 text-[#8a86a0] text-sm'>
+          <div className="flex space-x-4">
+            <div className="flex items-center space-x-2 text-[#8a86a0] text-sm">
               {thread?.visibility === 'Public' ? (
                 <>
                   <Globe2 className="text-[#00D1FF]" size={16} />
@@ -95,8 +109,7 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
                   <Lock className="text-[#00D1FF]" size={16} />
                   <span>Private</span>
                 </>
-              )
-              }
+              )}
             </div>
             <div className="flex items-center space-x-2 text-[#8a86a0] text-sm">
               <Users size={16} className="text-[#00D1FF]" />
@@ -144,7 +157,11 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
               className="flex-shrink-0 w-10 h-10 rounded-full overflow-hidden border border-[#FF005D] border-opacity-60"
             >
               <img
-                src={bead.image ? CORE_BACKEND_URL + bead.image : DEFAULT_PROFILE_PICTURE}
+                src={
+                  bead.image
+                    ? CORE_BACKEND_URL + bead.image
+                    : DEFAULT_PROFILE_PICTURE
+                }
                 alt={bead.name || 'Bead image'}
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -164,37 +181,46 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({ thread, refetchThreads, 
       {isOwner && (
         <div className="absolute bottom-0 right-0 w-full flex items-center justify-end p-4 gap-2">
           <button
-            onClick={() => { shouldIgnoreNextClick.current = true; }}
-
+            onClick={() => {
+              shouldIgnoreNextClick.current = true;
+            }}
             disabled
-            className="bg-[#FF005D]/50 hover:bg-[#FF005D]/80 cursor-pointer w-7 h-7 flex items-center justify-center rounded-full text-white">
+            className="bg-[#FF005D]/50 hover:bg-[#FF005D]/80 cursor-pointer w-7 h-7 flex items-center justify-center rounded-full text-white"
+          >
             <Pencil size={12} />
           </button>
 
           <button
-            onClick={() => { setOpenDeleteModal(true), shouldIgnoreNextClick.current = true; }}
-            className="bg-[#FF005D]/50 hover:bg-[#FF005D]/80  cursor-pointer w-7 h-7 flex items-center justify-center rounded-full text-white">
+            onClick={() => {
+              setOpenDeleteModal(true), (shouldIgnoreNextClick.current = true);
+            }}
+            className="bg-[#FF005D]/50 hover:bg-[#FF005D]/80  cursor-pointer w-7 h-7 flex items-center justify-center rounded-full text-white"
+          >
             <Trash size={12} />
           </button>
-
         </div>
       )}
 
       <AlertDialog open={openDeleteModal}>
-        <AlertDialogContent className='bg-[#1c102b] border border-[#3f2e6a] rounded-xl'>
+        <AlertDialogContent className="bg-[#1c102b] border border-[#3f2e6a] rounded-xl">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the thread.
+              This action cannot be undone. This will permanently delete the
+              thread.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
               onClick={() => setOpenDeleteModal(false)}
-              className='text-[#8a86a0] hover:text-[#FF005D] outline-none focus:outline-none border-0 focus:ring-0'>Cancel</AlertDialogCancel>
+              className="text-[#8a86a0] hover:text-[#FF005D] outline-none focus:outline-none border-0 focus:ring-0"
+            >
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleDeleteThread(thread._id)}
-              className="bg-red-600 hover:bg-red-700 text-white">
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
               {isDeletingThread ? 'Deleting...' : ' Yes, delete it'}
             </AlertDialogAction>
           </AlertDialogFooter>

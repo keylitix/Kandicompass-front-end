@@ -1,7 +1,11 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { buildStyles, CircularProgressbar, CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import {
+  buildStyles,
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+} from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import {
   Menu,
@@ -36,12 +40,17 @@ import {
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { useAppSelector } from '@/app/hook/useReduxApp';
-import { useGetBeadRequestByEmailQuery, useGetInvitationsQuery } from '@/redux/api/thredApi';
+import {
+  useGetBeadRequestByEmailQuery,
+  useGetInvitationsQuery,
+} from '@/redux/api/thredApi';
 import { AppNotification } from '@/app/types/notification';
 import { toast } from 'sonner';
 import { CORE_BACKEND_URL } from '@/helper/path';
 import { DEFAULT_PROFILE_PICTURE } from '@/lib/variables';
 import { useGetUserByIdQuery } from '@/redux/api/userApi';
+import BeadAcceptRequestModal from '@/app/_components/modal/BeadAcceptRQ';
+import { setBeadRequestRes } from '@/redux/slice/Notification';
 
 const DashboardRoutes = [
   {
@@ -69,10 +78,15 @@ const statusColors = {
 
 const Dnavbar = () => {
   const { user, shouldRefetchUser } = useAppSelector((state) => state.auth);
-  const userId = user?.id || "";
-  const { data, isLoading: isLoadingUser, refetch: refetchUser, isFetching: isFetchingUser } = useGetUserByIdQuery({ id: userId });
-  const userData = data?.data?.[0] || null;
   const { refecthNotification } = useAppSelector((state) => state.notification);
+  const userId = user?.id || '';
+  const {
+    data,
+    isLoading: isLoadingUser,
+    refetch: refetchUser,
+    isFetching: isFetchingUser,
+  } = useGetUserByIdQuery({ id: userId });
+  const userData = data?.data?.[0] || null;
   const userEmail = user?.email as string;
   const { data: invitations, isLoading } = useGetInvitationsQuery(userEmail, {
     skip: !userEmail,
@@ -84,7 +98,7 @@ const Dnavbar = () => {
   });
   const invitationsData = invitations?.data;
   const beadRequestsData = beadRequests?.data?.data;
-  console.log('invitationsData', beadRequestsData)
+  console.log('invitationsData', beadRequestsData);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number | undefined>();
@@ -107,7 +121,6 @@ const Dnavbar = () => {
     );
   };
 
-
   const threadInvitations: AppNotification[] =
     invitationsData?.map((invite) => ({
       id: invite._id,
@@ -120,7 +133,9 @@ const Dnavbar = () => {
       action: {
         label: 'View Thread',
         onClick: () => {
-          route.push(`/dashboard/thread/${invite.threadId}?inviteId=${invite._id}`);
+          route.push(
+            `/dashboard/thread/${invite.threadId}?inviteId=${invite._id}`,
+          );
         },
       },
     })) || [];
@@ -137,11 +152,23 @@ const Dnavbar = () => {
       action: {
         label: 'View Request',
         onClick: () => {
-          route.push(`/dashboard/beads/${request._id}`);
+          dispatch(
+            setBeadRequestRes({
+              isOpen: true,
+              reqId: request._id,
+              beadName: request.beadName,
+              buyerID: request.buyerId.id,
+              offerPrice: request.offerPrice,
+              message: request.message,
+              threadName: request.threadId.threadName,
+              beadId: request.beadId._id,
+              status: request.status,
+              threadId: request.threadId._id,
+            }),
+          );
         },
       },
     })) || [];
-
 
   const allNotifications = [...threadInvitations, ...beadRequestsNotifications];
 
@@ -156,45 +183,49 @@ const Dnavbar = () => {
   useEffect(() => {
     if (!invitationsData) return;
 
-    const currentIds: Set<string> = new Set(invitationsData.map((invite) => invite._id));
+    const currentIds: Set<string> = new Set(
+      invitationsData.map((invite) => invite._id),
+    );
     const prevIds = prevIdsRef.current;
 
     const newInvites = invitationsData.filter(
-      (invite) =>
-        !prevIds.has(invite._id) &&
-        invite.status === 'pending'
+      (invite) => !prevIds.has(invite._id) && invite.status === 'pending',
     );
 
     if (newInvites.length > 0) {
       setUnreadCount((prevCount) => (prevCount || 0) + newInvites.length);
-      toast.message(`You have ${newInvites.length} new thread invitation${newInvites.length > 1 ? 's' : ''}.`);
+      toast.message(
+        `You have ${newInvites.length} new thread invitation${newInvites.length > 1 ? 's' : ''}.`,
+      );
       prevIdsRef.current = currentIds;
     }
   }, [invitationsData]);
 
-
   useEffect(() => {
     if (!beadRequestsData) return;
 
-    const currentIds: Set<string> = new Set(beadRequestsData.map((request: any) => request._id));
+    const currentIds: Set<string> = new Set(
+      beadRequestsData.map((request: any) => request._id),
+    );
     const prevIds = prevIdsRef.current;
 
     const newRequests = beadRequestsData.filter(
       (request: any) =>
-        !prevIds.has(request._id) &&
-        request.status === 'pending'
+        !prevIds.has(request._id) && request.status === 'pending',
     );
 
     if (newRequests.length > 0) {
       setUnreadCount((prevCount) => (prevCount || 0) + newRequests.length);
-      toast.message(`You have ${newRequests.length} new bead purchase request${newRequests.length > 1 ? 's' : ''}.`);
+      toast.message(
+        `You have ${newRequests.length} new bead purchase request${newRequests.length > 1 ? 's' : ''}.`,
+      );
       prevIdsRef.current = currentIds;
     }
   }, [beadRequestsData]);
 
-
   useEffect(() => {
-    const pendingInvitations = invitationsData?.filter(inv => inv.status === 'pending') || [];
+    const pendingInvitations =
+      invitationsData?.filter((inv) => inv.status === 'pending') || [];
     const unreadCount = [...pendingInvitations];
     setUnreadCount(unreadCount.length);
   }, [invitationsData, refecthNotification]);
@@ -204,7 +235,7 @@ const Dnavbar = () => {
       refetchUser();
       dispatch(setRefetchUser());
     }
-  }, [shouldRefetchUser])
+  }, [shouldRefetchUser]);
 
   return (
     <nav className="w-full relative">
@@ -253,7 +284,7 @@ const Dnavbar = () => {
               {allNotifications.map((notification) => (
                 <DropdownMenuItem
                   key={notification.id}
-                  className={`flex flex-col items-start gap-1 p-3 ${notification.status === 'pending' ? 'bg-gray-600' : ''} hover:bg-gray-800 rounded-xl cursor-pointer focus:bg-gray-900`}
+                  className={`flex flex-col items-start gap-1 p-3 ${notification.status === 'pending' ? 'bg-gray-600' : ''} hover:bg-gray-800 hover:text-white rounded-xl cursor-pointer focus:bg-gray-900`}
                   onClick={() => {
                     if (notification.action) {
                       notification.action.onClick();
@@ -261,20 +292,24 @@ const Dnavbar = () => {
                   }}
                 >
                   <div className="flex justify-between w-full">
-                    <span className="font-semibold flex items-center gap-2">
+                    <span className="font-semibold flex items-center gap-2 hover:text-white">
                       {notification.icon}
                       {notification.title}
                     </span>
-                    <span className='flex flex-col items-end justify-between'>
-                      <Badge className={`text-[8px] ${statusColors[notification.status]}`}>
+                    <span className="flex flex-col items-end justify-between">
+                      <Badge
+                        className={`text-[8px] ${statusColors[notification.status]}`}
+                      >
                         {notification.status.toUpperCase()}
                       </Badge>
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-300">{notification.content}</p>
+                  <p className="text-sm text-gray-300">
+                    {notification.content}
+                  </p>
 
-                  <span className='flex items-end justify-between w-full'>
+                  <span className="flex items-end justify-between w-full">
                     {notification.action && (
                       <button
                         className="text-xs text-blue-400 hover:text-blue-300 mt-1"
@@ -283,7 +318,9 @@ const Dnavbar = () => {
                         {notification.action.label}
                       </button>
                     )}
-                    <span className="text-xs text-gray-400">{notification.time}</span>
+                    <span className="text-xs text-gray-400">
+                      {notification.time}
+                    </span>
                   </span>
 
                   {/* {notification.action && (
@@ -293,7 +330,6 @@ const Dnavbar = () => {
                   )} */}
                 </DropdownMenuItem>
               ))}
-
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -311,9 +347,11 @@ const Dnavbar = () => {
                 >
                   <div className="flex justify-center items-center w-[40px] h-[40px] rounded-full p-[2px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF]">
                     <Image
-                      src={userData?.avatar
-                        ? `${CORE_BACKEND_URL}${userData.avatar}`
-                        : DEFAULT_PROFILE_PICTURE}
+                      src={
+                        userData?.avatar
+                          ? `${CORE_BACKEND_URL}${userData.avatar}`
+                          : DEFAULT_PROFILE_PICTURE
+                      }
                       alt="Profile"
                       unoptimized
                       width={36}
@@ -323,7 +361,9 @@ const Dnavbar = () => {
                   </div>
                 </CircularProgressbarWithChildren>
                 <div className="absolute -bottom-4 w-[130px] h-[15px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] rounded-xl flex items-center justify-center">
-                  <span className="text-[8px] text-white">{`${60}%`} profile complete</span>
+                  <span className="text-[8px] text-white">
+                    {`${60}%`} profile complete
+                  </span>
                 </div>
               </div>
             </DropdownMenuTrigger>
@@ -339,7 +379,9 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => { route.push('/dashboard/faq') }}
+                onClick={() => {
+                  route.push('/dashboard/faq');
+                }}
               >
                 <HelpCircle className="h-4 w-4" />
                 <span>FAQ</span>
@@ -347,7 +389,9 @@ const Dnavbar = () => {
 
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
-                onClick={() => { route.push('/terms-and-conditions') }}
+                onClick={() => {
+                  route.push('/terms-and-conditions');
+                }}
               >
                 <ReceiptText className="h-4 w-4" />
                 <span>Terms & Conditions</span>
@@ -409,6 +453,7 @@ const Dnavbar = () => {
           </div>
         </div>
       )}
+      <BeadAcceptRequestModal />
     </nav>
   );
 };

@@ -55,5 +55,10 @@ export interface BeadPurchaseRequest {
   buyerId: string;
   offerPrice: number;
   message: string;
-};
+}
 
+export interface respondeToBeadPurchaseRQ {
+  requestId: string;
+  accept: boolean;
+  responseMessage: string;
+}

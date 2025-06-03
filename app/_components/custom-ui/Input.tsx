@@ -52,7 +52,10 @@ const Input: React.FC<InputProps> = ({
   return (
     <div className="mb-4">
       {label && (
-        <label className="block text-white mb-1 text-sm font-medium" htmlFor={name}>
+        <label
+          className="block text-white mb-1 text-sm font-medium"
+          htmlFor={name}
+        >
           {label}
         </label>
       )}
@@ -94,7 +97,6 @@ const Input: React.FC<InputProps> = ({
             />
           )}
         </div>
-
       </div>
     </div>
   );

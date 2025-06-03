@@ -20,23 +20,30 @@ export default function TermsAndConditions() {
           </div>
 
           <div className="p-3">
-            <h3 className="text-sm font-semibold">2. Intellectual Property Rights</h3>
+            <h3 className="text-sm font-semibold">
+              2. Intellectual Property Rights
+            </h3>
             <p className="text-xs font-sans leading-[1.6]">
-              Except as otherwise provided, all content is the property of the website.
+              Except as otherwise provided, all content is the property of the
+              website.
             </p>
           </div>
 
           <div className="p-3">
             <h3 className="text-sm font-semibold">3. User Obligations</h3>
             <p className="text-xs font-sans leading-[1.6]">
-              Users must not use the website in a way that causes, or may cause, damage to the website.
+              Users must not use the website in a way that causes, or may cause,
+              damage to the website.
             </p>
           </div>
 
           <div className="p-3">
-            <h3 className="text-sm font-semibold">4. Limitation of Liability</h3>
+            <h3 className="text-sm font-semibold">
+              4. Limitation of Liability
+            </h3>
             <p className="text-xs font-sans leading-[1.6]">
-              In no event shall the company be liable for any damages arising out of or in connection with the use of this website.
+              In no event shall the company be liable for any damages arising
+              out of or in connection with the use of this website.
             </p>
           </div>
         </div>

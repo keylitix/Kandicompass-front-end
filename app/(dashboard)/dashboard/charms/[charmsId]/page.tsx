@@ -119,7 +119,7 @@ const BeadPage = () => {
       <div className="container mx-auto flex flex-col lg:flex-row-reverse justify-evenly items-start gap-18 md:gap-8 px-4">
         {/* Right Section: World Map (shows on top in mobile view) */}
         <div className="w-full lg:w-[30%]">
-          <WorldMap />
+          <WorldMap locations={[]} />
         </div>
 
         {/* Left Section: Bead Image and Details */}
