@@ -127,10 +127,11 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isLoading}
-              className={`w-full h-12 mt-2 text-white font-semibold border border-white/60 rounded-sm ${isLoading
+              className={`w-full h-12 mt-2 text-white font-semibold border border-white/60 rounded-sm ${
+                isLoading
                   ? 'opacity-70'
                   : 'hover:bg-gradient-to-r from-[#FF005D] to-[#00D1FF] hover:shadow-[0_0_20px_0_rgba(249,6,214,0.7)]'
-                }`}
+              }`}
             >
               {isLoading ? 'LOGGING IN...' : 'LOG IN'}
             </Button>

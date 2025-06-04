@@ -189,7 +189,13 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({
               shouldIgnoreNextClick.current = true;
               e.stopPropagation();
               e.preventDefault();
-              setEditData && setEditData({ threadName: thread.threadName, description: thread.description, _id: thread._id, visibility: thread.visibility } as any);
+              setEditData &&
+                setEditData({
+                  threadName: thread.threadName,
+                  description: thread.description,
+                  _id: thread._id,
+                  visibility: thread.visibility,
+                } as any);
               setOpenThread && setOpenThread(true);
             }}
             className="bg-[#FF005D]/50 hover:bg-[#FF005D]/80 cursor-pointer w-7 h-7 flex items-center justify-center rounded-full text-white"

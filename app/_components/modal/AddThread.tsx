@@ -49,7 +49,6 @@ const AddThread: React.FC<AddThreadProps> = ({
   const isUpdateFrom = Boolean(editData && editData._id);
   const [updateThread, { isLoading: isUpdating }] = useUpdateThreadMutation();
 
-
   const formik = useFormik({
     initialValues: {
       threadName: editData?.threadName || '',
@@ -60,7 +59,10 @@ const AddThread: React.FC<AddThreadProps> = ({
     enableReinitialize: true,
     onSubmit: async (values) => {
       if (isUpdateFrom && editData?._id && values) {
-        const res = await updateThread({ id: editData._id, payload: values }).unwrap();
+        const res = await updateThread({
+          id: editData._id,
+          payload: values,
+        }).unwrap();
         if (res && res?.isSuccess) {
           setUploadedFile(null);
           refetchThreads && refetchThreads();
@@ -145,7 +147,9 @@ const AddThread: React.FC<AddThreadProps> = ({
               >
                 {isAdding || isUploading || isFetchingThreads
                   ? 'Saving...'
-                  : isUpdateFrom ? 'Update Thread' : 'Save Thread'}
+                  : isUpdateFrom
+                    ? 'Update Thread'
+                    : 'Save Thread'}
               </GradientButton>
             </DialogFooter>
           </form>

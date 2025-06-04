@@ -42,13 +42,11 @@ const ThreadsPage = () => {
     { refetchOnMountOrArgChange: true },
   );
 
-  const {
-    data: memberThreadsData,
-    isFetching: isFetchingMembersThreads,
-  } = useGetThreadsByMemberQuery(
-    { id: user?.id ?? '', page_number: joinedPage, page_size: 10 },
-    { refetchOnMountOrArgChange: true },
-  );
+  const { data: memberThreadsData, isFetching: isFetchingMembersThreads } =
+    useGetThreadsByMemberQuery(
+      { id: user?.id ?? '', page_number: joinedPage, page_size: 10 },
+      { refetchOnMountOrArgChange: true },
+    );
 
   useEffect(() => {
     if (threadsData?.data) {
@@ -83,7 +81,10 @@ const ThreadsPage = () => {
   const loadMore = debounce(() => {
     if (activeTab === 'my' && threadsData?.data?.length === 10) {
       setOwnerPage((prev) => prev + 1);
-    } else if (activeTab === 'joined' && memberThreadsData?.data?.length === 10) {
+    } else if (
+      activeTab === 'joined' &&
+      memberThreadsData?.data?.length === 10
+    ) {
       setJoinedPage((prev) => prev + 1);
     }
   }, 300);
@@ -112,7 +113,10 @@ const ThreadsPage = () => {
     Array(4)
       .fill(0)
       .map((_, i) => (
-        <div key={`skeleton-${i}`} className="w-full h-60 bg-white/10 rounded-lg animate-pulse" />
+        <div
+          key={`skeleton-${i}`}
+          className="w-full h-60 bg-white/10 rounded-lg animate-pulse"
+        />
       ));
 
   return (
@@ -196,11 +200,17 @@ const ThreadsPage = () => {
         >
           {ownedThreads.length > 0 ? (
             ownedThreads.map((thread: any) => (
-              <ThreadCard key={thread.id} thread={thread} setEditData={setEditData} setOpenThread={setOpenThread} />
+              <ThreadCard
+                key={thread.id}
+                thread={thread}
+                setEditData={setEditData}
+                setOpenThread={setOpenThread}
+              />
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">
-              You haven’t created any threads yet. Click "Create Thread" to get started and invite others.
+              You haven’t created any threads yet. Click "Create Thread" to get
+              started and invite others.
             </p>
           )}
 
@@ -215,15 +225,23 @@ const ThreadsPage = () => {
         >
           {joinedThreads.length > 0 ? (
             joinedThreads.map((thread: any) => (
-              <ThreadCard key={thread.id} thread={thread} setEditData={setEditData} setOpenThread={setOpenThread} />
+              <ThreadCard
+                key={thread.id}
+                thread={thread}
+                setEditData={setEditData}
+                setOpenThread={setOpenThread}
+              />
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">
-              You haven’t joined any threads yet. Ask a thread owner to invite you.
+              You haven’t joined any threads yet. Ask a thread owner to invite
+              you.
             </p>
           )}
 
-          {isFetchingMembersThreads && activeTab === 'joined' && renderSkeletons()}
+          {isFetchingMembersThreads &&
+            activeTab === 'joined' &&
+            renderSkeletons()}
           <div ref={bottomRef} className="col-span-full h-10" />
         </TabsContent>
       </Tabs>

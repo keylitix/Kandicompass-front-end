@@ -85,4 +85,4 @@ export interface ThreadUpdateRequest {
   threadName: string | undefined;
   description: string | undefined;
   visibility: 'Public' | 'Private';
-};
+}

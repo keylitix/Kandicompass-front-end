@@ -41,7 +41,7 @@ export default function ThreadsList() {
     isFetching,
   } = useGetAllThreadsQuery(
     { page_number: page, page_size: 10 },
-    { skip: !hasMore }
+    { skip: !hasMore },
   );
 
   const threadsResponse = tData?.data ?? [];
@@ -73,7 +73,7 @@ export default function ThreadsList() {
       setLoadingMore(true);
       setPage((prev) => prev + 1);
     }, 300),
-    []
+    [],
   );
 
   const handleQrCodeClick = (thread: any) => {
@@ -162,7 +162,11 @@ export default function ThreadsList() {
                     <TooltipTrigger>
                       <div className="w-10 h-10 relative bg-white rounded-md flex-shrink-0 overflow-hidden">
                         <Image
-                          src={thread.qrCode ? `${CORE_BACKEND_URL}${thread.qrCode}` : ''}
+                          src={
+                            thread.qrCode
+                              ? `${CORE_BACKEND_URL}${thread.qrCode}`
+                              : ''
+                          }
                           fill
                           alt="QR Code"
                           className="object-cover rounded-md"

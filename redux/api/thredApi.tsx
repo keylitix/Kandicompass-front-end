@@ -73,7 +73,10 @@ export const threadApi = createApi({
     }),
 
     // Update thread
-    updateThread: builder.mutation<any, { id: string; payload: ThreadUpdateRequest }>({
+    updateThread: builder.mutation<
+      any,
+      { id: string; payload: ThreadUpdateRequest }
+    >({
       query: ({ id, payload }) => ({
         url: `threads/updateThread/${id}`,
         method: 'PUT',
