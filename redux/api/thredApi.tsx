@@ -13,7 +13,10 @@ import {
 import { getIn } from 'formik';
 import {
   BeadPurchaseRequest,
+  joinThreadResponse,
+  requestToJoinThread,
   respondeToBeadPurchaseRQ,
+  respondToMembershipRequest,
 } from '@/app/types/bead';
 
 interface IThread {
@@ -187,6 +190,8 @@ export const threadApi = createApi({
       }),
     }),
 
+    //
+
     // bead request by email id
     getBeadRequestByEmail: builder.query<any, string>({
       query: (email) => ({
@@ -209,6 +214,25 @@ export const threadApi = createApi({
         body: payload,
       }),
     }),
+
+    //request to join thread
+    requestToJoinThread: builder.mutation<joinThreadResponse, requestToJoinThread>({
+      query: (payload) => ({
+        url: `threads/membership-request`,
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+
+    // respond-to-membership-request
+    respondToMembershipRequest: builder.mutation<any, respondToMembershipRequest>({
+      query: (payload) => ({
+        url: `threads/respond-to-membership-request`,
+        method: 'POST',
+        body: payload,
+      }),
+    }),
+
   }),
 });
 
@@ -228,4 +252,6 @@ export const {
   useBeadPurchaseRequestMutation,
   useGetBeadRequestByEmailQuery,
   useRespondToBeadPurchaseRequestMutation,
+  useRequestToJoinThreadMutation,
+  useRespondToMembershipRequestMutation,
 } = threadApi;

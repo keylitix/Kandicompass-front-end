@@ -118,6 +118,15 @@ const ThreadDetailPage: React.FC = () => {
     );
   }
 
+  const closeJoiningRQModal = () => {
+    setOpenJoiningRequestModal(false);
+    // if (forJoining) {
+    //   router.push(`/dashboard/thread/${id}`);
+    // } else {
+    //   router.back();
+    // }
+  };
+
   return (
     <div className="container mx-auto px-4 pb-8 mt-8 space-y-6">
       <div className="bg-[#1c102b] backdrop-blur-md rounded-xl overflow-hidden border border-[#3f2e6a] border-opacity-20">
@@ -281,14 +290,9 @@ const ThreadDetailPage: React.FC = () => {
         onSuccessResponse={() => setOpenInvitationActionModal(false)}
       />
       <JoiningRequest
-        inviteId={inviteId ?? ''}
-        threadName={thread.threadName}
+        thread={thread}
         isOpen={openJoiningRequestModal}
-        onClose={() => {
-          setOpenJoiningRequestModal(false);
-          router.back();
-        }}
-        onSuccessResponse={() => setOpenInvitationActionModal(false)}
+        onClose={closeJoiningRQModal}
       />
 
       <Drawer

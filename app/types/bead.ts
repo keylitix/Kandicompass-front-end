@@ -62,3 +62,32 @@ export interface respondeToBeadPurchaseRQ {
   accept: boolean;
   responseMessage: string;
 }
+
+export interface requestToJoinThread {
+  threadId: string;
+  userId: string;
+  message: string;
+}
+
+export interface joinThreadResponseData {
+  message: string;
+  success: boolean;
+  requestId: string;
+  threadId: string;
+  userId: string;
+}
+
+export interface joinThreadResponse {
+  data: joinThreadResponseData;
+  isSuccess: boolean;
+  message: string;
+  statusCode: number;
+}
+
+export interface respondToMembershipRequest {
+  requestId: string;
+  threadId: string;
+  userId: string;
+  accept: boolean;
+  responseMessage: string;
+}

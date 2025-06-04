@@ -7,109 +7,75 @@ import {
   DialogOverlay,
 } from '@/components/ui/dialog';
 import { GradientButton } from '../custom-ui/GradientButton';
-import { useRespondeToInvitationMutation } from '@/redux/api/thredApi';
+import { useRequestToJoinThreadMutation, useRespondeToInvitationMutation } from '@/redux/api/thredApi';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { useAppDispatch } from '@/app/hook/useReduxApp';
+import { useAppDispatch, useAppSelector } from '@/app/hook/useReduxApp';
 import { setRefetchNotification } from '@/redux/slice/Notification';
+import { useRouter } from 'next/navigation';
+import { joinThreadResponse } from '@/app/types/bead';
 
 interface InvitationActionProps {
   isOpen: boolean;
   onClose: () => void;
-  inviteId: string;
-  threadName: string;
-  onSuccessResponse?: () => void;
+  thread: any;
 }
 
 const JoiningRequest: React.FC<InvitationActionProps> = ({
   isOpen,
   onClose,
-  inviteId,
-  threadName,
-  onSuccessResponse,
+  thread,
 }) => {
-  const [respondeToInvitation, { isLoading: isResponding }] =
-    useRespondeToInvitationMutation();
-  const [accepting, setAccepting] = useState(false);
-  const [declining, setDeclining] = useState(false);
-  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { user } = useAppSelector((state) => state.auth);
+  const [requestToJoinThread, { isLoading: isRequesting }] = useRequestToJoinThreadMutation();
 
-  const onResponde = async (status: string) => {
-    if (!inviteId || isResponding) return;
-    if (status === 'accept') {
-      try {
-        const res = await respondeToInvitation({
-          inviteId,
-          accept: true,
-        }).unwrap();
-        if (isResponding) setAccepting(true);
-        const { isSuccess } = res;
-        if (isSuccess) {
-          setAccepting(false);
-          dispatch(setRefetchNotification(true));
-          toast.success(
-            'Invitation accepted successfully! you are now part of the thread',
-            { position: 'top-center' },
-          );
-          onSuccessResponse && onSuccessResponse();
-        }
-      } catch (error) {
-        setAccepting(false);
-        toast.error('Failed to accept invitation. Try again.');
-        console.error('Error accepting invitation:', error);
+  const onCancelClick = () => {
+    router.push('/dashboard');
+  }
+
+  let message = `Hi, ${user.fullName} would like to join the thread "${thread.threadName || ''}" as a member.`;
+
+  const onSendRequest = async () => {
+    try {
+      const res = await requestToJoinThread({ threadId: thread._id, userId: user.id, message: message });
+      const { data } = res.data as joinThreadResponse;
+      if (data.success) {
+        toast.success('Request sent successfully');
+        onCancelClick();
       }
-    } else {
-      try {
-        const res = await respondeToInvitation({
-          inviteId,
-          accept: false,
-        }).unwrap();
-        if (isResponding) setDeclining(true);
-        const { isSuccess } = res;
-        if (isSuccess) {
-          setDeclining(false);
-          dispatch(setRefetchNotification(true));
-          toast.success('Invitation declined successfully!');
-          onSuccessResponse && onSuccessResponse();
-        }
-      } catch (error) {
-        setDeclining(false);
-        toast.error('Failed to decline invitation. Try again.');
-        console.error('Error declining invitation:', error);
-      }
+    } catch (error) {
+      toast.error('Failed to send request');
     }
-  };
-
+  }
   return (
     <div>
-      <Dialog open={isOpen}>
+      <Dialog open={isOpen} onOpenChange={() => { }}  >
         <DialogOverlay className="bg-black/10 backdrop-blur-xs fixed inset-0 z-50 pointer-events-none" />
-        <DialogContent>
+        <DialogContent className="[&>button]:hidden">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-red-500">
-              This thread is private
+              <h2 className="font-bold text-white">Request to Join This Thread?</h2>
             </DialogTitle>
           </DialogHeader>
 
           <div className="mt-4 text-gray-300 text-sm">
-            You need permission to become a member of{' '}
-            <h2 className="font-bold text-white">"{threadName}"</h2>. Please
-            request to join.
+            You need permission to join the thread <h2 className="font-bold text-white">"{thread.threadName || ''}"</h2>.
+            Please submit a request to become a member.
           </div>
 
           <div className="mt-6 flex justify-end gap-3">
             <GradientButton
               variant="outline"
-              onClick={onClose}
-              disabled={isResponding}
+              onClick={onCancelClick}
             >
               Cancel
             </GradientButton>
             <GradientButton
-              onClick={() => onResponde('request')}
-              disabled={isResponding}
+              onClick={onSendRequest}
+              disabled={isRequesting}
             >
-              {isResponding ? 'Requesting...' : 'Request to Join'}
+              Request to Join
             </GradientButton>
           </div>
         </DialogContent>

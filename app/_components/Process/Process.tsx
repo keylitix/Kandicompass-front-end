@@ -171,7 +171,7 @@ const Process = () => {
         <p className="font-orbitron font-bold text-xl text-white">
           How It Works
         </p>
-        <h2 className="font-orbitron font-bold text-3xl sm:text-4xl md:text-[46px]  text-[#FF005D] text-shadow-pink">
+        <h2 className=" font-bold text-3xl sm:text-4xl md:text-[46px]  text-[#FF005D]">
           Three-Step Process
         </h2>
       </div>
@@ -191,16 +191,16 @@ const Process = () => {
               src={step.icon}
               className="w-32 h-32 sm:w-40 sm:h-40"
             />
-            <p className="w-[80%] font-orbitron  text-lg sm:text-xl md:text-2xl text-center font-[600] bg-gradient-to-r from-[#00D1FF] to-[#FF005D] bg-clip-text text-transparent">
+            <h2 className="w-[80%] font-orbitron  text-lg sm:text-xl md:text-2xl text-center font-[600]">
               {step.text}
-            </p>
+            </h2>
           </div>
         ))}
       </div>
 
       {/* Explore Button */}
       <div className="w-full max-w-[1100px] py-10">
-        <button className="w-full h-[70px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] shadow-[0_0_20px_0_#FF005D] flex items-center justify-center">
+        <button className="w-full h-[70px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] flex items-center justify-center">
           <p className="font-orbitron font-bold text-xl sm:text-2xl md:text-[30px] leading-[54px] text-white">
             Explore Our Charms
           </p>
