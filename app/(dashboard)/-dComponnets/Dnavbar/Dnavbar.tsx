@@ -341,7 +341,7 @@ const Dnavbar = () => {
                   value={userData?.profileScore || 0}
                   styles={buildStyles({
                     pathColor: '#FF005D',
-                    trailColor: 'transparent',
+                    trailColor: '#FFFFFF9C',
                     rotation: 1,
                   })}
                 >
