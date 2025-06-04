@@ -56,6 +56,7 @@ export interface UserType {
   notifications: UserNotifications;
   privacy: UserPrivacy;
   security: UserSecurity;
+  profileScore: number;
   __v: number;
 }
 
@@ -91,6 +92,7 @@ export interface User {
   notifications: UserNotifications;
   privacy: UserPrivacy;
   security: UserSecurity;
+  profileScore: number;
   __v: number;
   token: string;
 }

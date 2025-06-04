@@ -313,6 +313,7 @@ export default function UpdateProfilePage() {
                     placeholder="Tell us about yourself..."
                     name="bio"
                     onChange={(e) => setFieldValue('bio', e.target.value)}
+                    value={values.bio}
                   />
                   {/* <p className="text-sm text-[#8a86a0] mt-1">{values?.bio?.length || 0}/500 characters</p> */}
                 </div>

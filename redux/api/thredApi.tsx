@@ -8,6 +8,7 @@ import {
   sendInvitationRequest,
   SendInvitationResponse,
   ThreadDeleteResponse,
+  ThreadUpdateRequest,
 } from '@/app/types/threads';
 import { getIn } from 'formik';
 import {
@@ -72,14 +73,11 @@ export const threadApi = createApi({
     }),
 
     // Update thread
-    updateThread: builder.mutation<
-      IThread,
-      { id: string; body: Partial<IThread> }
-    >({
-      query: ({ id, body }) => ({
-        url: `threads/update/${id}`,
+    updateThread: builder.mutation<any, { id: string; payload: ThreadUpdateRequest }>({
+      query: ({ id, payload }) => ({
+        url: `threads/updateThread/${id}`,
         method: 'PUT',
-        body,
+        body: payload,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Thread', id }],
     }),

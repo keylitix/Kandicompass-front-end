@@ -44,14 +44,15 @@ const AddMembers: React.FC<AddMembersProps> = ({
   };
 
   useEffect(() => {
-    if (!users) return;
-    if (search.trim() !== '') {
-      const filtered = users.filter((u) =>
-        u?.email?.toLowerCase().includes(search.toLowerCase()),
-      );
-      setResults(filtered);
-    } else {
-      setResults([]);
+    if (users && users.length > 0) {
+      if (search.trim() !== '') {
+        const filtered = users.filter((u) =>
+          u?.email?.toLowerCase().includes(search.toLowerCase()),
+        );
+        setResults(filtered);
+      } else {
+        setResults([]);
+      }
     }
   }, [search, users]);
 

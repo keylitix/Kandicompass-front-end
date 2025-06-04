@@ -338,7 +338,7 @@ const Dnavbar = () => {
               <div className="relative cursor-pointer flex items-center justify-center w-[50px] h-[50px] rounded-full relative">
                 <CircularProgressbarWithChildren
                   strokeWidth={5}
-                  value={60}
+                  value={userData?.profileScore || 0}
                   styles={buildStyles({
                     pathColor: '#FF005D',
                     trailColor: 'transparent',
@@ -362,7 +362,7 @@ const Dnavbar = () => {
                 </CircularProgressbarWithChildren>
                 <div className="absolute -bottom-4 w-[130px] h-[15px] bg-gradient-to-r from-[#FF005D] to-[#00D1FF] rounded-xl flex items-center justify-center">
                   <span className="text-[8px] text-white">
-                    {`${60}%`} profile complete
+                    {`${userData?.profileScore || 0}%`} profile complete
                   </span>
                 </div>
               </div>

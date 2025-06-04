@@ -16,6 +16,7 @@ import { ThreadCard } from '@/app/_components/dashboard/ThreadCards';
 import { Plus } from 'lucide-react';
 import AddThread from '@/app/_components/modal/AddThread';
 import { GradientButton } from '@/app/_components/custom-ui/GradientButton';
+import { debounce } from 'lodash';
 
 const ThreadsPage = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -28,9 +29,12 @@ const ThreadsPage = () => {
   const [ownedThreads, setOwnedThreads] = useState<any[]>([]);
   const [joinedThreads, setJoinedThreads] = useState<any[]>([]);
 
+  const [editData, setEditData] = useState<any>({});
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
   const {
     data: threadsData,
-    isLoading: isLoadingThreads,
     isFetching: isFetchingThreads,
     refetch: refetchThreads,
   } = useGetThreadsByOwnerQuery(
@@ -40,7 +44,6 @@ const ThreadsPage = () => {
 
   const {
     data: memberThreadsData,
-    isLoading: isLoadingMembersThreads,
     isFetching: isFetchingMembersThreads,
   } = useGetThreadsByMemberQuery(
     { id: user?.id ?? '', page_number: joinedPage, page_size: 10 },
@@ -67,21 +70,29 @@ const ThreadsPage = () => {
     }
   }, [memberThreadsData, joinedPage]);
 
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (activeTab === 'my') {
+      // setOwnerPage(1);
+      // setOwnedThreads([]);
+    } else {
+      // setJoinedPage(1);
+      // setJoinedThreads([]);
+    }
+  }, [activeTab]);
+
+  const loadMore = debounce(() => {
+    if (activeTab === 'my' && threadsData?.data?.length === 10) {
+      setOwnerPage((prev) => prev + 1);
+    } else if (activeTab === 'joined' && memberThreadsData?.data?.length === 10) {
+      setJoinedPage((prev) => prev + 1);
+    }
+  }, 300);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          if (activeTab === 'my') {
-            if (threadsData?.data.length === 10) {
-              setOwnerPage((prev) => prev + 1);
-            }
-          } else {
-            if (memberThreadsData?.data.length === 10) {
-              setJoinedPage((prev) => prev + 1);
-            }
-          }
+          loadMore();
         }
       },
       { threshold: 1.0 },
@@ -93,18 +104,16 @@ const ThreadsPage = () => {
 
     return () => {
       if (bottomRef.current) observer.unobserve(bottomRef.current);
+      observer.disconnect();
     };
-  }, [activeTab, threadsData, memberThreadsData]);
+  }, [bottomRef, activeTab, threadsData, memberThreadsData]);
 
-  useEffect(() => {
-    if (activeTab === 'my') {
-      setOwnerPage(1);
-      setOwnedThreads([]);
-    } else {
-      setJoinedPage(1);
-      setJoinedThreads([]);
-    }
-  }, [activeTab]);
+  const renderSkeletons = () =>
+    Array(4)
+      .fill(0)
+      .map((_, i) => (
+        <div key={`skeleton-${i}`} className="w-full h-60 bg-white/10 rounded-lg animate-pulse" />
+      ));
 
   return (
     <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-10">
@@ -135,9 +144,10 @@ const ThreadsPage = () => {
             </CarouselContent>
           </Carousel>
         ) : (
-          <p className="text-gray-400 italic">
-            No featured threads available. Start by creating your first thread!
-          </p>
+          <>
+            {isFetchingMembersThreads && renderSkeletons()}
+            <div ref={bottomRef} className="col-span-full h-10" />
+          </>
         )}
       </div>
 
@@ -150,23 +160,19 @@ const ThreadsPage = () => {
           <TabsList className="bg-[#1c102b] text-white flex gap-2 px-2 h-12 rounded-lg overflow-x-auto">
             <TabsTrigger
               value="my"
-              className="
-                px-4 py-2 rounded-lg font-semibold text-sm transition
+              className="px-4 py-2 rounded-lg font-semibold text-sm transition
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#FF005D] data-[state=active]:to-[#00D1FF]
                 data-[state=active]:text-white
-                data-[state=inactive]:border data-[state=inactive]:border-[#FF005D] data-[state=inactive]:text-white
-              "
+                data-[state=inactive]:border data-[state=inactive]:border-[#FF005D] data-[state=inactive]:text-white"
             >
               My Threads
             </TabsTrigger>
             <TabsTrigger
               value="joined"
-              className="
-                px-4 py-2 rounded-lg font-semibold text-sm transition
+              className="px-4 py-2 rounded-lg font-semibold text-sm transition
                 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#FF005D] data-[state=active]:to-[#00D1FF]
                 data-[state=active]:text-white
-                data-[state=inactive]:border data-[state=inactive]:border-[#00D1FF] data-[state=inactive]:text-white
-              "
+                data-[state=inactive]:border data-[state=inactive]:border-[#00D1FF] data-[state=inactive]:text-white"
             >
               Joined Threads
             </TabsTrigger>
@@ -183,37 +189,41 @@ const ThreadsPage = () => {
           )}
         </div>
 
+        {/* My Threads */}
         <TabsContent
           value="my"
           className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
           {ownedThreads.length > 0 ? (
             ownedThreads.map((thread: any) => (
-              <ThreadCard key={thread.id} thread={thread} />
+              <ThreadCard key={thread.id} thread={thread} setEditData={setEditData} setOpenThread={setOpenThread} />
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">
-              You haven’t created any threads yet. Click "Create Thread" to get
-              started and invite others.
+              You haven’t created any threads yet. Click "Create Thread" to get started and invite others.
             </p>
           )}
+
+          {isFetchingThreads && activeTab === 'my' && renderSkeletons()}
           <div ref={bottomRef} className="col-span-full h-10" />
         </TabsContent>
 
+        {/* Joined Threads */}
         <TabsContent
           value="joined"
           className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
           {joinedThreads.length > 0 ? (
             joinedThreads.map((thread: any) => (
-              <ThreadCard key={thread.id} thread={thread} />
+              <ThreadCard key={thread.id} thread={thread} setEditData={setEditData} setOpenThread={setOpenThread} />
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">
-              You haven’t joined any threads yet. Ask a thread owner to invite
-              you.
+              You haven’t joined any threads yet. Ask a thread owner to invite you.
             </p>
           )}
+
+          {isFetchingMembersThreads && activeTab === 'joined' && renderSkeletons()}
           <div ref={bottomRef} className="col-span-full h-10" />
         </TabsContent>
       </Tabs>
@@ -223,6 +233,7 @@ const ThreadsPage = () => {
         onClose={() => setOpenThread(false)}
         refetchThreads={refetchThreads}
         isFetchingThreads={isFetchingThreads}
+        editData={editData}
       />
     </div>
   );

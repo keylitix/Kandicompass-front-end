@@ -10,7 +10,10 @@ export function middleware(request: NextRequest) {
   const isOpenPage = ['/terms-and-conditions'].includes(path);
 
   if (isProtected && !token) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
+       const redirectUrl = new URL('/sign-in', request.url);
+    redirectUrl.searchParams.set('callbackUrl', path);
+    console.log('Redirecting to:', redirectUrl.toString());
+    return NextResponse.redirect(redirectUrl);
   }
 
   if (isAuthPage && token) {

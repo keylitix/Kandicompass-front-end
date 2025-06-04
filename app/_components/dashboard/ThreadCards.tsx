@@ -34,12 +34,16 @@ interface ThreadCardProps {
   thread: Thread;
   refetchThreads?: () => void;
   isFetchingThreads?: boolean;
+  setEditData?: React.Dispatch<React.SetStateAction<Thread | null>>;
+  setOpenThread?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ThreadCard: React.FC<ThreadCardProps> = ({
   thread,
   refetchThreads,
   isFetchingThreads,
+  setEditData,
+  setOpenThread,
 }) => {
   const [deleteThread, { isLoading: isDeletingThread }] =
     useDeleteThreadMutation();
@@ -181,10 +185,13 @@ export const ThreadCard: React.FC<ThreadCardProps> = ({
       {isOwner && (
         <div className="absolute bottom-0 right-0 w-full flex items-center justify-end p-4 gap-2">
           <button
-            onClick={() => {
+            onClick={(e) => {
               shouldIgnoreNextClick.current = true;
+              e.stopPropagation();
+              e.preventDefault();
+              setEditData && setEditData({ threadName: thread.threadName, description: thread.description, _id: thread._id, visibility: thread.visibility } as any);
+              setOpenThread && setOpenThread(true);
             }}
-            disabled
             className="bg-[#FF005D]/50 hover:bg-[#FF005D]/80 cursor-pointer w-7 h-7 flex items-center justify-center rounded-full text-white"
           >
             <Pencil size={12} />

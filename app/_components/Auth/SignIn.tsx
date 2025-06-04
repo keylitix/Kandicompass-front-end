@@ -1,7 +1,7 @@
 'use client';
 import { Lock, User, Facebook, Globe } from 'lucide-react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLoginUserMutation } from '@/redux/api/userApi';
 import { toast, ToastContainer } from 'react-toastify';
 import Link from 'next/link';
@@ -17,6 +17,7 @@ import { setUser } from '@/redux/slice/UserSlice';
 export default function SignIn() {
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -31,6 +32,8 @@ export default function SignIn() {
     }));
   };
 
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -43,13 +46,11 @@ export default function SignIn() {
         });
         dispatch(setUser(response.data));
         toast.success('Login successful! Redirecting...');
-        router.push('/dashboard');
+        router.push(callbackUrl);
       }
     } catch (err) {
       console.error('Login failed:', err);
       toast.error('Login failed. Please check your credentials.');
-    } finally {
-      router.push('/dashboard');
     }
   };
 
@@ -126,11 +127,10 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isLoading}
-              className={`w-full h-12 mt-2 text-white font-semibold border border-white/60 rounded-sm ${
-                isLoading
+              className={`w-full h-12 mt-2 text-white font-semibold border border-white/60 rounded-sm ${isLoading
                   ? 'opacity-70'
                   : 'hover:bg-gradient-to-r from-[#FF005D] to-[#00D1FF] hover:shadow-[0_0_20px_0_rgba(249,6,214,0.7)]'
-              }`}
+                }`}
             >
               {isLoading ? 'LOGGING IN...' : 'LOG IN'}
             </Button>

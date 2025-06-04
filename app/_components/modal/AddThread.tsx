@@ -10,6 +10,7 @@ import { ChangeEvent, DragEvent, useCallback, useState } from 'react';
 import {
   useAddThreadMutation,
   useGetAllThreadsQuery,
+  useUpdateThreadMutation,
   useUploadThreadImageMutation,
 } from '@/redux/api/thredApi';
 import Input from '../custom-ui/Input';
@@ -17,6 +18,7 @@ import { GradientButton } from '../custom-ui/GradientButton';
 import { Thread, ThreadCreate } from '@/app/types/common';
 import { useAppSelector } from '@/app/hook/useReduxApp';
 import ImageUpload from '../custom-ui/ImageUpload';
+import { ThreadUpdateRequest } from '@/app/types/threads';
 
 interface UploadedFile {
   file: File;
@@ -28,6 +30,7 @@ interface AddThreadProps {
   onClose: () => void;
   refetchThreads?: () => void;
   isFetchingThreads?: boolean;
+  editData?: ThreadUpdateRequest;
 }
 
 const AddThread: React.FC<AddThreadProps> = ({
@@ -35,31 +38,46 @@ const AddThread: React.FC<AddThreadProps> = ({
   onClose,
   refetchThreads,
   isFetchingThreads,
+  editData,
 }) => {
+  const { user } = useAppSelector((state) => state.auth);
   const [uploadedFile, setUploadedFile] = useState<UploadedFile | null>(null);
-
   const [addThread, { isLoading: isAdding }] = useAddThreadMutation();
   const [uploadImage, { isLoading: isUploading }] =
     useUploadThreadImageMutation();
 
-  const { user } = useAppSelector((state) => state.auth);
+  const isUpdateFrom = Boolean(editData && editData._id);
+  const [updateThread, { isLoading: isUpdating }] = useUpdateThreadMutation();
 
-  const formik = useFormik<ThreadCreate>({
+
+  const formik = useFormik({
     initialValues: {
-      threadName: '',
-      description: '',
+      threadName: editData?.threadName || '',
+      description: editData?.description || '',
       ownerId: user?.id ?? '',
-      visibility: 'Public',
+      visibility: editData?.visibility || 'Public',
     },
     enableReinitialize: true,
-    onSubmit: async (values: ThreadCreate) => {
-      const res = await addThread(values).unwrap();
-      if (res && res?.isSuccess) {
-        setUploadedFile(null);
-        refetchThreads && refetchThreads();
-        if (!isAdding || !isFetchingThreads) {
-          onClose();
-          formik.resetForm();
+    onSubmit: async (values) => {
+      if (isUpdateFrom && editData?._id && values) {
+        const res = await updateThread({ id: editData._id, payload: values }).unwrap();
+        if (res && res?.isSuccess) {
+          setUploadedFile(null);
+          refetchThreads && refetchThreads();
+          if (!isUpdating || !isFetchingThreads) {
+            onClose();
+            formik.resetForm();
+          }
+        }
+      } else {
+        const res = await addThread(values).unwrap();
+        if (res && res?.isSuccess) {
+          setUploadedFile(null);
+          refetchThreads && refetchThreads();
+          if (!isAdding || !isFetchingThreads) {
+            onClose();
+            formik.resetForm();
+          }
         }
       }
     },
@@ -75,7 +93,7 @@ const AddThread: React.FC<AddThreadProps> = ({
           <DialogHeader>
             <DialogTitle>
               <h2 className="text-3xl font-bold bg-gradient-to-r from-[#FF005D] to-[#00D1FF] bg-clip-text text-transparent">
-                Create a Thread
+                {isUpdateFrom ? 'Update Thread' : 'Create a Thread'}
               </h2>
             </DialogTitle>
           </DialogHeader>
@@ -127,7 +145,7 @@ const AddThread: React.FC<AddThreadProps> = ({
               >
                 {isAdding || isUploading || isFetchingThreads
                   ? 'Saving...'
-                  : 'Save Thread'}
+                  : isUpdateFrom ? 'Update Thread' : 'Save Thread'}
               </GradientButton>
             </DialogFooter>
           </form>

@@ -78,3 +78,11 @@ export interface ThreadDeleteResponse {
   message: string;
   statusCode: number;
 }
+
+//update thread
+export interface ThreadUpdateRequest {
+  _id?: string;
+  threadName: string | undefined;
+  description: string | undefined;
+  visibility: 'Public' | 'Private';
+};

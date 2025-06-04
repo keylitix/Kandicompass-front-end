@@ -27,6 +27,8 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
   const [openThread, setOpenThread] = React.useState(false);
   const ownedThreads = threads ?? [];
   const joinedThreads = memberThreads ?? [];
+
+  const [editData, setEditData] = React.useState<any>({});
   return (
     <section>
       <header className="flex justify-between items-center mb-6">
@@ -52,6 +54,8 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
                 thread={thread}
                 refetchThreads={refetchThreads}
                 isFetchingThreads={isFetchingThreads}
+                setEditData={setEditData}
+                setOpenThread={setOpenThread}
               />
             ))}
 
@@ -103,6 +107,8 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
                 thread={thread}
                 refetchThreads={refetchThreads}
                 isFetchingThreads={isFetchingThreads}
+                setEditData={setEditData}
+                setOpenThread={setOpenThread}
               />
             ))}
           </div>
@@ -113,6 +119,7 @@ export const YourThreads: React.FC<YourThreadsProps> = ({
         onClose={() => setOpenThread(false)}
         refetchThreads={refetchThreads}
         isFetchingThreads={isFetchingThreads}
+        editData={editData}
       />
     </section>
   );
