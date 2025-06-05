@@ -9,13 +9,13 @@ import Footer from '@/components/Footer/Footer';
 
 export default function Home() {
   return (
-    <div>
-      <Navbar />
+    <div className='mb-[100px]'>
+      {/* <Navbar /> */}
       <HomeOne />
       <Process />
-      <Deals />
-      {/* <Charms/>
-    <Footer/> */}
+      {/* <Deals /> */}
+      <Charms/>
+    {/* <Footer/> */}
     </div>
   );
 }

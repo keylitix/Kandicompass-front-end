@@ -47,7 +47,7 @@ const JoiningRequest: React.FC<InvitationActionProps> = ({
     } catch (error) {
       toast.error('Failed to send request');
     }
-  }
+  };
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={() => { }}  >
