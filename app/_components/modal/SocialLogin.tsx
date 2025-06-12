@@ -30,7 +30,7 @@ const SocialLoginModal: React.FC<SocialLoginModalProps> = ({
       } else {
         await loginWithFacebook();
       }
-      onClose(); // optionally close modal after successful login
+      onClose();
     } catch (error) {
       console.error('Login failed', error);
     }

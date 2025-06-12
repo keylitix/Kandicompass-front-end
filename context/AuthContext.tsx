@@ -41,6 +41,7 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
     const googleProvider = new GoogleAuthProvider();
     const facebookProvider = new FacebookAuthProvider();
 
+    
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user: any) => {
             setUser(user);
@@ -49,10 +50,21 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
         return () => unsubscribe();
     }, []);
 
+
     const loginWithGoogle = async () => {
         setLoading(true);
         try {
-            await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, googleProvider);
+            const token = await result.user.getIdToken();
+
+            await fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token }),
+            });
+        } catch (error) {
+            console.error('Google login failed:', error);
+            throw error;
         } finally {
             setLoading(false);
         }
