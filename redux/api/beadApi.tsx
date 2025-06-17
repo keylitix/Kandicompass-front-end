@@ -127,6 +127,11 @@ export const beadApi = createApi({
       ],
     }),
 
+    // explore moast travled beads
+    getExploreBeads: builder.query<any, void>({
+      query: () => 'beads/explore',
+    }),
+
     // Combined create bead with image upload
     createBeadWithImage: builder.mutation<
       IBead,
@@ -188,4 +193,5 @@ export const {
   useDeleteBeadMutation,
   useUploadBeadImageMutation,
   useCreateBeadWithImageMutation,
+  useGetExploreBeadsQuery,
 } = beadApi;

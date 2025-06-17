@@ -71,7 +71,7 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
   };
 
   return (
-    <Card className="glass-card border-white/20 mb-6">
+    <Card className="bg-[#1c102b] border-[#3f2e6a] mb-6">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -117,7 +117,7 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
             <img
               src={post.beadImage}
               alt={post.beadName}
-              className="w-full h-64 object-cover transition-transform group-hover:scale-105"
+              className="w-full h-75 object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             <div className="absolute bottom-4 left-4">
@@ -134,7 +134,7 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
               variant="ghost"
               size="sm"
               onClick={handleLike}
-              className={`text-white/70 hover:text-white ${isLiked ? 'text-red-400' : ''}`}
+              className={`text-white/70 hover:text-white hover:bg-gradient-to-r from-pink-600 to-cyan-600 ${isLiked ? 'text-red-400' : ''}`}
             >
               <Heart className={`w-4 h-4 mr-1 ${isLiked ? 'fill-current' : ''}`} />
               {post.likes.length}
@@ -143,7 +143,7 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
               variant="ghost"
               size="sm"
               onClick={() => setShowComments(!showComments)}
-              className="text-white/70 hover:text-white"
+              className="text-white/70 hover:text-white hover:bg-gradient-to-r from-pink-600 to-cyan-600"
             >
               <MessageCircle className="w-4 h-4 mr-1" />
               {post.comments.length}
@@ -151,19 +151,18 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
             <Button
               variant="ghost"
               size="sm"
-              className="text-white/70 hover:text-white"
+              className="text-white/70 hover:text-white hover:bg-gradient-to-r from-pink-600 to-cyan-600"
             >
               <Share2 className="w-4 h-4 mr-1" />
               Share
             </Button>
           </div>
           <Button
-            variant="outline"
             size="sm"
             onClick={() => onViewBead(post.beadId)}
-            className="border-white/20 text-white bg-white/10"
+            className="bg-gradient-to-r from-pink-600 to-cyan-600 hover:from-pink-700 hover:to-cyan-700"
           >
-            View Bead
+            View Bead QR
           </Button>
         </div>
 
@@ -192,7 +191,7 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
               <form onSubmit={handleComment} className="flex items-center gap-2 mt-3">
                 <Avatar className="w-6 h-6">
                   <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white text-xs">
-                    Sahi
+                    SA
                   </AvatarFallback>
                 </Avatar>
                 <Input
