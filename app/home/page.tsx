@@ -16,6 +16,7 @@ const HomePage: React.FC = () => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentTab, setCurrentTab] = useState('feed');
   const { data: exploreBeads, isLoading } = useGetExploreBeadsQuery();
+  
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">

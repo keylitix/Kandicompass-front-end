@@ -1,11 +1,12 @@
-'use client'
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Heart, MessageCircle, Share2, MapPin, Clock, MoreHorizontal } from 'lucide-react';
+import { CORE_BACKEND_URL } from '@/helper/path';
+import { DEFAULT_PROFILE_PICTURE } from '@/lib/variables';
 
 interface FeedPostProps {
   post: any;
@@ -17,114 +18,105 @@ interface FeedPostProps {
 export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps) {
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [isLiked, setIsLiked] = useState(
-    true ? post.likes.some((like: any) => like.userId === "") : false
-  );
+  const [isLiked, setIsLiked] = useState(() => {
+    // Assuming you can check if current user liked it
+    // For now, false by default
+    return false;
+  });
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    onLike(post.id);
+  // Extract text content safely
+  const textContent = Array.isArray(post.content)
+    ? post.content
+        .filter((c: any) => c.type === 'text')
+        .map((c: any) => c.content)
+        .join('\n')
+    : '';
+
+  const fullName = post.userId?.fullName || 'Unknown User';
+  const userAvatar = post.userId?.avatar
+    ? CORE_BACKEND_URL + post.userId.avatar
+    : DEFAULT_PROFILE_PICTURE;
+
+  const beadImage = post.beadId?.images?.[0]
+    ? CORE_BACKEND_URL + post.beadId.images[0]
+    : null;
+
+  const beadName = post.beadName || post.beadId?.beadName || '';
+
+  const likes = post.likes || [];
+  const comments = post.comments || [];
+
+  const formatTimeAgo = (dateString: string | Date) => {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    return `${Math.floor(seconds / 86400)}d ago`;
   };
 
-  const handleComment = (e: React.FormEvent) => {
+  const handleLikeClick = useCallback(() => {
+    setIsLiked((liked) => !liked);
+    onLike(post._id);
+  }, [post._id, onLike]);
+
+  const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newComment.trim()) {
-      onComment(post.id, newComment.trim());
-      setNewComment('');
-    }
-  };
-
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
-    if (diffInSeconds < 60) return 'just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    return `${Math.floor(diffInSeconds / 86400)}d ago`;
-  };
-
-  const getPostTypeIcon = () => {
-    switch (post.type) {
-      case 'bead_created':
-        return '✨';
-      case 'ownership_transfer':
-        return '🔄';
-      case 'location_update':
-        return '📍';
-      default:
-        return '💬';
-    }
-  };
-
-  const getPostTypeText = () => {
-    switch (post.type) {
-      case 'bead_created':
-        return 'created a new bead';
-      case 'ownership_transfer':
-        return 'received a bead';
-      case 'location_update':
-        return 'updated location';
-      default:
-        return 'commented';
-    }
+    if (!newComment.trim()) return;
+    onComment(post._id, newComment.trim());
+    setNewComment('');
   };
 
   return (
     <Card className="bg-[#1c102b] border-[#3f2e6a] mb-6">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar className="w-10 h-10">
-              <AvatarImage src={post.userAvatar} alt={post.userName} />
-              <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white">
-                {post.userName.split(' ').map((n: any) => n[0]).join('')}
+      <CardHeader className="pb-3 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <Avatar className="w-10 h-10">
+            {userAvatar ? (
+              <AvatarImage src={userAvatar} alt={fullName} />
+            ) : (
+              <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white font-bold">
+                {fullName
+                  .split(' ')
+                  .map((n: string) => n[0])
+                  .join('')}
               </AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-white">{post.userName}</span>
-                <span className="text-white/60 text-sm">
-                  {getPostTypeIcon()} {getPostTypeText()}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-white/50">
-                <Clock className="w-3 h-3" />
-                <span>{formatTimeAgo(post.timestamp)}</span>
-                {post.location && (
-                  <>
-                    <MapPin className="w-3 h-3 ml-2" />
-                    <span>{post.location.address}</span>
-                  </>
-                )}
-              </div>
+            )}
+          </Avatar>
+          <div>
+            <div className="flex items-center gap-2 text-white font-semibold">
+              {fullName}
+            </div>
+            <div className="text-xs text-white/50 flex items-center gap-2">
+              <Clock className="w-3 h-3" />
+              <span>{formatTimeAgo(post.createdAt)}</span>
+              {post.location?.address && (
+                <>
+                  <MapPin className="w-3 h-3" />
+                  <span>{post.location.address}</span>
+                </>
+              )}
             </div>
           </div>
-          <Button variant="ghost" size="sm" className="text-white/60 hover:text-white">
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
         </div>
+        <Button variant="ghost" size="sm" className="text-white/60 hover:text-white">
+          <MoreHorizontal className="w-4 h-4" />
+        </Button>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        <p className="text-white/90">{post.content}</p>
+      <CardContent className="space-y-4 text-white/90">
+        <p className="whitespace-pre-line">{textContent}</p>
 
-        {post.beadImage && (
-          <div 
+        {beadImage && (
+          <div
             className="relative rounded-lg overflow-hidden cursor-pointer group"
-            onClick={() => onViewBead(post.beadId)}
+            onClick={() => onViewBead(post.beadId?._id)}
           >
-            <img
-              src={post.beadImage}
-              alt={post.beadName}
-              className="w-full h-75 object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-            <div className="absolute bottom-4 left-4">
-              <Badge className="bg-white/20 text-white backdrop-blur-sm">
-                {post.beadName}
-              </Badge>
-            </div>
+            <img src={beadImage} alt={beadName} className="w-full h-75 object-cover rounded-lg" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg" />
+            <Badge className="absolute bottom-4 left-4 bg-white/20 text-white backdrop-blur-sm">
+              {beadName}
+            </Badge>
           </div>
         )}
 
@@ -133,20 +125,22 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleLike}
-              className={`text-white/70 hover:text-white hover:bg-gradient-to-r from-pink-600 to-cyan-600 ${isLiked ? 'text-red-400' : ''}`}
+              onClick={handleLikeClick}
+              className={`text-white/70 hover:text-white hover:bg-gradient-to-r from-pink-600 to-cyan-600 ${
+                isLiked ? 'text-red-400' : ''
+              }`}
             >
               <Heart className={`w-4 h-4 mr-1 ${isLiked ? 'fill-current' : ''}`} />
-              {post.likes.length}
+              {likes.length}
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setShowComments(!showComments)}
+              onClick={() => setShowComments((show) => !show)}
               className="text-white/70 hover:text-white hover:bg-gradient-to-r from-pink-600 to-cyan-600"
             >
               <MessageCircle className="w-4 h-4 mr-1" />
-              {post.comments.length}
+              {comments.length}
             </Button>
             <Button
               variant="ghost"
@@ -159,7 +153,7 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
           </div>
           <Button
             size="sm"
-            onClick={() => onViewBead(post.beadId)}
+            onClick={() => onViewBead(post.beadId?._id)}
             className="bg-gradient-to-r from-pink-600 to-cyan-600 hover:from-pink-700 hover:to-cyan-700"
           >
             View Bead QR
@@ -167,14 +161,20 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
         </div>
 
         {showComments && (
-          <div className="space-y-3 pt-3 border-t border-white/10">
-            {post.comments.map((comment: any) => (
+          <section className="space-y-3 pt-3 border-t border-white/10">
+            {comments.map((comment: any) => (
               <div key={comment.id} className="flex items-start gap-2">
                 <Avatar className="w-6 h-6">
-                  <AvatarImage src={comment.userAvatar} alt={comment.userName} />
-                  <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white text-xs">
-                    {comment.userName.split(' ').map((n: any) => n[0]).join('')}
-                  </AvatarFallback>
+                  {comment.userAvatar ? (
+                    <AvatarImage src={comment.userAvatar} alt={comment.userName} />
+                  ) : (
+                    <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white text-xs">
+                      {comment.userName
+                        .split(' ')
+                        .map((n: string) => n[0])
+                        .join('')}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="flex-1">
                   <div className="bg-white/5 rounded-lg px-3 py-2">
@@ -188,28 +188,28 @@ export function FeedPost({ post, onLike, onComment, onViewBead }: FeedPostProps)
               </div>
             ))}
 
-              <form onSubmit={handleComment} className="flex items-center gap-2 mt-3">
-                <Avatar className="w-6 h-6">
-                  <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white text-xs">
-                    SA
-                  </AvatarFallback>
-                </Avatar>
-                <Input
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Write a comment..."
-                  className="bg-white/5 border-white/20 text-white placeholder:text-white/50"
-                />
-                <Button
-                  type="submit"
-                  size="sm"
-                  disabled={!newComment.trim()}
-                  className="bg-gradient-to-r from-pink-600 to-cyan-600 hover:from-pink-700 hover:to-cyan-700"
-                >
-                  Post
-                </Button>
-              </form>
-          </div>
+            <form onSubmit={handleCommentSubmit} className="flex items-center gap-2 mt-3">
+              <Avatar className="w-6 h-6">
+                <AvatarFallback className="bg-gradient-to-r from-pink-500 to-cyan-500 text-white text-xs">
+                  SA
+                </AvatarFallback>
+              </Avatar>
+              <Input
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Write a comment..."
+                className="bg-white/5 border-white/20 text-white placeholder:text-white/50"
+              />
+              <Button
+                type="submit"
+                size="sm"
+                disabled={!newComment.trim()}
+                className="bg-gradient-to-r from-pink-600 to-cyan-600 hover:from-pink-700 hover:to-cyan-700"
+              >
+                Post
+              </Button>
+            </form>
+          </section>
         )}
       </CardContent>
     </Card>

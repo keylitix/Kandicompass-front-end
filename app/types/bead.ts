@@ -1,3 +1,5 @@
+import { Pagination } from '.';
+
 export interface CreateBeadRequest {
   beadName: string;
   threadId: string;
@@ -90,4 +92,16 @@ export interface respondToMembershipRequest {
   userId: string;
   accept: boolean;
   responseMessage: string;
+}
+
+export interface BeadFeedResponse {
+  isSuccess: boolean;
+  data: BeedFeedData;
+  statusCode: number;
+  message: string;
+}
+
+export interface BeedFeedData {
+  data: any[];
+  pagination: Pagination;
 }
