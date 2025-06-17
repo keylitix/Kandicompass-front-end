@@ -169,7 +169,6 @@
 //   );
 // }
 
-
 import React, { useState, useEffect } from 'react';
 import { RecentActivity } from './recentActivity';
 import { FeedPost } from './feedPost';
@@ -211,22 +210,21 @@ export function FeedPage({ onViewBead }: FeedPageProps) {
 
   // When latestData updates, check for new posts
   useEffect(() => {
-  if (!latestData?.data?.data || feedPosts.length === 0) return;
+    if (!latestData?.data?.data || feedPosts.length === 0) return;
 
-  // Find newest post's createdAt in current feedPosts
-  const newestCreatedAt = new Date(feedPosts[0].createdAt).getTime();
+    // Find newest post's createdAt in current feedPosts
+    const newestCreatedAt = new Date(feedPosts[0].createdAt).getTime();
 
-  // Filter posts that are strictly newer (createdAt greater) than newestCreatedAt
-  const newerPosts = latestData.data.data.filter(
-    (post) => new Date(post.createdAt).getTime() > newestCreatedAt
-  );
+    // Filter posts that are strictly newer (createdAt greater) than newestCreatedAt
+    const newerPosts = latestData.data.data.filter(
+      (post) => new Date(post.createdAt).getTime() > newestCreatedAt,
+    );
 
-  if (newerPosts.length > 0) {
-    setNewPosts(newerPosts);
-    setShowNewPostsBanner(true);
-  }
-}, [latestData, feedPosts]);
-
+    if (newerPosts.length > 0) {
+      setNewPosts(newerPosts);
+      setShowNewPostsBanner(true);
+    }
+  }, [latestData, feedPosts]);
 
   // User clicks "Show new posts"
   const handleShowNewPosts = () => {
@@ -238,14 +236,17 @@ export function FeedPage({ onViewBead }: FeedPageProps) {
   return (
     <div className="max-w-7xl mx-auto p-6">
       {/* New posts banner */}
-      {showNewPostsBanner && (
-        <div
-          onClick={handleShowNewPosts}
-          className="cursor-pointer bg-gradient-to-r from-pink-600 to-cyan-600 text-white text-center py-2 rounded mb-4 font-semibold shadow-md"
-        >
-          {newPosts.length} new {newPosts.length > 1 ? 'posts' : 'post'} — Click to view
-        </div>
-      )}
+      <div className="flex justify-center items-center">
+        {showNewPostsBanner && (
+          <div
+            onClick={handleShowNewPosts}
+            className="cursor-pointer bg-gradient-to-r from-pink-600 to-cyan-600 text-white text-center py-2 rounded mb-4 font-semibold shadow-md"
+          >
+            {newPosts.length} new {newPosts.length > 1 ? 'posts' : 'post'} —
+            Click to view
+          </div>
+        )}
+      </div>
 
       {/* Your feed rendering */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -258,7 +259,9 @@ export function FeedPage({ onViewBead }: FeedPageProps) {
               post={post}
               onLike={() => {}}
               onComment={() => {}}
-              onViewBead={(beadId: string) => onViewBead(beadId || post.beadId?._id)}
+              onViewBead={(beadId: string) =>
+                onViewBead(beadId || post.beadId?._id)
+              }
             />
           ))}
         </div>
