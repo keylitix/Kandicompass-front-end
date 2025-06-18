@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../store/store';
 import { CORE_BACKEND_URL } from '@/helper/path';
-import { CreateBeadRequest } from '@/app/types/bead';
+import { BeadFeedResponse, CreateBeadRequest } from '@/app/types/bead';
 
 interface IBead {
   avatar: any;
@@ -127,6 +127,20 @@ export const beadApi = createApi({
       ],
     }),
 
+    // explore moast travled beads
+    getExploreBeads: builder.query<any, void>({
+      query: () => 'beads/explore',
+    }),
+
+    // get beed feads
+    getBeadFeeds: builder.query<
+      BeadFeedResponse,
+      { page_number: number; page_size: number }
+    >({
+      query: ({ page_number, page_size }) =>
+        `beads/feed?page_number=${page_number}&page_size=${page_size}`,  
+    }),
+
     // Combined create bead with image upload
     createBeadWithImage: builder.mutation<
       IBead,
@@ -188,4 +202,6 @@ export const {
   useDeleteBeadMutation,
   useUploadBeadImageMutation,
   useCreateBeadWithImageMutation,
+  useGetExploreBeadsQuery,
+  useGetBeadFeedsQuery,
 } = beadApi;

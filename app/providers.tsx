@@ -26,14 +26,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <FirebaseAuthProvider>
-          <APIProvider
-            apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ''}
-            onLoad={() => console.log('Maps API has loaded.')}
-          >
-            <AuthGate>{children}</AuthGate>
-          </APIProvider>
-        </FirebaseAuthProvider>
+        {/* <FirebaseAuthProvider> */}
+        <APIProvider
+          apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ''}
+          onLoad={() => console.log('Maps API has loaded.')}
+        >
+          {/* <AuthGate> */}
+          {children}
+          {/* </AuthGate> */}
+        </APIProvider>
+        {/* </FirebaseAuthProvider> */}
       </PersistGate>
       <Toaster />
     </Provider>

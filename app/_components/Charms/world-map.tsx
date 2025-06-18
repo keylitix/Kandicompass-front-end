@@ -209,7 +209,7 @@ const WorldMap = ({ locations }: { locations: Location[] }) => {
           borderRadius: 'inherit',
           border: 'none',
         }}
-        defaultCenter={{ lng: locations[0].lng, lat: locations[0].lat }}
+        defaultCenter={{ lng: locations[0]?.lng, lat: locations[0]?.lat }}
         defaultZoom={5}
         gestureHandling="greedy"
         disableDefaultUI={false}

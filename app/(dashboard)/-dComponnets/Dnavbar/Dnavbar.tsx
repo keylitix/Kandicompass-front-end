@@ -19,6 +19,7 @@ import {
   User2Icon,
   User2,
   MailIcon,
+  ToggleRight,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -369,6 +370,24 @@ const Dnavbar = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent className="w-auto bg-gray-900 text-white border border-gray-700 mt-2">
+              <DropdownMenuItem
+                className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
+                onClick={() => {
+                  if (window.location.pathname === '/dashboard') {
+                    route.push('/home');
+                  } else {
+                    route.push('/dashboard');
+                  }
+                }}
+              >
+                <ToggleRight className="h-4 w-4" />
+                <span>
+                  {window.location.pathname === '/dashboard'
+                    ? 'Switch to Home'
+                    : 'Switch to Dashboard'}
+                </span>
+              </DropdownMenuItem>
+
               <DropdownMenuItem
                 className="flex items-center gap-2 px-3 py-2 text-white hover:bg-gray-800 cursor-pointer"
                 onClick={() => route.push('/dashboard/profile')}
