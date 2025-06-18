@@ -32,7 +32,7 @@ export default function SignIn() {
     }));
   };
 
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || '/home';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

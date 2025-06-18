@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { beadApi } from '../api/beadApi';
 import { userApi } from '../api/userApi';
 import { threadApi } from '../api/thredApi';
+import { feadApi } from '../api/feedApi';
 import authReducer from '../slice/UserSlice';
 import notificationReducer from '../slice/Notification';
 import { combineReducers } from 'redux';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   [beadApi.reducerPath]: beadApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [threadApi.reducerPath]: threadApi.reducer,
+  [feadApi.reducerPath]: feadApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -29,7 +31,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(beadApi.middleware, userApi.middleware, threadApi.middleware),
+    }).concat(beadApi.middleware, userApi.middleware, threadApi.middleware, feadApi.middleware),
 });
 
 export const persistor = persistStore(store);
