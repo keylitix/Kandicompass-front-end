@@ -1,4 +1,4 @@
 const CORE_BACKEND_URL = process.env.NEXT_PUBLIC_CORE_BACKEND_URL;
 const CORE_FRONTEND_URL = process.env.NEXT_PUBLIC_CORE_FRONTEND_URL;
 export { CORE_BACKEND_URL, CORE_FRONTEND_URL };
-console.log('')
+export const NEW = "USER";
